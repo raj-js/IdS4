@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RajsLibs.Abstraction.Key;
 using RajsLibs.Abstraction.Repositories;
+using RajsLibs.Abstraction.Repositories.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,6 +138,26 @@ namespace RajsLibs.Repository.EfCore
         public async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+        }
+
+        public IEnumerable<TEntity> Paging(IPageQuery<TEntity> query)
+        {
+            return _dbContext.Set<TEntity>()
+                .Where(query.Predicate)
+                //.OrderBy(query.Order)
+                .Skip(query.Skip)
+                .Take(query.Take)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _dbContext.Set<TEntity>()
+                .Where(query.Predicate)
+                //.OrderBy(query.Order)
+                .Skip(query.Skip)
+                .Take(query.Take)
+                .ToListAsync();
         }
 
         #endregion

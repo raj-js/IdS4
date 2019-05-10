@@ -13,7 +13,8 @@ namespace RajsLibs.Abstraction.Repositories
         IFirst<TEntity, TKey>,
         ISingle<TEntity, TKey>,
         IMultiplue<TEntity, TKey>,
-        IWhere<TEntity, TKey>
+        IWhere<TEntity, TKey>,
+        IPaging<TEntity, TKey>
 
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
@@ -30,16 +31,8 @@ namespace RajsLibs.Abstraction.Repositories
         IFirstAsync<TEntity, TKey>,
         ISingleAsync<TEntity, TKey>,
         IMultiplueAsync<TEntity, TKey>,
-        IWhereAsync<TEntity, TKey>
-
-        where TEntity : class, IKey<TKey>
-        where TKey : IEquatable<TKey>
-    {
-
-    }
-
-    public interface ITrackingRepository<TEntity, TKey> :
-        ITracking<TEntity, TKey>
+        IWhereAsync<TEntity, TKey>,
+        IPagingAsync<TEntity, TKey>
 
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
