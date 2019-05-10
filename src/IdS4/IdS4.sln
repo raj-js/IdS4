@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.352
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1AA63E2D-EDF6-4134-8523-9DC87318C2D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdS4.Infrastructure", "IdS4.Infrastructure\IdS4.Infrastructure.csproj", "{7A538133-ED88-426C-A4CA-4F4A1E8E4A32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdS4.Infrastructure", "IdS4.Infrastructure\IdS4.Infrastructure.csproj", "{7A538133-ED88-426C-A4CA-4F4A1E8E4A32}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdS4", "IdS4\IdS4.csproj", "{307750F7-97DF-41B7-954F-B01DA96EF9FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdS4", "IdS4\IdS4.csproj", "{307750F7-97DF-41B7-954F-B01DA96EF9FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{763F8990-A48E-40FD-B8F7-1DB5411578CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs", "RajsLibs\RajsLibs.csproj", "{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.Repository.EfCore", "RajsLibs.Repository.EfCore\RajsLibs.Repository.EfCore.csproj", "{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +29,14 @@ Global
 		{307750F7-97DF-41B7-954F-B01DA96EF9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{307750F7-97DF-41B7-954F-B01DA96EF9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{307750F7-97DF-41B7-954F-B01DA96EF9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +44,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7A538133-ED88-426C-A4CA-4F4A1E8E4A32} = {1AA63E2D-EDF6-4134-8523-9DC87318C2D1}
 		{307750F7-97DF-41B7-954F-B01DA96EF9FF} = {1AA63E2D-EDF6-4134-8523-9DC87318C2D1}
+		{763F8990-A48E-40FD-B8F7-1DB5411578CF} = {1AA63E2D-EDF6-4134-8523-9DC87318C2D1}
+		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
+		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {680055F7-79E1-4553-A05E-9675FB38067C}
