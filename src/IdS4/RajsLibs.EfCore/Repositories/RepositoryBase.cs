@@ -9,143 +9,145 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using RajsLibs.EfCore.Uow;
+using RajsLibs.Uow;
 
 namespace RajsLibs.Repository.EfCore
 {
-    public class EfCoreRepository<TEntity, TKey> : IRepository<TEntity, TKey>
+    public class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
     {
-        private readonly DbContext _dbContext;
+        protected UnitOfWorkBase UnitOfWork { get; }
+        protected DbSet<TEntity> Set { get; }
 
-        public EfCoreRepository(DbContext dbContext)
+        public RepositoryBase(IUnitOfWork unitOfWork)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            UnitOfWork = (UnitOfWorkBase) unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            Set = UnitOfWork.Set<TEntity>();
         }
 
         #region Queries
 
         public IEnumerable<TEntity> All()
         {
-            return _dbContext.Set<TEntity>();
+            return Set;
         }
 
         public async Task<IEnumerable<TEntity>> AllAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().ToListAsync(cancellationToken);
+            return await Set.ToListAsync(cancellationToken);
         }
 
         public int Count(Expression<Func<TEntity, bool>> predicate = null)
         {
-            return _dbContext.Set<TEntity>().Count(predicate);
+            return Set.Count(predicate);
         }
 
         public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().CountAsync(predicate, cancellationToken);
+            return await Set.CountAsync(predicate, cancellationToken);
 
         }
 
         public bool Exists(TKey id)
         {
-            return _dbContext.Set<TEntity>().Any(s => s.Id.Equals(id));
+            return Set.Any(s => s.Id.Equals(id));
         }
 
         public bool Exists(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().Any(predicate);
+            return Set.Any(predicate);
         }
 
         public async Task<bool> ExistsAsync(TKey id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().AnyAsync(s => s.Id.Equals(id), cancellationToken);
+            return await Set.AnyAsync(s => s.Id.Equals(id), cancellationToken);
         }
 
         public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().AnyAsync(predicate, cancellationToken);
+            return await Set.AnyAsync(predicate, cancellationToken);
         }
 
         public TEntity First(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().First(predicate);
+            return Set.First(predicate);
         }
 
         public async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().FirstAsync(predicate, cancellationToken);
+            return await Set.FirstAsync(predicate, cancellationToken);
         }
 
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().FirstOrDefault(predicate);
+            return Set.FirstOrDefault(predicate);
         }
 
         public async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().FirstOrDefaultAsync(predicate, cancellationToken);
+            return await Set.FirstOrDefaultAsync(predicate, cancellationToken);
         }
 
         public long LongCount(Expression<Func<TEntity, bool>> predicate = null)
         {
-            return _dbContext.Set<TEntity>().LongCount(predicate);
+            return Set.LongCount(predicate);
         }
 
         public async Task<long> LongCountAsync(Expression<Func<TEntity, bool>> predicate = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().LongCountAsync(predicate, cancellationToken);
+            return await Set.LongCountAsync(predicate, cancellationToken);
         }
 
         public IEnumerable<TEntity> Multiple(params TKey[] ids)
         {
-            return _dbContext.Set<TEntity>().Where(s => ids.Contains(s.Id));
+            return Set.Where(s => ids.Contains(s.Id));
         }
 
         public IEnumerable<TEntity> Multiple(IEnumerable<TKey> ids)
         {
-            return _dbContext.Set<TEntity>().Where(s => ids.Contains(s.Id));
+            return Set.Where(s => ids.Contains(s.Id));
         }
 
         public async Task<IEnumerable<TEntity>> MultipleAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().Where(s => ids.Contains(s.Id)).ToListAsync();
+            return await Set.Where(s => ids.Contains(s.Id)).ToListAsync();
         }
 
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().Single(predicate);
+            return Set.Single(predicate);
         }
 
         public async Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().SingleAsync(predicate, cancellationToken);
+            return await Set.SingleAsync(predicate, cancellationToken);
         }
 
         public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().SingleOrDefault(predicate);
+            return Set.SingleOrDefault(predicate);
         }
 
         public async Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().SingleOrDefaultAsync(predicate, cancellationToken);
+            return await Set.SingleOrDefaultAsync(predicate, cancellationToken);
         }
 
         public IEnumerable<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
         {
-            return _dbContext.Set<TEntity>().Where(predicate);
+            return Set.Where(predicate);
         }
 
         public async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>().Where(predicate).ToListAsync();
+            return await Set.Where(predicate).ToListAsync();
         }
 
         public IEnumerable<TEntity> Paging(IPageQuery<TEntity> query)
         {
-            
-
-            return _dbContext.Set<TEntity>()
+            return Set.AsNoTracking()
                 .Where(query.Predicate)
                 .OrderBy(query.OrderBy)
                 .Skip(query.Skip)
@@ -155,7 +157,7 @@ namespace RajsLibs.Repository.EfCore
 
         public async Task<IEnumerable<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await _dbContext.Set<TEntity>()
+            return await Set.AsNoTracking()
                 .Where(query.Predicate)
                 .OrderBy(query.OrderBy)
                 .Skip(query.Skip)
@@ -169,82 +171,96 @@ namespace RajsLibs.Repository.EfCore
 
         public void Add(params TEntity[] entities)
         {
-            _dbContext.AddRange(entities);
+            Set.AddRange(entities);
         }
 
         public void Add(IEnumerable<TEntity> entities)
         {
-            _dbContext.AddRange(entities);
+            Set.AddRange(entities);
         }
 
         public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _dbContext.AddAsync(entity, cancellationToken);
+            await Set.AddAsync(entity, cancellationToken);
         }
 
         public async Task AddAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
         {
-            await _dbContext.AddRangeAsync(entities, cancellationToken);
+            await Set.AddRangeAsync(entities, cancellationToken);
         }
 
         public void Delete(params TKey[] ids)
         {
-
+            Set.RemoveRange(Multiple(ids));
         }
 
         public void Delete(IEnumerable<TKey> ids)
         {
-            throw new NotImplementedException();
+            Set.RemoveRange(Multiple(ids));
         }
 
         public void Delete(params TEntity[] entities)
         {
-            throw new NotImplementedException();
+            Set.RemoveRange(entities);
         }
 
         public void Delete(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            Set.RemoveRange(entities);
         }
 
-        public Task Delete(TKey id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Delete(TKey id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.Remove(await FindAsync(id));
         }
 
-        public Task Delete(IEnumerable<TKey> ids, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Delete(IEnumerable<TKey> ids, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.RemoveRange(await MultipleAsync(ids));
         }
 
-        public Task Delete(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Delete(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.Remove(entity);
+            await Task.CompletedTask;
         }
 
-        public Task Delete(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Delete(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.RemoveRange(entities);
+            await Task.CompletedTask;
         }
 
         public void Update(params TEntity[] entities)
         {
-            throw new NotImplementedException();
+            Set.UpdateRange(entities);
         }
 
         public void Update(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            Set.UpdateRange(entities);
         }
 
-        public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.Update(entity);
+            await Task.CompletedTask;
         }
 
-        public Task UpdateAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task UpdateAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            Set.UpdateRange(entities);
+            await Task.CompletedTask;
+        }
+
+        public TEntity Find(TKey id)
+        {
+            return Set.Find(id);
+        }
+
+        public async Task<TEntity> FindAsync(TKey id)
+        {
+            return await Set.FindAsync(id);
         }
 
         #endregion

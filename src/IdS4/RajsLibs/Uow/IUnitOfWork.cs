@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RajsLibs.Uow
@@ -7,6 +8,6 @@ namespace RajsLibs.Uow
     {
         int Commit();
 
-        Task<int> CommitAsync();
+        Task<int> CommitAsync(CancellationToken cancallationToken = default(CancellationToken));
     }
 }

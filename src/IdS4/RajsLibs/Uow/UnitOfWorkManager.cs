@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RajsLibs.Uow
@@ -19,10 +20,10 @@ namespace RajsLibs.Uow
                 unitOfWork.Commit();
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(CancellationToken cancallationToken = default(CancellationToken))
         {
             foreach (var unitOfWork in _unitOfWorks)
-                await unitOfWork.CommitAsync();
+                await unitOfWork.CommitAsync(cancallationToken);
         }
 
         public void Dispose()

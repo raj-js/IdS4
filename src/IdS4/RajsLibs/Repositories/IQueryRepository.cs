@@ -14,7 +14,8 @@ namespace RajsLibs.Repositories
         ISingle<TEntity, TKey>,
         IMultiplue<TEntity, TKey>,
         IWhere<TEntity, TKey>,
-        IPaging<TEntity, TKey>
+        IPaging<TEntity, TKey>,
+        IFind<TEntity, TKey>
 
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
@@ -32,7 +33,8 @@ namespace RajsLibs.Repositories
         ISingleAsync<TEntity, TKey>,
         IMultiplueAsync<TEntity, TKey>,
         IWhereAsync<TEntity, TKey>,
-        IPagingAsync<TEntity, TKey>
+        IPagingAsync<TEntity, TKey>,
+        IFindAsync<TEntity, TKey>
 
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
