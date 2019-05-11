@@ -1,11 +1,11 @@
-﻿using RajsLibs.Abstraction.Key;
+﻿using RajsLibs.Key;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RajsLibs.Abstraction.Repositories.Operations
+namespace RajsLibs.Repositories.Operations
 {
     public interface IPageQuery<TEntity>
         where TEntity : class

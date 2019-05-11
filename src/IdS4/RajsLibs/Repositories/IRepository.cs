@@ -1,7 +1,7 @@
-﻿using RajsLibs.Abstraction.Key;
+﻿using RajsLibs.Key;
 using System;
 
-namespace RajsLibs.Abstraction.Repositories
+namespace RajsLibs.Repositories
 {
     public interface IRepository<TEntity, TKey> :
         IQueryRepository<TEntity, TKey>,

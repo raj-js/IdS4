@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RajsLibs.Abstraction.Key;
-using RajsLibs.Abstraction.Repositories;
-using RajsLibs.Abstraction.Repositories.Operations;
+using RajsLibs.Key;
+using RajsLibs.Repositories;
+using RajsLibs.Repositories.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Dynamic;
+using System.Linq.Dynamic.Core;
 
 namespace RajsLibs.Repository.EfCore
 {

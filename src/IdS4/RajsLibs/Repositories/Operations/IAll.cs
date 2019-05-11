@@ -1,10 +1,10 @@
-﻿using RajsLibs.Abstraction.Key;
+﻿using RajsLibs.Key;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RajsLibs.Abstraction.Repositories.Operations
+namespace RajsLibs.Repositories.Operations
 {
     public interface IAll<out TEntity, in TKey>
         where TEntity : class, IKey<TKey>

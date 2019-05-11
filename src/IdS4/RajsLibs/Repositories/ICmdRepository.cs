@@ -1,8 +1,8 @@
-﻿using RajsLibs.Abstraction.Key;
-using RajsLibs.Abstraction.Repositories.Operations;
+﻿using RajsLibs.Key;
+using RajsLibs.Repositories.Operations;
 using System;
 
-namespace RajsLibs.Abstraction.Repositories
+namespace RajsLibs.Repositories
 {
     public interface ICmdRepository<TEntity, TKey> :
         IAdd<TEntity, TKey>,

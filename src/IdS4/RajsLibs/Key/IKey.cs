@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RajsLibs.Abstraction.Key
+namespace RajsLibs.Key
 {
     public interface IKey<out T> where T : IEquatable<T>
     {
