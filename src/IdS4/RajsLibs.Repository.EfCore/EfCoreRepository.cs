@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq.Dynamic;
 
 namespace RajsLibs.Repository.EfCore
 {
@@ -142,9 +143,11 @@ namespace RajsLibs.Repository.EfCore
 
         public IEnumerable<TEntity> Paging(IPageQuery<TEntity> query)
         {
+            
+
             return _dbContext.Set<TEntity>()
                 .Where(query.Predicate)
-                //.OrderBy(query.Order)
+                .OrderBy(query.OrderBy)
                 .Skip(query.Skip)
                 .Take(query.Take)
                 .ToList();
@@ -154,7 +157,7 @@ namespace RajsLibs.Repository.EfCore
         {
             return await _dbContext.Set<TEntity>()
                 .Where(query.Predicate)
-                //.OrderBy(query.Order)
+                .OrderBy(query.OrderBy)
                 .Skip(query.Skip)
                 .Take(query.Take)
                 .ToListAsync();

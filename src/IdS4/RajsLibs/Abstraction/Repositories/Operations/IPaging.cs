@@ -17,6 +17,13 @@ namespace RajsLibs.Abstraction.Repositories.Operations
         int Take { get; }
 
         string Order { get; }
+
+        bool IsDesc { get; }
+
+        /// <summary>
+        /// Order + IsDesc
+        /// </summary>
+        string OrderBy { get; }
     }
 
     public interface IPaging<TEntity, in TKey>
