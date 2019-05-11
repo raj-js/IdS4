@@ -5,21 +5,23 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1AA63E2D-EDF6-4134-8523-9DC87318C2D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdS4.Infrastructure", "IdS4.Infrastructure\IdS4.Infrastructure.csproj", "{7A538133-ED88-426C-A4CA-4F4A1E8E4A32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdS4.Infrastructure", "IdS4.Infrastructure\IdS4.Infrastructure.csproj", "{7A538133-ED88-426C-A4CA-4F4A1E8E4A32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdS4", "IdS4\IdS4.csproj", "{307750F7-97DF-41B7-954F-B01DA96EF9FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdS4", "IdS4\IdS4.csproj", "{307750F7-97DF-41B7-954F-B01DA96EF9FF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{763F8990-A48E-40FD-B8F7-1DB5411578CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs", "RajsLibs\RajsLibs.csproj", "{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RajsLibs", "RajsLibs\RajsLibs.csproj", "{3D8E6D25-F9FF-419D-92B3-32F7E03F6686}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.EfCore", "RajsLibs.EfCore\RajsLibs.EfCore.csproj", "{21A0AAE1-305C-425E-982B-FC320547CA13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RajsLibs.EfCore", "RajsLibs.EfCore\RajsLibs.EfCore.csproj", "{21A0AAE1-305C-425E-982B-FC320547CA13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.EventBus.RabbitMQ", "RajsLibs.EventBus.RabbitMQ\RajsLibs.EventBus.RabbitMQ.csproj", "{655F6D51-57A9-49D1-BB0A-B41C727D31D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RajsLibs.EventBus.RabbitMQ", "RajsLibs.EventBus.RabbitMQ\RajsLibs.EventBus.RabbitMQ.csproj", "{655F6D51-57A9-49D1-BB0A-B41C727D31D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.EventBus", "RajsLibs.EventBus\RajsLibs.EventBus.csproj", "{923F54E3-E46C-4620-87A9-6451355DBB4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RajsLibs.EventBus", "RajsLibs.EventBus\RajsLibs.EventBus.csproj", "{923F54E3-E46C-4620-87A9-6451355DBB4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.Cqrs", "RajsLibs.Cqrs\RajsLibs.Cqrs.csproj", "{DDFE2215-1E9F-4E1E-872E-891ADB499733}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RajsLibs.Cqrs", "RajsLibs.Cqrs\RajsLibs.Cqrs.csproj", "{DDFE2215-1E9F-4E1E-872E-891ADB499733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdS4.Application", "IdS4.Application\IdS4.Application.csproj", "{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{DDFE2215-1E9F-4E1E-872E-891ADB499733}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDFE2215-1E9F-4E1E-872E-891ADB499733}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDFE2215-1E9F-4E1E-872E-891ADB499733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{655F6D51-57A9-49D1-BB0A-B41C727D31D2} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
 		{923F54E3-E46C-4620-87A9-6451355DBB4C} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
 		{DDFE2215-1E9F-4E1E-872E-891ADB499733} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
+		{3B77C10D-E14C-4C29-AA3F-E8CCC4B7A229} = {1AA63E2D-EDF6-4134-8523-9DC87318C2D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {680055F7-79E1-4553-A05E-9675FB38067C}

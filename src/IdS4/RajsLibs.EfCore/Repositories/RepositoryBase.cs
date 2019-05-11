@@ -1,29 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RajsLibs.EfCore.Uow;
 using RajsLibs.Key;
 using RajsLibs.Repositories;
 using RajsLibs.Repositories.Operations;
+using RajsLibs.Uow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Dynamic.Core;
-using RajsLibs.EfCore.Uow;
-using RajsLibs.Uow;
 
 namespace RajsLibs.Repository.EfCore
 {
-    public class RepositoryBase<TEntity, TKey> : IRepository<TEntity, TKey>
+    public class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
+        where TDbContext : DbContext
         where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
     {
-        protected UnitOfWorkBase UnitOfWork { get; }
+        protected UnitOfWorkBase<TDbContext> UnitOfWork { get; }
         protected DbSet<TEntity> Set { get; }
 
         public RepositoryBase(IUnitOfWork unitOfWork)
         {
-            UnitOfWork = (UnitOfWorkBase) unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            UnitOfWork = (UnitOfWorkBase<TDbContext>)unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             Set = UnitOfWork.Set<TEntity>();
         }
 

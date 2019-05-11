@@ -1,12 +1,19 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RajsLibs.Uow;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RajsLibs.EfCore.Uow
 {
-    public abstract class UnitOfWorkBase : DbContext, IUnitOfWork
+    public abstract class UnitOfWorkBase<TDbContext> : DbContext, IUnitOfWork
+        where TDbContext : DbContext
     {
+        public UnitOfWorkBase(DbContextOptions<TDbContext> options)
+            : base(options)
+        {
+
+        }
+
         public int Commit()
         {
             return SaveChanges();
