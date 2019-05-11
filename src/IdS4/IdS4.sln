@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs", "RajsLibs\RajsLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.Repository.EfCore", "RajsLibs.Repository.EfCore\RajsLibs.Repository.EfCore.csproj", "{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RajsLibs.EfCore", "RajsLibs.EfCore\RajsLibs.EfCore.csproj", "{21A0AAE1-305C-425E-982B-FC320547CA13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A0AAE1-305C-425E-982B-FC320547CA13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A0AAE1-305C-425E-982B-FC320547CA13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A0AAE1-305C-425E-982B-FC320547CA13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A0AAE1-305C-425E-982B-FC320547CA13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +53,7 @@ Global
 		{763F8990-A48E-40FD-B8F7-1DB5411578CF} = {1AA63E2D-EDF6-4134-8523-9DC87318C2D1}
 		{3D8E6D25-F9FF-419D-92B3-32F7E03F6686} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
 		{D460DBD0-39EA-40A9-80AC-B5BB2D59ABEF} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
+		{21A0AAE1-305C-425E-982B-FC320547CA13} = {763F8990-A48E-40FD-B8F7-1DB5411578CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {680055F7-79E1-4553-A05E-9675FB38067C}
