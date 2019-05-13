@@ -3,7 +3,6 @@ using RajsLibs.EfCore.Uow;
 using RajsLibs.Key;
 using RajsLibs.Repositories;
 using RajsLibs.Repositories.Operations;
-using RajsLibs.Uow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,23 +15,23 @@ namespace RajsLibs.Repository.EfCore
 {
     public class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
         where TDbContext : DbContext
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
-        protected UnitOfWorkBase<TDbContext> UnitOfWork { get; }
+        protected IEfUnitOfWork<TDbContext> UnitOfWork { get; }
         protected DbSet<TEntity> Set { get; }
 
-        public RepositoryBase(IUnitOfWork unitOfWork)
+        public RepositoryBase(IEfUnitOfWork<TDbContext> unitOfWork)
         {
-            UnitOfWork = (UnitOfWorkBase<TDbContext>)unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            Set = UnitOfWork.Set<TEntity>();
+            UnitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            Set = UnitOfWork.DbContext.Set<TEntity>();
         }
 
         #region Queries
 
         public IEnumerable<TEntity> All()
         {
-            return Set;
+            return Set.ToList();
         }
 
         public async Task<IEnumerable<TEntity>> AllAsync(CancellationToken cancellationToken = default(CancellationToken))

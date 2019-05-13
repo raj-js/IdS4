@@ -6,7 +6,7 @@ using RajsLibs.Uow;
 
 namespace IdS4.Infrastructure.DbContexts
 {
-    public class IdS4LogDbContext : UnitOfWorkBase<IdS4LogDbContext>, IUnitOfWork, IIdS4DbContext
+    public class IdS4LogDbContext : DbContext, IIdS4DbContext
     {
         public IdS4LogDbContext(DbContextOptions<IdS4LogDbContext> options)
             : base(options)

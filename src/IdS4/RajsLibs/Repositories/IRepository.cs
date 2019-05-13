@@ -9,7 +9,7 @@ namespace RajsLibs.Repositories
         ICmdRepository<TEntity, TKey>,
         ICmdAsyncRepository<TEntity, TKey>
 
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
 

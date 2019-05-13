@@ -9,7 +9,7 @@ namespace RajsLibs.Repositories
         IUpdate<TEntity, TKey>,
         IDelete<TEntity, TKey>
 
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
 
@@ -20,7 +20,7 @@ namespace RajsLibs.Repositories
         IUpdateAsync<TEntity, TKey>,
         IDeleteAsync<TEntity, TKey>
 
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
 

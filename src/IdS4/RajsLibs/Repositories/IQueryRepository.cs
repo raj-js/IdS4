@@ -17,7 +17,7 @@ namespace RajsLibs.Repositories
         IPaging<TEntity, TKey>,
         IFind<TEntity, TKey>
 
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
 
@@ -36,7 +36,7 @@ namespace RajsLibs.Repositories
         IPagingAsync<TEntity, TKey>,
         IFindAsync<TEntity, TKey>
 
-        where TEntity : class, IKey<TKey>
+        where TEntity : class
         where TKey : IEquatable<TKey>
     {
 

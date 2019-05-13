@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdS4.Infrastructure.DbContexts
 {
-    class IdS4PersistedGrantDbContext : PersistedGrantDbContext<IdS4PersistedGrantDbContext>, IIdS4PersistedGrantDbContext
+    public class IdS4PersistedGrantDbContext : PersistedGrantDbContext<IdS4PersistedGrantDbContext>, IIdS4PersistedGrantDbContext
     {
         public IdS4PersistedGrantDbContext(DbContextOptions options, OperationalStoreOptions storeOptions) 
             : base(options, storeOptions)

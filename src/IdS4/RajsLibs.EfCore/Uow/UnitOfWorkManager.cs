@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using RajsLibs.Uow;
+﻿using RajsLibs.Uow;
 
 namespace RajsLibs.EfCore.Uow
 {

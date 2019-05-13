@@ -1,14 +1,14 @@
 ﻿using IdS4.Infrastructure.DbContexts;
 using IdS4.Logs;
-using RajsLibs.Repositories;
+using IdS4.Repositories;
+using RajsLibs.EfCore.Uow;
 using RajsLibs.Repository.EfCore;
-using RajsLibs.Uow;
 
 namespace IdS4.Infrastructure.Repositories
 {
-    public class LogsRepository : RepositoryBase<IdS4LogDbContext, Log, long>, IRepository<Log, long>
+    public class LogsRepository : RepositoryBase<IdS4LogDbContext, Log, int>, ILogRepository
     {
-        public LogsRepository(IUnitOfWork unitOfWork)
+        public LogsRepository(IEfUnitOfWork<IdS4LogDbContext> unitOfWork) 
             : base(unitOfWork)
         {
 
