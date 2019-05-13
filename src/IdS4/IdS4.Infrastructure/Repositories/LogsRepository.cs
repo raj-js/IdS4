@@ -6,7 +6,7 @@ using RajsLibs.Repository.EfCore;
 
 namespace IdS4.Infrastructure.Repositories
 {
-    public class LogsRepository : RepositoryBase<IdS4LogDbContext, Log, int>, ILogRepository
+    public class LogsRepository : RepositoryBase<IdS4LogDbContext, Log, long>, ILogRepository
     {
         public LogsRepository(IEfUnitOfWork<IdS4LogDbContext> unitOfWork) 
             : base(unitOfWork)

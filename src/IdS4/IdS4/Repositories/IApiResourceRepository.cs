@@ -1,9 +1,9 @@
-﻿using IdentityServer4.EntityFramework.Entities;
+﻿using IdS4.Wrappers;
 using RajsLibs.Repositories;
 
 namespace IdS4.Repositories
 {
-    public interface IApiResourceRepository : IRepository<ApiResource, int>
+    public interface IApiResourceRepository : IRepository<IdS4ApiResource, int>
     {
 
     }

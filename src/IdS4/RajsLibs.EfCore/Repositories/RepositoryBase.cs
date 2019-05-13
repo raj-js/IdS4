@@ -15,7 +15,7 @@ namespace RajsLibs.Repository.EfCore
 {
     public class RepositoryBase<TDbContext, TEntity, TKey> : IRepository<TEntity, TKey>
         where TDbContext : DbContext
-        where TEntity : class
+        where TEntity : class, IKey<TKey>
         where TKey : IEquatable<TKey>
     {
         protected IEfUnitOfWork<TDbContext> UnitOfWork { get; }
