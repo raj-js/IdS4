@@ -2,7 +2,7 @@
 using RajsLibs.EfCore.Uow;
 using RajsLibs.Key;
 using RajsLibs.Repositories;
-using RajsLibs.Repositories.Operations;
+using RajsLibs.Repositories.Paging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -149,7 +149,7 @@ namespace RajsLibs.Repository.EfCore
         {
             return Set.AsNoTracking()
                 .Where(query.Predicate)
-                .OrderBy(query.OrderBy)
+                .OrderBy($"{query.Order} {(query.IsDesc ? "desc" : "asc")}")
                 .Skip(query.Skip)
                 .Take(query.Take)
                 .ToList();
@@ -159,7 +159,7 @@ namespace RajsLibs.Repository.EfCore
         {
             return await Set.AsNoTracking()
                 .Where(query.Predicate)
-                .OrderBy(query.OrderBy)
+                .OrderBy($"{query.Order} {(query.IsDesc ? "desc" : "asc")}")
                 .Skip(query.Skip)
                 .Take(query.Take)
                 .ToListAsync();
