@@ -42,17 +42,17 @@ namespace IdS4.Services.Impls
             _logRepository.Add(Log.New(LogLevel.Info, msg));
         }
 
-        public async Task<List<Log>> SearchAsync(LogLevel? level = null, (DateTimeOffset? Begin, DateTimeOffset? End)? range = null)
+        public async Task<List<Log>> PagingAsync(IPageQuery<Log> query)
         {
-            var query = new PageQuery<Log>.Builder()
-                .Filter(level.HasValue, s => s.Level == level)
-                .Filter(range.HasValue && range?.Begin.HasValue == true, s => s.TimeStamp >= range.Value.Begin)
-                .Filter(range.HasValue && range?.End.HasValue == true, s => s.TimeStamp <= range.Value.End)
-                .OrderBy("TimeStamp")
-                .Descending()
-                .Skip(0)
-                .Take(50)
-                .Build();
+            //var query = new PageQuery<Log>.Builder()
+            //    .Filter(level.HasValue, s => s.Level == level)
+            //    .Filter(begin.HasValue == true, s => s.CreateTime >= begin)
+            //    .Filter(end.HasValue == true, s => s.CreateTime <= end)
+            //    .OrderBy(nameof(Log.CreateTime))
+            //    .Descending()
+            //    .Skip(0)
+            //    .Take(50)
+            //    .Build();
 
            var paging = await _logRepository.PagingAsync(query);
            return paging.ToList();

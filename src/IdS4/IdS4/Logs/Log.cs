@@ -11,17 +11,16 @@ namespace IdS4.Logs
 
         public string Msg { get; private set; }
 
-        public DateTimeOffset TimeStamp { get; private set; } 
+        public DateTime CreateTime { get; private set; } 
 
         public Log() { }
 
-        public Log(long id, LogLevel level, string msg, DateTimeOffset timeStamp)
+        public Log(long id, LogLevel level, string msg, DateTime timeStamp)
         {
             Id = id;
             Level = level;
             Msg = msg ?? throw new ArgumentNullException(nameof(msg));
-            TimeStamp = timeStamp;
-
+            CreateTime = timeStamp;
         }
 
         public static Log New(LogLevel level, string msg)
@@ -30,7 +29,7 @@ namespace IdS4.Logs
             {
                 Level = level,
                 Msg = msg ?? throw new ArgumentNullException(nameof(msg)),
-                TimeStamp = DateTimeOffset.Now
+                CreateTime = DateTime.Now
             };
         }
     }

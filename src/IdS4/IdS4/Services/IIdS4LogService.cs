@@ -1,4 +1,5 @@
 ﻿using IdS4.Logs;
+using RajsLibs.Repositories.Paging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +20,6 @@ namespace IdS4.Services
 
         void Warn(string msg);
 
-        Task<List<Log>> SearchAsync(LogLevel? level = null, (DateTimeOffset? Begin, DateTimeOffset? End)? range = null);
+        Task<List<Log>> PagingAsync(IPageQuery<Log> query);
     }
 }
