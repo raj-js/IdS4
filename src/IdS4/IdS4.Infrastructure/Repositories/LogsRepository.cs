@@ -11,7 +11,6 @@ namespace IdS4.Infrastructure.Repositories
         public LogsRepository(IEfUnitOfWork<IdS4LogDbContext> unitOfWork) 
             : base(unitOfWork)
         {
-
         }
     }
 }
