@@ -30,9 +30,9 @@ namespace RajsLibs.Repositories.Paging
                 return !condition ? this : Filter(predicate);
             }
 
-            public Builder OrderBy(string order)
+            public Builder OrderBy(string orderBy)
             {
-                _query.OrderBy = order;
+                _query.OrderBy = orderBy;
                 return this;
             }
 
@@ -56,15 +56,15 @@ namespace RajsLibs.Repositories.Paging
                 return this;
             }
 
-            public Builder SetCurrentPage(int page)
+            public Builder SetCurrentPage(int currentPage)
             {
-                _query.CurrentPage = page;
+                _query.CurrentPage = currentPage;
                 return this;
             }
 
-            public Builder SetPageSize(int size)
+            public Builder SetPageSize(int pageSize)
             {
-                _query.PageSize = size;
+                _query.PageSize = pageSize;
                 return this;
             }
 
