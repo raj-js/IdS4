@@ -8,12 +8,16 @@ namespace RajsLibs.Repositories.Paging
     {
         Expression<Func<TEntity, bool>> Predicate { get; set; }
 
-        int Skip { get; set; }
+        int CurrentPage { get; set; } 
 
-        int Take { get; set; }
+        int PageSize { get; set; }
 
-        string Order { get; set; }
+        string OrderBy { get; set; }
 
         bool IsDesc { get; set; }
+
+        int Skip { get; }
+
+        int Take { get; }
     }
 }

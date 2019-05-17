@@ -20,6 +20,6 @@ namespace IdS4.Services
 
         void Warn(string msg);
 
-        Task<List<Log>> PagingAsync(IPageQuery<Log> query);
+        Task<IPageResult<Log>> PagingAsync(IPageQuery<Log> query);
     }
 }

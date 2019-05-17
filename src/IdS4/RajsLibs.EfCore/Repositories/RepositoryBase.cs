@@ -112,7 +112,7 @@ namespace RajsLibs.Repository.EfCore
 
         public async Task<IEnumerable<TEntity>> MultipleAsync(IEnumerable<TKey> ids, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Set.Where(s => ids.Contains(s.Id)).ToListAsync();
+            return await Set.Where(s => ids.Contains(s.Id)).ToListAsync(cancellationToken);
         }
 
         public TEntity Single(Expression<Func<TEntity, bool>> predicate)
@@ -142,27 +142,41 @@ namespace RajsLibs.Repository.EfCore
 
         public async Task<IEnumerable<TEntity>> WhereAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Set.Where(predicate).ToListAsync();
+            return await Set.Where(predicate).ToListAsync(cancellationToken);
         }
 
-        public IEnumerable<TEntity> Paging(IPageQuery<TEntity> query)
+        public IPageResult<TEntity> Paging(IPageQuery<TEntity> query)
         {
-            return Set.AsNoTracking()
+            var data = Set.AsNoTracking()
                 .Where(query.Predicate)
-                .OrderBy($"{query.Order} {(query.IsDesc ? "desc" : "asc")}")
+                .OrderBy($"{query.OrderBy} {(query.IsDesc ? "desc" : "asc")}")
                 .Skip(query.Skip)
                 .Take(query.Take)
                 .ToList();
+
+            return new PageResult<TEntity>
+                .Builder(data)
+                .CurrentPage(query.CurrentPage)
+                .PageSize(query.PageSize)
+                .TotalCount(Count(query.Predicate))
+                .Build();
         }
 
-        public async Task<IEnumerable<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IPageResult<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Set.AsNoTracking()
+            var data = await Set.AsNoTracking()
                 .Where(query.Predicate)
-                .OrderBy($"{query.Order} {(query.IsDesc ? "desc" : "asc")}")
+                .OrderBy($"{query.OrderBy} {(query.IsDesc ? "desc" : "asc")}")
                 .Skip(query.Skip)
                 .Take(query.Take)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
+
+            return new PageResult<TEntity>
+                    .Builder(data)
+                .CurrentPage(query.CurrentPage)
+                .PageSize(query.PageSize)
+                .TotalCount(await CountAsync(query.Predicate, cancellationToken))
+                .Build();
         }
 
         #endregion

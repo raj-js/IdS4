@@ -10,13 +10,13 @@ namespace RajsLibs.Repositories.Operations
         where TEntity : class
         where TKey : IEquatable<TKey>
     {
-        IEnumerable<TEntity> Paging(IPageQuery<TEntity> query);
+        IPageResult<TEntity> Paging(IPageQuery<TEntity> query);
     }
 
     public interface IPagingAsync<TEntity, in TKey>
         where TEntity : class
         where TKey : IEquatable<TKey>
     {
-        Task<IEnumerable<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IPageResult<TEntity>> PagingAsync(IPageQuery<TEntity> query, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

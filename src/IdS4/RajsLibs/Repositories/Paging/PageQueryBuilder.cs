@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace RajsLibs.Repositories.Paging
 {
-    public partial class PageQuery<TEntity> : IPageQuery<TEntity>
+    public partial class PageQuery<TEntity>
         where TEntity : class
     {
         public class Builder
@@ -27,14 +27,12 @@ namespace RajsLibs.Repositories.Paging
 
             public Builder Filter(bool condition, Expression<Func<TEntity, bool>> predicate)
             {
-                if (!condition) return this;
-
-                return Filter(predicate);
+                return !condition ? this : Filter(predicate);
             }
 
             public Builder OrderBy(string order)
             {
-                _query.Order = order;
+                _query.OrderBy = order;
                 return this;
             }
 
@@ -58,15 +56,15 @@ namespace RajsLibs.Repositories.Paging
                 return this;
             }
 
-            public Builder Skip(int skip)
+            public Builder SetCurrentPage(int page)
             {
-                _query.Skip = skip;
+                _query.CurrentPage = page;
                 return this;
             }
 
-            public Builder Take(int take)
+            public Builder SetPageSize(int size)
             {
-                _query.Take = take;
+                _query.PageSize = size;
                 return this;
             }
 
