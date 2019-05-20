@@ -14,7 +14,7 @@ export const SCHEMA_THIRDS_COMPONENTS = [
   declarations: SCHEMA_THIRDS_COMPONENTS,
   entryComponents: SCHEMA_THIRDS_COMPONENTS,
   imports: [
-    SharedModule,
+    SharedModule.forRoot(),
     DelonFormModule.forRoot()
   ],
   exports: [

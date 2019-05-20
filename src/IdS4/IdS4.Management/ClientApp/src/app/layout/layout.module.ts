@@ -45,7 +45,7 @@ const PASSPORT = [
 ];
 
 @NgModule({
-  imports: [SharedModule],
+  imports: [SharedModule.forRoot()],
   entryComponents: SETTINGDRAWER,
   declarations: [
     ...COMPONENTS,

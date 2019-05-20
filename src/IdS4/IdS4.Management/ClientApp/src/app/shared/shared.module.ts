@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -13,10 +13,9 @@ import { TranslateModule } from '@ngx-translate/core';
 // #region third libs
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
-const THIRDMODULES = [
-  NgZorroAntdModule,
-  CountdownModule
-];
+import { ConfigurationService } from './services/configuration.service';
+import { StorageService } from './services/storage.service';
+const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
 // #endregion
 
 // #region your componets & directives
@@ -60,4 +59,14 @@ const DIRECTIVES = [];
     ...DIRECTIVES
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        ConfigurationService,
+        StorageService
+      ]
+    };
+  }
+}

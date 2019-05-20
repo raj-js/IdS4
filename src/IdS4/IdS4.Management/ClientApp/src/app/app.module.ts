@@ -103,7 +103,7 @@ import { LayoutModule } from './layout/layout.module';
     HttpClientModule,
     DelonModule.forRoot(),
     CoreModule,
-    SharedModule,
+    SharedModule.forRoot(),
     LayoutModule,
     RoutesModule,
     ...I18NSERVICE_MODULES,

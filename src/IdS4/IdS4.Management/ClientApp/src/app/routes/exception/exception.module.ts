@@ -12,7 +12,7 @@ const COMPONENTS = [Exception403Component, Exception404Component, Exception500Co
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
-  imports: [SharedModule, ExceptionRoutingModule],
+  imports: [SharedModule.forRoot(), ExceptionRoutingModule],
   declarations: [...COMPONENTS, ...COMPONENTS_NOROUNT],
   entryComponents: COMPONENTS_NOROUNT,
 })

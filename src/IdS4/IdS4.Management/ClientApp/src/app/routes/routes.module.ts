@@ -25,7 +25,7 @@ const COMPONENTS = [
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
-  imports: [ SharedModule, RouteRoutingModule ],
+  imports: [ SharedModule.forRoot(), RouteRoutingModule ],
   declarations: [
     ...COMPONENTS,
     ...COMPONENTS_NOROUNT
