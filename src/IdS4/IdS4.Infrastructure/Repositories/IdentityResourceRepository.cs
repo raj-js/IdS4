@@ -1,16 +1,8 @@
-﻿using IdentityServer4.EntityFramework.Entities;
-using IdS4.Infrastructure.DbContexts;
-using IdS4.Wrappers;
-using RajsLibs.EfCore.Uow;
-using RajsLibs.Repository.EfCore;
+﻿using IdS4.Repositories;
 
-namespace IdS4.Repositories
+namespace IdS4.Infrastructure.Repositories
 {
-    public class IdentityResourceRepository : RepositoryBase<IdS4ConfigurationDbContext, IdS4IdentityResource, int>, IIdentityResourceRepository
+    public class IdentityResourceRepository : IIdentityResourceRepository
     {
-        public IdentityResourceRepository(IEfUnitOfWork<IdS4ConfigurationDbContext> unitOfWork) : base(unitOfWork)
-        {
-
-        }
     }
 }

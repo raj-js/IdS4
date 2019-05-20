@@ -1,16 +1,9 @@
-﻿using IdentityServer4.EntityFramework.Entities;
-using IdS4.Infrastructure.DbContexts;
-using IdS4.Wrappers;
-using RajsLibs.EfCore.Uow;
-using RajsLibs.Repository.EfCore;
+﻿using IdS4.Repositories;
 
-namespace IdS4.Repositories
+namespace IdS4.Infrastructure.Repositories
 {
-    public class PersistedGrantRepository : RepositoryBase<IdS4PersistedGrantDbContext, IdS4PersistedGrant, string>, IPersistedGrantRepository
+    public class PersistedGrantRepository : IPersistedGrantRepository
     {
-        public PersistedGrantRepository(IEfUnitOfWork<IdS4PersistedGrantDbContext> unitOfWork) : base(unitOfWork)
-        {
 
-        }
     }
 }

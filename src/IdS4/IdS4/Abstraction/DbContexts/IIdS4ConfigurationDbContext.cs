@@ -2,7 +2,7 @@
 using IdentityServer4.EntityFramework.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdS4.DbContexts
+namespace IdS4.Abstraction.DbContexts
 {
     public interface IIdS4ConfigurationDbContext : IConfigurationDbContext
     {

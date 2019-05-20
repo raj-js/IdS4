@@ -11,10 +11,5 @@ namespace IdS4.Infrastructure.DbContexts
         {
 
         }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
     }
 }

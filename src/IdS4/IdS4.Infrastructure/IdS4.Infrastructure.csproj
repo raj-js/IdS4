@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdS4\IdS4.csproj" />
-    <ProjectReference Include="..\RajsLibs.EfCore\RajsLibs.EfCore.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,6 @@
-﻿using IdS4.DbContexts;
+﻿using IdS4.Abstraction.DbContexts;
 using IdS4.Logs;
 using Microsoft.EntityFrameworkCore;
-using RajsLibs.EfCore.Uow;
-using RajsLibs.Uow;
 
 namespace IdS4.Infrastructure.DbContexts
 {

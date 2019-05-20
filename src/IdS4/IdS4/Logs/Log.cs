@@ -1,9 +1,8 @@
-﻿using RajsLibs.Key;
-using System;
+﻿using System;
 
 namespace IdS4.Logs
 {
-    public class Log : IKey<long>
+    public class Log
     {
         public long Id { get; private set; }
 

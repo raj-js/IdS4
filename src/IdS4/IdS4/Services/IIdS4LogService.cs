@@ -1,8 +1,4 @@
-﻿using IdS4.Logs;
-using RajsLibs.Repositories.Paging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace IdS4.Services
 {
@@ -19,7 +15,5 @@ namespace IdS4.Services
         void Fatal(string msg);
 
         void Warn(string msg);
-
-        Task<IPageResult<Log>> PagingAsync(IPageQuery<Log> query);
     }
 }
