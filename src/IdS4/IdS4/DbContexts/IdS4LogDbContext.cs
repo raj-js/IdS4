@@ -1,10 +1,9 @@
-﻿using IdS4.DbContexts;
-using IdS4.Logs;
+﻿using IdS4.Logs;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdS4.Infrastructure.DbContexts
+namespace IdS4.DbContexts
 {
-    public class IdS4LogDbContext : DbContext, IIdS4DbContext
+    public class IdS4LogDbContext : DbContext
     {
         public IdS4LogDbContext(DbContextOptions<IdS4LogDbContext> options)
             : base(options)

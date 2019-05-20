@@ -1,12 +1,11 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Options;
-using IdS4.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdS4.Infrastructure.DbContexts
+namespace IdS4.DbContexts
 {
-    public class IdS4ConfigurationDbContext : ConfigurationDbContext<IdS4ConfigurationDbContext>, IIdS4ConfigurationDbContext
+    public class IdS4ConfigurationDbContext : ConfigurationDbContext<IdS4ConfigurationDbContext>
     {
         public IdS4ConfigurationDbContext(DbContextOptions<IdS4ConfigurationDbContext> options, ConfigurationStoreOptions storeOptions)
             : base(options, storeOptions)

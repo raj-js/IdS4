@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdS4.Infrastructure.DbContexts
+namespace IdS4.DbContexts
 {
     public class IdS4IdentityDbContext: IdentityDbContext<IdS4User, IdS4Role, string, IdS4UserClaim, IdS4UserRole, IdS4UserLogin, IdS4RoleClaim, IdS4UserToken>
     {
