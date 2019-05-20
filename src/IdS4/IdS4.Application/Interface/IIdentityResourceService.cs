@@ -14,7 +14,7 @@ namespace IdS4.Application.Interface
         /// </summary>
         /// <param name="identityResource"></param>
         /// <returns></returns>
-        Task AddAsync(IdentityResource identityResource);
+        Task CreateAsync(IdentityResource identityResource);
 
         /// <summary>
         /// 修改 Identity Resource
@@ -28,7 +28,7 @@ namespace IdS4.Application.Interface
         /// </summary>
         /// <param name="identityResource"></param>
         /// <returns></returns>
-        Task DeleteAsync(IdentityResource identityResource);
+        Task RemoveAsync(IdentityResource identityResource);
 
         /// <summary>
         /// 根据 id 查找 Identity Resource

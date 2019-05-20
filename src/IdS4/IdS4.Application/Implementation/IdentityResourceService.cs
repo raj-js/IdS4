@@ -19,7 +19,7 @@ namespace IdS4.Application.Implementation
             _configurationDb = configurationDb ?? throw new ArgumentNullException(nameof(configurationDb));
         }
 
-        public async Task AddAsync(IdentityResource identityResource)
+        public async Task CreateAsync(IdentityResource identityResource)
         {
             if (identityResource == null)
                 throw new ArgumentNullException(nameof(identityResource));
@@ -37,7 +37,7 @@ namespace IdS4.Application.Implementation
             await _configurationDb.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(IdentityResource identityResource)
+        public async Task RemoveAsync(IdentityResource identityResource)
         {
             if (identityResource == null)
                 throw new ArgumentNullException(nameof(identityResource));
