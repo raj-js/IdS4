@@ -37,7 +37,7 @@ export class UserLoginComponent implements OnDestroy {
 		private configurationService: ConfigurationService,
 		private storageService: StorageService
 	) {
-		this.configurationService.settingsLoaded$.subscribe((x) => {
+		this.configurationService.settingsLoaded$.subscribe((_) => {
 			this.coreApiUrl = this.configurationService.serverSettings.coreApiUrl;
 			this.storageService.store('CoreApiUrl', this.coreApiUrl);
 		});
