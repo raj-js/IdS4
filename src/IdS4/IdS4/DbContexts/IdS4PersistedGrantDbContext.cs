@@ -6,7 +6,7 @@ namespace IdS4.DbContexts
 {
     public class IdS4PersistedGrantDbContext : PersistedGrantDbContext<IdS4PersistedGrantDbContext>
     {
-        public IdS4PersistedGrantDbContext(DbContextOptions options, OperationalStoreOptions storeOptions) 
+        public IdS4PersistedGrantDbContext(DbContextOptions<IdS4PersistedGrantDbContext> options, OperationalStoreOptions storeOptions) 
             : base(options, storeOptions)
         {
 

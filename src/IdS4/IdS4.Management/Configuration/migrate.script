@@ -1,0 +1,18 @@
+﻿--dotnet ef
+dotnet ef migrations add InitialIdS4ConfigurationDbMigration -c IdS4ConfigurationDbContext -o Data/Migrations/IdS4/IdS4ConfigurationDb
+dotnet ef migrations add InitialIdS4PersistedGrantDbMigration -c IdS4PersistedGrantDbContext -o Data/Migrations/IdS4/IdS4PersistedGrantDb
+dotnet ef migrations add InitialIdS4IdentityDbContextMigration -c IdS4IdentityDbContext -o Data/Migrations/IdS4/IdS4IdentityDb
+dotnet ef migrations add InitialIdS4LogDbMigration -c IdS4LogDbContext -o Data/Migrations/IdS4/IdS4LogDb
+
+--package manage console (prefer)
+Add-Migration InitialIdS4ConfigurationDbMigration -c IdS4ConfigurationDbContext -o Data/Migrations/IdS4/IdS4ConfigurationDb
+Update-Database -c IdS4ConfigurationDbContext
+
+Add-Migration InitialIdS4PersistedGrantDbMigration -c IdS4PersistedGrantDbContext -o Data/Migrations/IdS4/IdS4PersistedGrantDb
+Update-Database -c IdS4PersistedGrantDbContext
+
+Add-Migration InitialIdS4IdentityDbContextMigration -c IdS4IdentityDbContext -o Data/Migrations/IdS4/IdS4IdentityDb
+Update-Database -c IdS4IdentityDbContext
+
+Add-Migration InitialIdS4LogDbMigration -c IdS4LogDbContext -o Data/Migrations/IdS4/IdS4LogDb
+Update-Database -c IdS4LogDbContext
