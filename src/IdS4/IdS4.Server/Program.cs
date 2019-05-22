@@ -1,3 +1,4 @@
+using IdS4.Server.Configuration;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -8,10 +9,15 @@ namespace IdS4.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var webHost = CreateWebHostBuilder(args).Build();
+            var provider = webHost.Services;
+
+            provider.AddIdS4ManagementClient().Wait();
+
+            webHost.Run();
         }
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>();
     }

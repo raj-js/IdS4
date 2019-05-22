@@ -34,7 +34,10 @@ namespace IdS4.Server
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseIdentityServer();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(router => 
+            {
+                router.MapRoute("default", "{controller=Account}/{action=Login}/{id?}");
+            });
         }
     }
 }

@@ -28,7 +28,7 @@ namespace IdS4.Server.Configuration
                     options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<IdS4IdentityDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders(); 
 
             var idsBuilder = services
                 .AddIdentityServer(options =>
@@ -53,7 +53,7 @@ namespace IdS4.Server.Configuration
                         b.UseSqlServer(configuration.GetConnectionString("PersistedGrantDb"));
                 });
 
-            // 添加临时证书
+            // 添加临时证书 (生产环境中应作修改)
             idsBuilder.AddDeveloperSigningCredential();
 
             services.AddAuthentication()
