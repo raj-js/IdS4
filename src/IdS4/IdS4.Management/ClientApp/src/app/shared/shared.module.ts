@@ -15,7 +15,8 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
 import { ConfigurationService } from './services/configuration.service';
 import { StorageService } from './services/storage.service';
-const THIRDMODULES = [NgZorroAntdModule, CountdownModule];
+import { OidcService } from './services/oidc.service';
+const THIRDMODULES = [ NgZorroAntdModule, CountdownModule ];
 // #endregion
 
 // #region your componets & directives
@@ -24,49 +25,46 @@ const DIRECTIVES = [];
 // #endregion
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    ReactiveFormsModule,
-    AlainThemeModule.forChild(),
-    DelonABCModule,
-    DelonACLModule,
-    DelonFormModule,
-    // third libs
-    ...THIRDMODULES
-  ],
-  declarations: [
-    // your components
-    ...COMPONENTS,
-    ...DIRECTIVES
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    AlainThemeModule,
-    DelonABCModule,
-    DelonACLModule,
-    DelonFormModule,
-    // i18n
-    TranslateModule,
-    // third libs
-    ...THIRDMODULES,
-    // your components
-    ...COMPONENTS,
-    ...DIRECTIVES
-  ]
+	imports: [
+		CommonModule,
+		FormsModule,
+		RouterModule,
+		ReactiveFormsModule,
+		AlainThemeModule.forChild(),
+		DelonABCModule,
+		DelonACLModule,
+		DelonFormModule,
+		// third libs
+		...THIRDMODULES
+	],
+	declarations: [
+		// your components
+		...COMPONENTS,
+		...DIRECTIVES
+	],
+	exports: [
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		RouterModule,
+		AlainThemeModule,
+		DelonABCModule,
+		DelonACLModule,
+		DelonFormModule,
+		// i18n
+		TranslateModule,
+		// third libs
+		...THIRDMODULES,
+		// your components
+		...COMPONENTS,
+		...DIRECTIVES
+	]
 })
 export class SharedModule {
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: SharedModule,
-      providers: [
-        ConfigurationService,
-        StorageService
-      ]
-    };
-  }
+	static forRoot(): ModuleWithProviders {
+		return {
+			ngModule: SharedModule,
+			providers: [ ConfigurationService, StorageService, OidcService ]
+		};
+	}
 }

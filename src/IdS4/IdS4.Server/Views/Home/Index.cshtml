@@ -1,8 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    var version = typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.GetName().Version.ToString();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="welcome-page">
+    <div class="row page-header">
+        <div class="col-sm-10">
+            <h1>
+                <img class="icon" src="~/icon.jpg">
+                Welcome to IdS4.Server
+                @*<small>(version @version)</small>*@
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-8">
+            <p>
+                <a href="~/.well-known/openid-configuration">Discovery document</a>
+            </p>
+        </div>
+        <div class="col-sm-8">
+            <p>
+                Click <a href="~/grants">here</a> to manage your stored grants.
+            </p>
+        </div>
+    </div>
+    @*<div class="row">
+        <div class="col-sm-8">
+            <p>
+                Here are links to the
+                <a href="https://github.com/identityserver/IdentityServer4">source code repository</a>,
+                and <a href="https://github.com/identityserver/IdentityServer4.Samples">ready to use samples</a>.
+            </p>
+        </div>
+    </div>*@
 </div>

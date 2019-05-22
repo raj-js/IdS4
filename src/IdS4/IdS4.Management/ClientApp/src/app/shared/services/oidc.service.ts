@@ -26,4 +26,24 @@ export class OidcService {
 			});
 		});
 	}
+
+	public isAuthenticate(): boolean {
+		return this.currentUser != null;
+	}
+
+	public getUser(): User {
+		return this.currentUser;
+	}
+
+	public signIn(): Promise<void> {
+		return this.userManager.signinRedirect();
+	}
+
+	public signOut(): Promise<void> {
+		return this.userManager.signoutRedirect();
+	}
+
+	public refresh(): Promise<User> {
+		return this.userManager.signinSilent();
+	}
 }
