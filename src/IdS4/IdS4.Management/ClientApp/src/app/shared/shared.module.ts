@@ -13,10 +13,13 @@ import { TranslateModule } from '@ngx-translate/core';
 // #region third libs
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CountdownModule } from 'ngx-countdown';
+const THIRDMODULES = [ NgZorroAntdModule, CountdownModule ];
+// #endregion
+
+// #region shared services
 import { ConfigurationService } from './services/configuration.service';
 import { StorageService } from './services/storage.service';
 import { OidcService } from './services/oidc.service';
-const THIRDMODULES = [ NgZorroAntdModule, CountdownModule ];
 // #endregion
 
 // #region your componets & directives

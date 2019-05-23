@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
 using IdS4.DbContexts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,9 @@ namespace IdS4.Server.Configuration
 
                 logger.LogInformation($"客户端 IdS4_Management_Spa 初始化中...");
                 var ids4ManagementSpaId = "IdS4.Management.Spa";
-                if (ids4ConfigurationDb.Clients.Any(c => c.ClientId.Equals(ids4ManagementSpaId)))
+                if (ids4ConfigurationDb.Clients
+                    .AsNoTracking()
+                    .Any(c => c.ClientId.Equals(ids4ManagementSpaId)))
                 {
                     logger.LogInformation($"客户端 IdS4_Management_Spa 已存在.");
                     return;
@@ -40,22 +43,22 @@ namespace IdS4.Server.Configuration
                     ClientName = "IdS4管理系统",
                     ClientUri = spaSettings["ClientUri"],
 
-                    AllowedGrantTypes = { new ClientGrantType { GrantType = "implicit" } },
+                    //AllowedGrantTypes = { new ClientGrantType { GrantType = "implicit" } },
                     AllowAccessTokensViaBrowser = true,
 
-                    RedirectUris = { new ClientRedirectUri { RedirectUri = spaSettings["RedirectUri"] } },
-                    PostLogoutRedirectUris = { new ClientPostLogoutRedirectUri { PostLogoutRedirectUri = spaSettings["PostLogoutRedirectUri"] } },
-                    AllowedCorsOrigins = { new ClientCorsOrigin { Origin = spaSettings["Origin"] } },
+                    //RedirectUris = { new ClientRedirectUri { RedirectUri = spaSettings["RedirectUri"] } },
+                    //PostLogoutRedirectUris = { new ClientPostLogoutRedirectUri { PostLogoutRedirectUri = spaSettings["PostLogoutRedirectUri"] } },
+                    //AllowedCorsOrigins = { new ClientCorsOrigin { Origin = spaSettings["Origin"] } },
 
-                    AllowedScopes =
-                    {
-                        new ClientScope { Scope = Constants.StandardScopes.OpenId },
-                        new ClientScope { Scope = Constants.StandardScopes.Email },
-                        new ClientScope { Scope = Constants.StandardScopes.Profile },
-                        new ClientScope { Scope = "roles" },
+                    //AllowedScopes =
+                    //{
+                    //    new ClientScope { Scope = Constants.StandardScopes.OpenId },
+                    //    new ClientScope { Scope = Constants.StandardScopes.Email },
+                    //    new ClientScope { Scope = Constants.StandardScopes.Profile },
+                    //    new ClientScope { Scope = "roles" },
 
-                        new ClientScope { Scope = "coreApi" }
-                    }
+                    //    new ClientScope { Scope = "coreApi" }
+                    //}
                 };
 
                 await ids4ConfigurationDb.Clients.AddAsync(client);
