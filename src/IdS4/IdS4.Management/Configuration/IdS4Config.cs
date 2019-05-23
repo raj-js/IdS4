@@ -10,18 +10,15 @@ namespace IdS4.Management.Configuration
 {
     public static class IdS4Config
     {
-        public static void AddIdS4(this IServiceCollection services, IConfiguration configuration)
+        public static void AddIdS4DbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var assembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            // 为 Asp.Net Core Identity 添加 DbContext
             services.AddDbContext<IdS4IdentityDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("IdentityDb"),
-                    sql => sql.MigrationsAssembly(assembly));
+                options.UseSqlServer(configuration.GetConnectionString("IdentityDb"));
             });
 
-            // 配置 Asp.Net Core Identity
             services
                 .AddIdentity<IdS4User, IdS4Role>(options =>
                 {
@@ -30,6 +27,7 @@ namespace IdS4.Management.Configuration
                 .AddEntityFrameworkStores<IdS4IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
+            // 只是将相关服务注入到DI
             var idsBuilder = services
                 .AddIdentityServer(options =>
                 {
@@ -43,31 +41,15 @@ namespace IdS4.Management.Configuration
             idsBuilder.AddConfigurationStore<IdS4ConfigurationDbContext>(options =>
             {
                 options.ConfigureDbContext = b =>
-                    b.UseSqlServer(configuration.GetConnectionString("ConfigurationDb"),
-                        sql => sql.MigrationsAssembly(assembly));
+                    b.UseSqlServer(configuration.GetConnectionString("ConfigurationDb"));
             });
 
             idsBuilder.AddOperationalStore<IdS4PersistedGrantDbContext>(options =>
-                {
-                    options.EnableTokenCleanup = true;
-                    options.ConfigureDbContext = b =>
-                        b.UseSqlServer(configuration.GetConnectionString("PersistedGrantDb"),
-                            sql => sql.MigrationsAssembly(assembly));
-                });
-
-            // 添加临时证书
-            idsBuilder.AddDeveloperSigningCredential();
-        }
-
-        public static void AddIdS4Log(this IServiceCollection service, IConfiguration configuration)
-        {
-            var assembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
-            service.AddDbContext<IdS4LogDbContext>(options =>
-                {
-                    options.UseSqlServer(configuration.GetConnectionString("LogDb"),
-                        sql => sql.MigrationsAssembly(assembly));
-                });
+            {
+                options.EnableTokenCleanup = true;
+                options.ConfigureDbContext = b =>
+                    b.UseSqlServer(configuration.GetConnectionString("PersistedGrantDb"));
+            });
         }
     }
 }

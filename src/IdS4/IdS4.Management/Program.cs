@@ -12,6 +12,7 @@ namespace IdS4.Management
             var provider = webHost.Services;
 
             provider.AddIdS4Adminstrator().Wait();
+            provider.AddIdS4ManagementClient().Wait();
 
             webHost.Run();
         }

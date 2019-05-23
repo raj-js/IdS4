@@ -20,9 +20,7 @@ namespace IdS4.Management
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
-            services.AddIdS4(Configuration);
-            services.AddIdS4Log(Configuration);
+            services.AddIdS4DbContext(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSpaStaticFiles(configuration =>
