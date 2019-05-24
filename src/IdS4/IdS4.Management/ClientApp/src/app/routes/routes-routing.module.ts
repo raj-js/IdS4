@@ -12,9 +12,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserLoginComponent } from './passport/login/login.component';
 import { UserRegisterComponent } from './passport/register/register.component';
 import { UserRegisterResultComponent } from './passport/register-result/register-result.component';
+import { SocialLoginComponent } from './passport/social-login/social-login.component';
+import { UserLockComponent } from './passport/lock/lock.component';
+
 // single pages
 import { CallbackComponent } from './callback/callback.component';
-import { UserLockComponent } from './passport/lock/lock.component';
 
 const routes: Routes = [
   {
@@ -45,6 +47,7 @@ const routes: Routes = [
       { path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
       { path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
       { path: 'lock', component: UserLockComponent, data: { title: '锁屏' } },
+      { path: 'social-login', component: SocialLoginComponent, data: { title: '登录' } },
     ]
   },
   // 单页不包裹Layout

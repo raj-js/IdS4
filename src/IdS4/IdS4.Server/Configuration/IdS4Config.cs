@@ -56,33 +56,7 @@ namespace IdS4.Server.Configuration
             // 添加临时证书 (生产环境中应作修改)
             idsBuilder.AddDeveloperSigningCredential();
 
-            services.AddAuthentication()
-                .AddGoogle("Google", options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    options.ClientId = "<insert here>";
-                    options.ClientSecret = "<inser here>";
-                })
-                .AddOpenIdConnect("demoidsrv", "IdentityServer", options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-
-                    options.Authority = "https://demo.identityserver.io/";
-                    options.ClientId = "implicit";
-                    options.ResponseType = "id_token";
-                    options.SaveTokens = true;
-                    options.CallbackPath = new PathString("/signin-idsrv");
-                    options.SignedOutCallbackPath = new PathString("/signout-callback-idsrv");
-                    options.RemoteSignOutPath = new PathString("/signout-idsrv");
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
-                });
+            services.AddAuthentication();
         }
     }
 }

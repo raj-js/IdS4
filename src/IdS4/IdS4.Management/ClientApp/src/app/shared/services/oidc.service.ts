@@ -12,10 +12,11 @@ export class OidcService {
   jsClientSettings = {
     authority: "https://localhost:5001",
     client_id: "IdS4.Management.Spa",
-    redirect_uri: "http://localhost:5002/",
-    response_type: "code id_token",
-    scope: "openid profile email roles coreApi",
-    post_logout_redirect_uri: "http://localhost:5002/",
+    redirect_uri: "https://localhost:5002/#/callback",
+    response_type: "code",
+    scope: "coreApi.full_access",
+    post_logout_redirect_uri: "https://localhost:5002/#/index",
+    filterProtocolClaims: true,
   };
 
 	constructor() {
@@ -49,7 +50,7 @@ export class OidcService {
 		return this.userManager.signoutRedirect();
 	}
 
-	public refresh(): Promise<User> {
+	public renewToken(): Promise<User> {
 		return this.userManager.signinSilent();
 	}
 }

@@ -29,26 +29,13 @@ namespace IdS4.Management.Configuration
 
             // 只是将相关服务注入到DI
             var idsBuilder = services
-                .AddIdentityServer(options =>
-                {
-                    options.Events.RaiseErrorEvents = true;
-                    options.Events.RaiseInformationEvents = true;
-                    options.Events.RaiseFailureEvents = true;
-                    options.Events.RaiseSuccessEvents = true;
-                })
+                .AddIdentityServer()
                 .AddAspNetIdentity<IdS4User>();
 
             idsBuilder.AddConfigurationStore<IdS4ConfigurationDbContext>(options =>
             {
                 options.ConfigureDbContext = b =>
                     b.UseSqlServer(configuration.GetConnectionString("ConfigurationDb"));
-            });
-
-            idsBuilder.AddOperationalStore<IdS4PersistedGrantDbContext>(options =>
-            {
-                options.EnableTokenCleanup = true;
-                options.ConfigureDbContext = b =>
-                    b.UseSqlServer(configuration.GetConnectionString("PersistedGrantDb"));
             });
         }
     }

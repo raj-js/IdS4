@@ -113,24 +113,10 @@ namespace IdS4.Server.Account
                 var user = await _userManager.FindByNameAsync(model.Username);
                 if (user != null)
                 {
-                    var signInResult = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberLogin, false);
+                    var signInResult = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberLogin, true);
                     if (signInResult.Succeeded)
                     {
                         await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
-                        // only set explicit expiration here if user chooses "remember me". 
-                        // otherwise we rely upon expiration configured in cookie middleware.
-                        AuthenticationProperties props = null;
-                        if (AccountOptions.AllowRememberLogin && model.RememberLogin)
-                        {
-                            props = new AuthenticationProperties
-                            {
-                                IsPersistent = true,
-                                ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                            };
-                        };
-
-                        // issue authentication cookie with subject ID and username
-                        await HttpContext.SignInAsync(user.Id, user.UserName, props);
 
                         if (context != null)
                         {
@@ -159,6 +145,16 @@ namespace IdS4.Server.Account
                             // user might have clicked on a malicious link - should be logged
                             throw new Exception("invalid return URL");
                         }
+                    }
+
+                    if (signInResult.RequiresTwoFactor)
+                    {
+                        return RedirectToAction("LoginWith2fa", new { model.ReturnUrl, RememberMe = model.RememberLogin });
+                    }
+
+                    if (signInResult.IsLockedOut)
+                    {
+                        return View("Lockout");
                     }
                 }
 

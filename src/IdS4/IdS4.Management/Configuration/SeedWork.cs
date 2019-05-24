@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static IdentityModel.OidcConstants;
 using Constants = IdentityServer4.IdentityServerConstants;
 
 namespace IdS4.Management.Configuration
@@ -86,6 +87,8 @@ namespace IdS4.Management.Configuration
                         ClientName = "IdS4管理系统",
                         ClientUri = spaSettings["ClientUri"],
                         AllowAccessTokensViaBrowser = true,
+                        RequirePkce = true,
+                        RequireClientSecret = false
                     };
 
                     await ids4ConfigurationDb.Clients.AddAsync(client);
@@ -94,7 +97,7 @@ namespace IdS4.Management.Configuration
                     var grantType = new ClientGrantType
                     {
                         ClientId = client.Id,
-                        GrantType = "implicit"
+                        GrantType = GrantTypes.AuthorizationCode
                     };
                     await ids4ConfigurationDb.ClientGrantTypes.AddAsync(grantType);
 
@@ -124,27 +127,22 @@ namespace IdS4.Management.Configuration
                         new ClientScope
                         {
                             ClientId = client.Id,
-                            Scope = Constants.StandardScopes.OpenId
+                            Scope = StandardScopes.OpenId
                         },
                         new ClientScope
                         {
                             ClientId = client.Id,
-                            Scope = Constants.StandardScopes.Email
+                            Scope = StandardScopes.Profile
                         },
                         new ClientScope
                         {
                             ClientId = client.Id,
-                            Scope = Constants.StandardScopes.Profile
+                            Scope = StandardScopes.Email
                         },
                         new ClientScope
                         {
                             ClientId = client.Id,
-                            Scope = "roles"
-                        },
-                        new ClientScope
-                        {
-                            ClientId = client.Id,
-                            Scope = "coreApi"
+                            Scope = "coreApi.full_access"
                         }
                     };
                     await ids4ConfigurationDb.ClientScopes.AddRangeAsync(allowedScopes);
