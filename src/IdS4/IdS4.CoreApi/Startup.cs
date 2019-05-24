@@ -35,11 +35,11 @@ namespace IdS4.CoreApi
             {
                 app.UseHsts();
             }
+            app.UseHttpsRedirection();
 
             app.UseIdS4Authentication();
             app.UseIdS4Cors();
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
