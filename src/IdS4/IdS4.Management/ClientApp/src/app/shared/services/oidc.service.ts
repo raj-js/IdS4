@@ -7,39 +7,40 @@ export class OidcService {
 	private userManager: UserManager;
 	private currentUser: User;
 
-  userLoaded$ = new ReplaySubject<boolean>(1);
+	userLoaded$ = new ReplaySubject<boolean>(1);
 
-  jsClientSettings = {
-    authority: "https://localhost:5001",
-    client_id: "IdS4.Management.Spa",
-    redirect_uri: "https://localhost:5002/#/callback",
-    response_type: "code",
-    scope: "coreApi.full_access",
-    post_logout_redirect_uri: "https://localhost:5002/#/index",
-    filterProtocolClaims: true,
-  };
+	jsClientSettings = {
+		authority: 'https://localhost:5001',
+		client_id: 'IdS4.Management.Spa',
+		redirect_uri: 'https://localhost:5002/#/callback',
+		response_type: 'code',
+		scope: 'coreApi.full_access',
+		post_logout_redirect_uri: 'https://localhost:5002/#/index',
+		filterProtocolClaims: true
+	};
 
 	constructor() {
-      this.userManager = new UserManager(this.jsClientSettings);
-      this.userManager.clearStaleState();
+		this.userManager = new UserManager(this.jsClientSettings);
+		this.userManager.clearStaleState();
 
-      this.userManager.events.addUserLoaded((user) => {
-        this.currentUser = user;
-        this.userLoaded$.next(true);
-      });
+		this.userManager.events.addUserLoaded((user) => {
+			this.currentUser = user;
+			console.log(user);
+			this.userLoaded$.next(true);
+		});
 
-      this.userManager.events.addUserUnloaded((ev) => {
-        this.currentUser = null;
-        this.userLoaded$.next(true);
-      });
+		this.userManager.events.addUserUnloaded((ev) => {
+			this.currentUser = null;
+			this.userLoaded$.next(true);
+		});
 	}
 
 	public isAuthenticate(): boolean {
 		return this.currentUser != null;
 	}
 
-	public getUser(): User {
-		return this.currentUser;
+	public getUser(): Promise<User> {
+		return this.userManager.getUser();
 	}
 
 	public signIn(): Promise<void> {

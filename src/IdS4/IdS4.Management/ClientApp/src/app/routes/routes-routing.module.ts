@@ -51,7 +51,7 @@ const routes: Routes = [
     ]
   },
   // 单页不包裹Layout
-  { path: 'callback/:type', component: CallbackComponent },
+  { path: 'callback', component: CallbackComponent },
   { path: '**', redirectTo: 'exception/404' },
 ];
 

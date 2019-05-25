@@ -172,6 +172,7 @@ namespace IdS4.Server.Account
         /// Show logout page
         /// </summary>
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout(string logoutId)
         {
             // build a model so the logout page knows what to display
@@ -192,13 +193,16 @@ namespace IdS4.Server.Account
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Logout(LogoutInputModel model)
         {
             // build a model so the logged out page knows what to display
             var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
-            if (User?.Identity.IsAuthenticated == true)
+            if (User.IsAuthenticated())
             {
+                await _signInManager.SignOutAsync();
+
                 // delete local authentication cookie
                 await HttpContext.SignOutAsync();
 

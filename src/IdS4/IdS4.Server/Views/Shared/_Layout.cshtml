@@ -1,9 +1,9 @@
 ﻿@using IdentityServer4.Extensions
 @{
     string name = null;
-    if (!true.Equals(ViewData["signed-out"]))
+    if (User.IsAuthenticated())
     {
-        name = Context.User?.GetDisplayName();
+        name = User.GetDisplayName();
     }
 }
 <!DOCTYPE html>
