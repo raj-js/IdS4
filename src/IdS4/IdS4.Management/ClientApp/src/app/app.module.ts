@@ -59,7 +59,7 @@ import { DefaultInterceptor } from '@core/net/default.interceptor';
 import { AuthInterceptor } from '@core/net/auth.interceptor';
 const INTERCEPTOR_PROVIDES = [
 	// { provide: HTTP_INTERCEPTORS, useClass: SimpleInterceptor, multi: true },
-	{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+	{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 	{ provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }
 ];
 // #endregion
