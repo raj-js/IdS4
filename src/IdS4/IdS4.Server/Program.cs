@@ -10,9 +10,9 @@ namespace IdS4.Server
         public static void Main(string[] args)
         {
             var webHost = CreateWebHostBuilder(args).Build();
-            //var provider = webHost.Services;
+            var provider = webHost.Services;
 
-            //provider.AddIdS4ManagementClient().Wait();
+            provider.AddIdentityResources().Wait();
 
             webHost.Run();
         }

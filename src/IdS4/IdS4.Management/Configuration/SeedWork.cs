@@ -17,7 +17,7 @@ namespace IdS4.Management.Configuration
 {
     public static class SeedWork
     {
-        public static async Task AddIdS4Adminstrator(this IServiceProvider serviceProvider)
+        public static async Task AddIdS4Administrator(this IServiceProvider serviceProvider)
         {
             using (var scope = serviceProvider.CreateScope())
             {

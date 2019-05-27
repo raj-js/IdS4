@@ -8,10 +8,7 @@ import { throwIfAlreadyLoaded } from '@core';
 import { AlainThemeModule } from '@delon/theme';
 
 // #region mock
-import { DelonMockModule } from '@delon/mock';
-import * as MOCKDATA from '../../_mock';
 import { environment } from '@env/environment';
-const MOCK_MODULES = !environment.production ? [DelonMockModule.forRoot({ data: MOCKDATA })] : [];
 // #endregion
 
 // #region reuse-tab
@@ -29,11 +26,11 @@ const MOCK_MODULES = !environment.production ? [DelonMockModule.forRoot({ data: 
 import { RouteReuseStrategy } from '@angular/router';
 import { ReuseTabService, ReuseTabStrategy } from '@delon/abc/reuse-tab';
 const REUSETAB_PROVIDES = [
-  // {
-  //   provide: RouteReuseStrategy,
-  //   useClass: ReuseTabStrategy,
-  //   deps: [ReuseTabService],
-  // },
+	// {
+	//   provide: RouteReuseStrategy,
+	//   useClass: ReuseTabStrategy,
+	//   deps: [ReuseTabService],
+	// },
 ];
 // #endregion
 
@@ -41,51 +38,55 @@ const REUSETAB_PROVIDES = [
 
 import { PageHeaderConfig } from '@delon/abc';
 export function fnPageHeaderConfig(): PageHeaderConfig {
-  return {
-    ...new PageHeaderConfig(),
-    ...({ homeI18n: 'home' } as PageHeaderConfig),
-  };
+	return {
+		...new PageHeaderConfig(),
+		...{ homeI18n: 'home' } as PageHeaderConfig
+	};
 }
 
 import { DelonAuthConfig } from '@delon/auth';
 export function fnDelonAuthConfig(): DelonAuthConfig {
-  return {
-    ...new DelonAuthConfig(),
-    ...({ login_url: '/passport/login' } as DelonAuthConfig),
-  };
+	return {
+		...new DelonAuthConfig(),
+		...{ login_url: '/passport/social-login' } as DelonAuthConfig
+	};
 }
 
 import { STConfig } from '@delon/abc';
 export function fnSTConfig(): STConfig {
-  return {
-    ...new STConfig(),
-    ...({
-      modal: { size: 'lg' },
-    } as STConfig),
-  };
+	return {
+		...new STConfig(),
+		...{
+			modal: { size: 'lg' }
+		} as STConfig
+	};
 }
 
 const GLOBAL_CONFIG_PROVIDES = [
-  // TIPS：@delon/abc 有大量的全局配置信息，例如设置所有 `st` 的页码默认为 `20` 行
-  { provide: STConfig, useFactory: fnSTConfig },
-  { provide: PageHeaderConfig, useFactory: fnPageHeaderConfig },
-  { provide: DelonAuthConfig, useFactory: fnDelonAuthConfig },
+	// TIPS：@delon/abc 有大量的全局配置信息，例如设置所有 `st` 的页码默认为 `20` 行
+	{ provide: STConfig, useFactory: fnSTConfig },
+	{ provide: PageHeaderConfig, useFactory: fnPageHeaderConfig },
+	{ provide: DelonAuthConfig, useFactory: fnDelonAuthConfig }
 ];
 
 // #endregion
 
 @NgModule({
-  imports: [AlainThemeModule.forRoot(), ...MOCK_MODULES],
+	imports: [ AlainThemeModule.forRoot() ]
 })
 export class DelonModule {
-  constructor(@Optional() @SkipSelf() parentModule: DelonModule) {
-    throwIfAlreadyLoaded(parentModule, 'DelonModule');
-  }
+	constructor(
+		@Optional()
+		@SkipSelf()
+		parentModule: DelonModule
+	) {
+		throwIfAlreadyLoaded(parentModule, 'DelonModule');
+	}
 
-  static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: DelonModule,
-      providers: [...REUSETAB_PROVIDES, ...GLOBAL_CONFIG_PROVIDES],
-    };
-  }
+	static forRoot(): ModuleWithProviders {
+		return {
+			ngModule: DelonModule,
+			providers: [ ...REUSETAB_PROVIDES, ...GLOBAL_CONFIG_PROVIDES ]
+		};
+	}
 }

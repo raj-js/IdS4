@@ -15,7 +15,7 @@ export class ConfigurationService {
 
 	load() {
 		const baseUri = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
-		const url = `${baseUri}api/Settings?_allow_anonymous=true`;
+		const url = `${baseUri}api/Settings`;
 		this.http.get(url).subscribe((response) => {
 			console.log('server settings loaded');
 			this.serverSettings = response as IConfiguration;

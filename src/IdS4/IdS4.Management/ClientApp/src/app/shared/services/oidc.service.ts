@@ -1,57 +1,51 @@
 import { Injectable } from '@angular/core';
-import { UserManager, User } from 'oidc-client';
-import { ReplaySubject } from 'rxjs';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { Observable, Subject, from } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class OidcService {
-	private userManager: UserManager;
-	private currentUser: User;
+	isAuthorized: boolean;
+	userData: any;
+	security: OidcSecurityService;
 
-	userLoaded$ = new ReplaySubject<boolean>(1);
+	constructor(private oidcSecurityService: OidcSecurityService, private router: Router) {
+		this.security = oidcSecurityService;
+		if (this.oidcSecurityService.moduleSetup) {
+			this.doCallbackIfRequired();
+		} else {
+			this.oidcSecurityService.onModuleSetup.subscribe(() => {
+				this.doCallbackIfRequired();
+			});
+		}
 
-	jsClientSettings = {
-		authority: 'https://localhost:5001',
-		client_id: 'IdS4.Management.Spa',
-		redirect_uri: 'https://localhost:5002/#/callback',
-		response_type: 'code',
-		scope: 'coreApi.full_access',
-		post_logout_redirect_uri: 'https://localhost:5002/#/index',
-		filterProtocolClaims: true
-	};
-
-	constructor() {
-		this.userManager = new UserManager(this.jsClientSettings);
-		this.userManager.clearStaleState();
-
-		this.userManager.events.addUserLoaded((user) => {
-			this.currentUser = user;
-			console.log(user);
-			this.userLoaded$.next(true);
+		this.oidcSecurityService.getIsAuthorized().subscribe((auth) => {
+			this.isAuthorized = auth;
 		});
 
-		this.userManager.events.addUserUnloaded((ev) => {
-			this.currentUser = null;
-			this.userLoaded$.next(true);
+		this.oidcSecurityService.getUserData().subscribe((d) => {
+			console.log(d);
+			this.userData = d;
 		});
 	}
 
-	public isAuthenticate(): boolean {
-		return this.currentUser != null;
+	login(): void {
+		this.oidcSecurityService.authorize((url) => {
+			window.location.href = url;
+		});
 	}
 
-	public getUser(): Promise<User> {
-		return this.userManager.getUser();
+	getToken(): string | null {
+		return this.isAuthorized ? this.oidcSecurityService.getToken() : null;
 	}
 
-	public signIn(): Promise<void> {
-		return this.userManager.signinRedirect();
+	logout() {
+		this.oidcSecurityService.logoff((url) => {
+			window.location.href = url;
+		});
 	}
 
-	public signOut(): Promise<void> {
-		return this.userManager.signoutRedirect();
-	}
-
-	public renewToken(): Promise<User> {
-		return this.userManager.signinSilent();
+	private doCallbackIfRequired() {
+		this.oidcSecurityService.authorizedCallbackWithCode(window.location.toString());
 	}
 }

@@ -11,7 +11,7 @@
         "layout",
         "header"
       ],
-      "camelCase",
+      "camelCase"
     ],
     "indent": [true, "tabs", 2],
     "component-selector": [

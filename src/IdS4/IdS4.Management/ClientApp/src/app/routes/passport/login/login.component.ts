@@ -38,7 +38,7 @@ export class UserLoginComponent implements OnDestroy {
 		private configurationService: ConfigurationService,
 		private storageService: StorageService,
 		private oidcService: OidcService
-    ) {
+	) {
 		this.configurationService.settingsLoaded$.subscribe((_) => {
 			this.coreApiUrl = this.configurationService.serverSettings.coreApiUrl;
 			this.storageService.store('CoreApiUrl', this.coreApiUrl);
@@ -91,11 +91,7 @@ export class UserLoginComponent implements OnDestroy {
 
 	// #endregion
 
-  submit() {
-    this.oidcService.signIn().then(_ => {
-      console.log('sign in');
-    });
-
+	submit() {
 		//this.error = '';
 		//if (this.type === 0) {
 		//	this.userName.markAsDirty();
@@ -110,10 +106,8 @@ export class UserLoginComponent implements OnDestroy {
 		//	this.captcha.updateValueAndValidity();
 		//	if (this.mobile.invalid || this.captcha.invalid) return;
 		//}
-
 		//// 默认配置中对所有HTTP请求都会强制 [校验](https://ng-alain.com/auth/getting-started) 用户 Token
 		//// 然一般来说登录请求不需要校验，因此可以在请求URL加上：`/login?_allow_anonymous=true` 表示不触发用户 Token 校验
-
 		//this.http
 		//	.post(`${this.coreApiUrl}/api/identity/authorize?_allow_anonymous=true`, {
 		//		type: this.type,

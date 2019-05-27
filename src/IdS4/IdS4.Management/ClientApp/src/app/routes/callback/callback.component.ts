@@ -1,52 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SocialService } from '@delon/auth';
-import { SettingsService } from '@delon/theme';
+import { Component, OnInit, Optional, Inject } from '@angular/core';
 import { OidcService } from '@shared/services/oidc.service';
+import { Router } from '@angular/router';
+import { ReuseTabService } from '@delon/abc';
+import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
+import { StartupService } from '@core';
+import { _HttpClient } from '@delon/theme';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
 	selector: 'app-callback',
-	template: `<Button type="primary" (click)="logout()">logout</Button>`,
-	providers: [ SocialService ]
+	template: ``
 })
 export class CallbackComponent implements OnInit {
 	constructor(
-		private socialService: SocialService,
-		private settingsSrv: SettingsService,
-		private route: ActivatedRoute,
-		private oidcService: OidcService
+		private oidcService: OidcService,
+		private router: Router,
+		@Optional()
+		@Inject(ReuseTabService)
+		private reuseTabService: ReuseTabService,
+		@Inject(DA_SERVICE_TOKEN) private tokenService: ITokenService,
+		private startupSrv: StartupService,
+		public http: _HttpClient,
+		public msg: NzMessageService
 	) {}
 
 	ngOnInit(): void {
-		// this.mockModel();
-		this.oidcService
-			.getUser()
-			.then((user) => {
-				console.log(user);
-			})
-			.catch((error) => {
-				console.log(`error: ${error}`);
-			});
-	}
-
-	logout() {
-		this.oidcService.signOut().then(() => {
-			console.log('logout...');
+		this.oidcService.security.getIsAuthorized().subscribe((auth) => {
+			if (auth) {
+				this.reuseTabService.clear();
+				const token = this.oidcService.security.getToken();
+				this.tokenService.set({
+					token
+				});
+				this.startupSrv.load().then(() => {
+					let url = this.tokenService.referrer.url || '/';
+					if (url.includes('/passport')) url = '/';
+					this.router.navigateByUrl(url);
+				});
+			}
 		});
-	}
-
-	private mockModel() {
-		// const info = {
-		// 	token: '123456789',
-		// 	name: 'cipchk',
-		// 	email: `${this.type}@${this.type}.com`,
-		// 	id: 10000,
-		// 	time: +new Date()
-		// };
-		// this.settingsSrv.setUser({
-		// 	...this.settingsSrv.user,
-		// 	...info
-		// });
-		// this.socialService.callback(info);
 	}
 }
