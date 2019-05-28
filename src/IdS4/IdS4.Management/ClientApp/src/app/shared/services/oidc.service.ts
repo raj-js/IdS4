@@ -36,7 +36,9 @@ export class OidcService {
 	}
 
 	getToken(): string | null {
-		return this.isAuthorized ? this.oidcSecurityService.getToken() : null;
+		const token = this.isAuthorized ? this.oidcSecurityService.getToken() : null;
+		console.log(token);
+		return token;
 	}
 
 	logout() {

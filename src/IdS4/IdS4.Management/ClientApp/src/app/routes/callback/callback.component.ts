@@ -28,7 +28,7 @@ export class CallbackComponent implements OnInit {
 		this.oidcService.security.getIsAuthorized().subscribe((auth) => {
 			if (auth) {
 				this.reuseTabService.clear();
-				const token = this.oidcService.security.getToken();
+				const token = this.oidcService.getToken();
 				this.tokenService.set({
 					token
 				});
