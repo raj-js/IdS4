@@ -11,7 +11,7 @@
   "post_login_route": "/home",
   "forbidden_route": "/forbidden",
   "unauthorized_route": "/unauthorized",
-  "log_console_warning_active": false,
-  "log_console_debug_active": false,
+  "log_console_warning_active": true,
+  "log_console_debug_active": true,
   "max_id_token_iat_offset_allowed_in_seconds": 10
 }

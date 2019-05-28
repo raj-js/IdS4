@@ -19,7 +19,6 @@ const THIRDMODULES = [ NgZorroAntdModule, CountdownModule ];
 // #region shared services
 import { ConfigurationService } from './services/configuration.service';
 import { StorageService } from './services/storage.service';
-import { OidcService } from './services/oidc.service';
 // #endregion
 
 // #region your componets & directives
@@ -67,7 +66,7 @@ export class SharedModule {
 	static forRoot(): ModuleWithProviders {
 		return {
 			ngModule: SharedModule,
-			providers: [ ConfigurationService, StorageService, OidcService ]
+			providers: [ ConfigurationService, StorageService ]
 		};
 	}
 }

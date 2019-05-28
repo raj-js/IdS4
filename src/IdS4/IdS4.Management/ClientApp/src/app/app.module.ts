@@ -54,12 +54,12 @@ const FORM_MODULES = [ JsonSchemaModule ];
 
 // #region Http Interceptors
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SimpleInterceptor } from '@delon/auth';
+// import { SimpleInterceptor } from '@delon/auth';
 import { DefaultInterceptor } from '@core/net/default.interceptor';
-import { AuthInterceptor } from '@core/net/auth.interceptor';
+// import { AuthInterceptor } from '@core/net/auth.interceptor';
 const INTERCEPTOR_PROVIDES = [
 	// { provide: HTTP_INTERCEPTORS, useClass: SimpleInterceptor, multi: true },
-	{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+	// { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 	{ provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }
 ];
 // #endregion
@@ -77,7 +77,6 @@ import { LayoutModule } from './layout/layout.module';
 
 import {
 	AuthModule,
-	AuthWellKnownEndpoints,
 	OidcConfigService,
 	OidcSecurityService,
 	OpenIDImplicitFlowConfiguration
@@ -85,14 +84,14 @@ import {
 
 // #region Startup Service
 
-const oidc_configuration = 'assets/auth.clientConfiguration.json';
+const oidcConfiguration = 'assets/auth.clientConfiguration.json';
 // if your config is on server side
-// const oidc_configuration = ${window.location.origin}/api/ClientAppSettings
+// const oidcConfiguration = `${window.location.origin}/api/Settings/Oidc`;
 import { StartupService } from '@core/startup/startup.service';
 export function StartupServiceFactory(startupService: StartupService, oidcConfigService: OidcConfigService): Function {
 	return () => {
+		oidcConfigService.load(oidcConfiguration);
 		startupService.load();
-		oidcConfigService.load(oidc_configuration);
 	};
 }
 const APPINIT_PROVIDES = [
@@ -122,7 +121,13 @@ const APPINIT_PROVIDES = [
 		...FORM_MODULES,
 		...GLOBAL_THIRD_MODULES
 	],
-	providers: [ ...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES ],
+	providers: [
+		OidcSecurityService,
+		...LANG_PROVIDES,
+		...INTERCEPTOR_PROVIDES,
+		...I18NSERVICE_PROVIDES,
+		...APPINIT_PROVIDES
+	],
 	bootstrap: [ AppComponent ]
 })
 export class AppModule {
