@@ -40,7 +40,7 @@ export class StartupService {
 	private viaHttp(resolve: any, reject: any) {
 		zip(
 			this.httpClient.get(`assets/tmp/i18n/${this.i18n.defaultLang}.json`),
-			this.httpClient.get('assets/tmp/app-data.json')
+			this.httpClient.get(`assets/tmp/app-data.json?v=${new Date().getTime()}`)
 		)
 			.pipe(
 				// 接收其他拦截器后产生的异常消息

@@ -19,52 +19,50 @@ import { UserLockComponent } from './passport/lock/lock.component';
 import { CallbackComponent } from './callback/callback.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: LayoutDefaultComponent,
-    canActivate: [SimpleGuard],
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent, data: { title: '仪表盘' } },
-      { path: 'exception', loadChildren: './exception/exception.module#ExceptionModule' },
-      // 业务子模块
-      // { path: 'widgets', loadChildren: './widgets/widgets.module#WidgetsModule' }
-    ]
-  },
-  // 全屏布局
-  // {
-  //     path: 'fullscreen',
-  //     component: LayoutFullScreenComponent,
-  //     children: [
-  //     ]
-  // },
-  // passport
-  {
-    path: 'passport',
-    component: LayoutPassportComponent,
-    children: [
-      { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
-      { path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
-      { path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
-      { path: 'lock', component: UserLockComponent, data: { title: '锁屏' } },
-      { path: 'social-login', component: SocialLoginComponent, data: { title: '登录' } },
-    ]
-  },
-  // 单页不包裹Layout
-  { path: 'callback', component: CallbackComponent },
-  { path: '**', redirectTo: 'exception/404' },
+	{
+		path: '',
+		component: LayoutDefaultComponent,
+		canActivate: [ SimpleGuard ],
+		children: [
+			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+			{ path: 'dashboard', component: DashboardComponent, data: { title: '仪表盘' } },
+			{ path: 'exception', loadChildren: './exception/exception.module#ExceptionModule' },
+			// resource
+			{ path: 'resource', loadChildren: './resource/resource.module#ResourceModule' },
+			// client
+			{ path: 'client', loadChildren: './client/client.module#ClientModule' },
+			// user
+			{ path: 'user', loadChildren: './user/user.module#UserModule' },
+			// role
+			{ path: 'role', loadChildren: './role/role.module#RoleModule' }
+		]
+	},
+	// passport
+	{
+		path: 'passport',
+		component: LayoutPassportComponent,
+		children: [
+			{ path: 'login', component: UserLoginComponent, data: { title: '登录' } },
+			{ path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
+			{ path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
+			{ path: 'lock', component: UserLockComponent, data: { title: '锁屏' } },
+			{ path: 'social-login', component: SocialLoginComponent, data: { title: '登录' } }
+		]
+	},
+	// 单页不包裹Layout
+	{ path: 'callback', component: CallbackComponent },
+	{ path: '**', redirectTo: 'exception/404' }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(
-      routes, {
-        useHash: environment.useHash,
-        // NOTICE: If you use `reuse-tab` component and turn on keepingScroll you can set to `disabled`
-        // Pls refer to https://ng-alain.com/components/reuse-tab
-        scrollPositionRestoration: 'top',
-      }
-    )],
-  exports: [RouterModule],
+	imports: [
+		RouterModule.forRoot(routes, {
+			useHash: environment.useHash,
+			// NOTICE: If you use `reuse-tab` component and turn on keepingScroll you can set to `disabled`
+			// Pls refer to https://ng-alain.com/components/reuse-tab
+			scrollPositionRestoration: 'top'
+		})
+	],
+	exports: [ RouterModule ]
 })
-export class RouteRoutingModule { }
+export class RouteRoutingModule {}
