@@ -4,9 +4,7 @@ import { Subject } from 'rxjs';
 import { StorageService } from './storage.service';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class ConfigurationService {
 	serverSettings: IConfiguration;
 	private settingsLoadedSource = new Subject();
@@ -16,8 +14,10 @@ export class ConfigurationService {
 	constructor(private http: HttpClient, private storageService: StorageService) {}
 
 	load() {
-		const url = `${window.location.origin}/api/Settings`;
+		const baseUri = document.baseURI.endsWith('/') ? document.baseURI : `${document.baseURI}/`;
+		const url = `${baseUri}api/Settings`;
 		this.http.get(url).subscribe((response) => {
+			console.log('server settings loaded');
 			this.serverSettings = response as IConfiguration;
 			console.log(this.serverSettings);
 

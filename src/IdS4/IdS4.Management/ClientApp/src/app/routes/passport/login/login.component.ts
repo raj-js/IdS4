@@ -8,6 +8,7 @@ import { ReuseTabService } from '@delon/abc';
 import { StartupService } from '@core';
 import { ConfigurationService } from '@shared/services/configuration.service';
 import { StorageService } from '@shared/services/storage.service';
+import { OidcService } from '@shared/services/oidc.service';
 
 @Component({
 	selector: 'passport-login',
@@ -35,7 +36,8 @@ export class UserLoginComponent implements OnDestroy {
 		public http: _HttpClient,
 		public msg: NzMessageService,
 		private configurationService: ConfigurationService,
-		private storageService: StorageService
+		private storageService: StorageService,
+		private oidcService: OidcService
 	) {
 		this.configurationService.settingsLoaded$.subscribe((_) => {
 			this.coreApiUrl = this.configurationService.serverSettings.coreApiUrl;

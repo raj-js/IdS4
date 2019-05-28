@@ -1,11 +1,11 @@
 import { Component, OnInit, Optional, Inject } from '@angular/core';
+import { OidcService } from '@shared/services/oidc.service';
 import { Router } from '@angular/router';
 import { ReuseTabService } from '@delon/abc';
 import { DA_SERVICE_TOKEN, ITokenService } from '@delon/auth';
 import { StartupService } from '@core';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService } from 'ng-zorro-antd';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
 	selector: 'app-callback',
@@ -13,7 +13,7 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 })
 export class CallbackComponent implements OnInit {
 	constructor(
-		private oidcSecurityService: OidcSecurityService,
+		private oidcService: OidcService,
 		private router: Router,
 		@Optional()
 		@Inject(ReuseTabService)
@@ -25,12 +25,13 @@ export class CallbackComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.oidcSecurityService.getIsAuthorized().subscribe((isAuth) => {
-			console.log(`callback is auth ${isAuth}`);
-			if (isAuth) {
+		this.oidcService.security.getIsAuthorized().subscribe((auth) => {
+			if (auth) {
 				this.reuseTabService.clear();
-				const token = this.oidcSecurityService.getToken();
-				this.tokenService.set({ token });
+				const token = this.oidcService.security.getToken();
+				this.tokenService.set({
+					token
+				});
 				this.startupSrv.load().then(() => {
 					let url = this.tokenService.referrer.url || '/';
 					if (url.includes('/passport')) url = '/';

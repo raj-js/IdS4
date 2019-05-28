@@ -5,7 +5,7 @@ import { TitleService } from '@delon/theme';
 import { VERSION as VERSION_ALAIN } from '@delon/theme';
 import { VERSION as VERSION_ZORRO, NzModalService } from 'ng-zorro-antd';
 import { ConfigurationService } from '@shared/services/configuration.service';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { OidcService } from '@shared/services/oidc.service';
 
 @Component({
 	selector: 'app-root',
@@ -21,26 +21,21 @@ export class AppComponent implements OnInit {
 		private titleSrv: TitleService,
 		private modalSrv: NzModalService,
 		private configurationService: ConfigurationService,
-		private oidcSecurityService: OidcSecurityService
+		private oidcService: OidcService
 	) {
-		if (this.oidcSecurityService.moduleSetup) {
-			this.oidcSecurityService.authorizedCallbackWithCode(window.location.toString());
-		} else {
-			this.oidcSecurityService.onModuleSetup.subscribe(() => {
-				this.oidcSecurityService.authorizedCallbackWithCode(window.location.toString());
-			});
-		}
-
 		renderer.setAttribute(el.nativeElement, 'ng-alain-version', VERSION_ALAIN.full);
 		renderer.setAttribute(el.nativeElement, 'ng-zorro-version', VERSION_ZORRO.full);
 	}
 
 	ngOnInit() {
+		console.log('configuration...');
 		this.configurationService.load();
 
 		this.router.events.pipe(filter((evt) => evt instanceof NavigationEnd)).subscribe(() => {
 			this.titleSrv.setTitle();
 			this.modalSrv.closeAll();
 		});
+
+		console.log(`is authorized: ${this.oidcService.isAuthorized}`);
 	}
 }

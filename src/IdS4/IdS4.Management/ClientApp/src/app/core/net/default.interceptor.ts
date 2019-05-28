@@ -54,8 +54,6 @@ export class DefaultInterceptor implements HttpInterceptor {
 		}
 
 		const errortext = CODEMESSAGE[ev.status] || ev.statusText;
-		console.log(ev);
-		debugger;
 		this.notification.error(`请求错误 ${ev.status}: ${ev.url}`, errortext);
 	}
 
@@ -124,10 +122,7 @@ export class DefaultInterceptor implements HttpInterceptor {
 				// 若一切都正常，则后续操作
 				return of(event);
 			}),
-			catchError((err: HttpErrorResponse) => {
-				console.log(req);
-				return this.handleData(err);
-			})
+			catchError((err: HttpErrorResponse) => this.handleData(err))
 		);
 	}
 }
