@@ -2,6 +2,7 @@
 using IdentityServer4;
 using IdS4.DbContexts;
 using IdS4.Identity;
+using IdS4.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,8 @@ namespace IdS4.Server.Configuration
 
             // 添加临时证书 (生产环境中应作修改)
             idsBuilder.AddDeveloperSigningCredential();
+
+            idsBuilder.AddProfileService<ProfileService>();
 
             services.AddAuthentication();
         }
