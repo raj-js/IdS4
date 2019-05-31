@@ -53,12 +53,7 @@ namespace IdS4.Server.Services
             _logger.LogDebug("IsActive called from: {caller}", context.Caller);
 
             var user = await _identityDb.Users.FindAsync(context.Subject.GetSubjectId());
-            // context.IsActive = user?.
-
-            if (user == null)
-                context.IsActive = false;
-            else
-                context.IsActive = await _signInManager.CanSignInAsync(user);
+            context.IsActive = user != null && await _signInManager.CanSignInAsync(user);
         }
     }
 }
