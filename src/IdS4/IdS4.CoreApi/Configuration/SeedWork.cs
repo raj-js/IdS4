@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Configuration
@@ -44,37 +45,28 @@ namespace IdS4.CoreApi.Configuration
                     {
                         Name = coreApiName,
                         DisplayName = $"IdS4.{coreApiName}",
-                        Description = "针对 IdS4.Management 的核心 Api"
+                        Description = "针对 IdS4.Management 的核心 Api",
+                        UserClaims = new List<ApiResourceClaim>
+                        {
+                            new ApiResourceClaim { Type = JwtClaimTypes.Name },
+                            new ApiResourceClaim { Type = JwtClaimTypes.Email }
+                        },
+                        Scopes = new List<ApiScope>
+                        {
+                            new ApiScope
+                            {
+                                Name = "coreApi.full_access",
+                                DisplayName = "Full access to coreApi",
+                            }
+                        },
+                        Secrets = new List<ApiSecret>
+                        {
+                            new ApiSecret{ Value = "secret".ToSha256() }
+                        }
                     };
                     await ids4ConfigurationDb.ApiResources.AddAsync(coreApi);
                     await ids4ConfigurationDb.SaveChangesAsync();
 
-                    await ids4ConfigurationDb.ApiResourceClaims.AddRangeAsync(
-                        new ApiResourceClaim
-                        {
-                            ApiResourceId = coreApi.Id,
-                            Type = JwtClaimTypes.Name
-                        },
-                        new ApiResourceClaim
-                        {
-                            ApiResourceId = coreApi.Id,
-                            Type = JwtClaimTypes.Email
-                        });
-
-                    await ids4ConfigurationDb.ApiScopes.AddAsync(
-                        new ApiScope
-                        {
-                            ApiResourceId = coreApi.Id,
-                            Name = "coreApi.full_access",
-                            DisplayName = "Full access to coreApi",
-                        });
-
-                    await ids4ConfigurationDb.ApiSecrets.AddAsync(
-                        new ApiSecret
-                        {
-                            ApiResourceId = coreApi.Id,
-                            Value = configuration["apiSecret"].ToSha256()
-                        });
 
                     await ids4ConfigurationDb.SaveChangesAsync();
                     logger.LogInformation($"Api资源 {coreApiName} 初始化完成.");

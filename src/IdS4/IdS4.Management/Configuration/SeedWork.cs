@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
 using static IdentityModel.OidcConstants;
 using Constants = IdentityServer4.IdentityServerConstants;
 
@@ -42,7 +44,9 @@ namespace IdS4.Management.Configuration
                     Email = adminSettings["Email"],
                     EmailConfirmed = true
                 };
+
                 var identityResult = await userManager.CreateAsync(admin, adminSettings["Password"]);
+                logger.LogInformation($"admin id is : {admin.Id}");
 
                 if (!identityResult.Succeeded)
                 {
@@ -51,6 +55,20 @@ namespace IdS4.Management.Configuration
                         logger.LogError($"{error.Code} --> {error.Description}");
                 }
 
+                logger.LogInformation($"初始化管理员Claims : ");
+                await ids4IdentityDb.UserClaims.AddRangeAsync(
+                    new List<IdS4UserClaim>
+                    {
+                        new IdS4UserClaim(admin.Id, JwtClaimTypes.Subject, admin.Id),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.Email, admin.Email),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.EmailVerified, admin.EmailConfirmed.ToString()),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.Name, admin.UserName),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.NickName, nameof(admin)),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.UpdatedAt, $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}")
+                    }
+                );
+                await ids4IdentityDb.SaveChangesAsync();
+                logger.LogInformation($"初始化管理员Claims完成.");
                 logger.LogInformation($"管理员账号初始化完成.");
             }
         }
