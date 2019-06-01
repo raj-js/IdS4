@@ -17,12 +17,14 @@ import { UserLockComponent } from './passport/lock/lock.component';
 
 // single pages
 import { CallbackComponent } from './callback/callback.component';
+import { AuthorizationGuard } from '@core/auth/authorization.guard';
 
 const routes: Routes = [
 	{
 		path: '',
 		component: LayoutDefaultComponent,
-		canActivate: [ SimpleGuard ],
+		canActivate: [ AuthorizationGuard ],
+		canLoad: [ AuthorizationGuard ],
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: 'dashboard', component: DashboardComponent, data: { title: '仪表盘' } },
