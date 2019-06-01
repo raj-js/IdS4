@@ -1,3 +1,5 @@
-<p>
-  identity-resource works!
-</p>
+<st [data]="users" [columns]="columns" [expand]="expand" expandRowByClick expandAccordion>
+  <ng-template #expand let-item let-index="index" let-column="column">
+    {{ item.description }}
+  </ng-template>
+</st>

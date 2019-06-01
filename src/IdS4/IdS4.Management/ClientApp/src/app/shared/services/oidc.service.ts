@@ -24,7 +24,6 @@ export class OidcService {
 		});
 
 		this.oidcSecurityService.getUserData().subscribe((d) => {
-			console.log(d);
 			this.userData = d;
 		});
 	}
@@ -37,7 +36,6 @@ export class OidcService {
 
 	getToken(): string | null {
 		const token = this.isAuthorized ? this.oidcSecurityService.getToken() : null;
-		console.log(token);
 		return token;
 	}
 
