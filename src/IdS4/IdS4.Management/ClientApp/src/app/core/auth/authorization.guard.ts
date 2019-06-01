@@ -33,7 +33,7 @@ export class AuthorizationGuard implements CanActivate, CanLoad {
 		return this.oidcSecurityService.getIsAuthorized().pipe(
 			map((isAuth: boolean) => {
 				if (!isAuth) {
-					this.router.navigate([ '/401' ]);
+					this.router.navigate([ '/passport/social-login' ]);
 					return false;
 				}
 				return true;

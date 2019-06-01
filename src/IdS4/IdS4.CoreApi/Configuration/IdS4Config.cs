@@ -78,7 +78,9 @@ namespace IdS4.CoreApi.Configuration
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins(configuration["CorsOrigin"])
+                    policy
+                        .AllowAnyOrigin()
+                        //.WithOrigins(configuration["CorsOrigin"])
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
