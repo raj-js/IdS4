@@ -116,11 +116,11 @@ const APPINIT_PROVIDES = [
 		CoreModule,
 		SharedModule.forRoot(),
 		LayoutModule,
-		RoutesModule,
 		AuthModule.forRoot(),
 		...I18NSERVICE_MODULES,
 		...FORM_MODULES,
-		...GLOBAL_THIRD_MODULES
+		...GLOBAL_THIRD_MODULES,
+		RoutesModule
 	],
 	providers: [ ...LANG_PROVIDES, ...INTERCEPTOR_PROVIDES, ...I18NSERVICE_PROVIDES, ...APPINIT_PROVIDES ],
 	bootstrap: [ AppComponent ]

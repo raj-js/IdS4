@@ -14,24 +14,21 @@ import { SocialLoginComponent } from './passport/social-login/social-login.compo
 import { CallbackComponent } from './callback/callback.component';
 
 const COMPONENTS = [
-  DashboardComponent,
-  // passport pages
-  UserLoginComponent,
-  UserRegisterComponent,
-  UserRegisterResultComponent,
-  SocialLoginComponent,
-  UserLockComponent,
-  // single pages
-  CallbackComponent,
+	DashboardComponent,
+	// passport pages
+	UserLoginComponent,
+	UserRegisterComponent,
+	UserRegisterResultComponent,
+	SocialLoginComponent,
+	UserLockComponent,
+	// single pages
+	CallbackComponent
 ];
 const COMPONENTS_NOROUNT = [];
 
 @NgModule({
-  imports: [ SharedModule.forRoot(), RouteRoutingModule ],
-  declarations: [
-    ...COMPONENTS,
-    ...COMPONENTS_NOROUNT,
-  ],
-  entryComponents: COMPONENTS_NOROUNT
+	imports: [ SharedModule.forRoot(), RouteRoutingModule ],
+	declarations: [ ...COMPONENTS, ...COMPONENTS_NOROUNT ],
+	entryComponents: COMPONENTS_NOROUNT
 })
 export class RoutesModule {}

@@ -1,8 +1,11 @@
 import { Component, OnInit, TemplateRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { STColumn } from '@delon/abc';
+import { STColumn, STReq, STRes, STData } from '@delon/abc';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { map, tap } from 'rxjs/operators';
+import { ConfigurationService } from '@shared/services/configuration.service';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-identity-resource',
@@ -11,60 +14,68 @@ import { map, tap } from 'rxjs/operators';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityResourceComponent implements OnInit {
+	url: string;
 	loading = false;
 	query: any = {
-		pi: 1,
-		ps: 10,
-		sorter: '',
-		status: null,
-		statusList: []
+		skip: 0,
+		limit: 10
 	};
 
-	resources: any[];
+	req: STReq = {
+		type: 'skip',
+		method: 'GET'
+	};
+
+	resp: STRes = {
+		reName: {
+			total: 'total',
+			list: 'list'
+		}
+	};
+
+	resources: Observable<STData[]>;
 
 	columns: STColumn[] = [
 		{ title: '', type: 'checkbox', index: 'key' },
 		{ title: 'ID', index: 'id' },
 		{ title: '名称', index: 'name' },
 		{ title: '显示名称', index: 'displayName' },
-		{ title: '必选', index: 'required' },
-		{ title: '强调', index: 'emphasize' },
-		{ title: '显示在发现文档', index: 'showInDiscoveryDocument' },
-		{ title: '创建时间', index: 'created' },
-		{ title: '修改时间', index: 'updated' },
-		{ title: '不可修改', index: 'nonEditable' }
+		{ title: '必选', index: 'required', type: 'yn' },
+		{ title: '强调', index: 'emphasize', type: 'yn' },
+		{ title: '显示在发现文档中', index: 'showInDiscoveryDocument', type: 'yn' },
+		{ title: '创建时间', index: 'created', type: 'date' },
+		{ title: '修改时间', index: 'updated', type: 'date' },
+		{ title: '是否启用', index: 'enabled', type: 'yn' },
+		{
+			title: '',
+			buttons: [
+				{
+					text: '修改',
+					icon: 'edit',
+					type: 'link',
+					iif: (row: any) => !row.nonEditable,
+					click: (row: any) => this.router.navigate([ '/resource/edit-identity', { id: row.id } ])
+				}
+			]
+		}
 	];
 
-	constructor(
-		private http: _HttpClient,
-		private msgSrv: NzMessageService,
-		private modalSrv: NzModalService,
-		private cdr: ChangeDetectorRef
-	) {}
+	constructor(private configSrv: ConfigurationService, private router: Router) {}
 
 	ngOnInit() {
-		this.load();
-	}
-
-	load(): void {
-		this.loading = true;
-		this.http
-			.get('https://localhost:5005/api/resource/identity')
-			.pipe(tap(() => (this.loading = false)))
-			.subscribe((resp) => {
-				this.resources = resp;
-				this.cdr.detectChanges();
+		if (this.configSrv.isReady) {
+			this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/resource/identity`;
+		} else {
+			this.configSrv.settingsLoaded$.subscribe(() => {
+				this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/resource/identity`;
 			});
+		}
 	}
 
-	add(tpl: TemplateRef<{}>) {
-		// this.modalSrv.create({
-		// 	nzTitle: '新建规则',
-		// 	nzContent: tpl,
-		// 	nzOnOk: () => {
-		// 		this.loading = true;
-		// 		this.http.post('/rule', { description: this.description }).subscribe(() => this.getData());
-		// 	}
-		// });
+	add() {
+		this.router.navigate([ '/resource/add-identity' ]);
 	}
+
+	//#region privates
+	//#endregion
 }

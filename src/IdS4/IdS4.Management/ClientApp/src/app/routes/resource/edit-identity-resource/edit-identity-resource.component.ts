@@ -1,0 +1,100 @@
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { SFComponent, SFSchema } from '@delon/form';
+import { NzMessageService } from 'ng-zorro-antd';
+import { ConfigurationService } from '@shared/services/configuration.service';
+import { _HttpClient } from '@delon/theme';
+import { IApiResult } from '@shared/models/api-result.model';
+import { ApiResultCode } from '@shared/models/api-result-code.enum';
+import { ParamMap, ActivatedRoute } from '@angular/router';
+
+@Component({
+	selector: 'app-edit-identity-resource',
+	templateUrl: './edit-identity-resource.component.html',
+	styles: []
+})
+export class EditIdentityResourceComponent implements OnInit {
+	id: number;
+	@ViewChild('basic') basic: SFComponent;
+
+	url: string;
+	saving = false;
+	basicSaved = false;
+
+	basicSchema: SFSchema = {
+		properties: {
+			id: {
+				type: 'number',
+				title: 'ID',
+				ui: {
+					widget: 'text'
+				}
+			},
+			name: {
+				type: 'string',
+				title: '名称',
+				maxLength: 32,
+				ui: {
+					autofocus: true,
+					grid: {
+						span: 4
+					}
+				}
+			},
+			displayName: { type: 'string', title: '显示名称', maxLength: 32 },
+			description: {
+				type: 'string',
+				title: '描述',
+				maxLength: 256,
+				ui: {
+					widget: 'textarea',
+					autosize: {
+						minRows: 3,
+						maxRows: 6
+					}
+				}
+			},
+			required: { type: 'boolean', title: '必选', default: false },
+			emphasize: { type: 'boolean', title: '强调', default: false },
+			showInDiscoveryDocument: { type: 'boolean', title: '显示在发现文档中', default: true },
+			enabled: { type: 'boolean', title: '是否启用', default: true }
+		},
+		required: [ 'name', 'displayName' ]
+	};
+
+	constructor(
+		private msgSrv: NzMessageService,
+		private configSrv: ConfigurationService,
+		private http: _HttpClient,
+		private cdr: ChangeDetectorRef,
+		private route: ActivatedRoute
+	) {
+		this.id = Number.parseInt(this.route.snapshot.queryParams.get('id'), 10);
+		console.log(this.id);
+		this.basic.setValue('/id', this.id);
+	}
+
+	ngOnInit() {
+		if (this.configSrv.isReady) {
+			this.url = this.configSrv.serverSettings.coreApiUrl;
+		} else {
+			this.configSrv.settingsLoaded$.subscribe(() => {
+				this.url = this.configSrv.serverSettings.coreApiUrl;
+			});
+		}
+	}
+
+	basicSubmit(value: any): void {
+		this.saving = true;
+		this.http.post(`${this.url}/api/resource/identity/edit`, value).subscribe((resp) => {
+			this.saving = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.basicSaved = true;
+				this.msgSrv.success('操作成功');
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
+	}
+}

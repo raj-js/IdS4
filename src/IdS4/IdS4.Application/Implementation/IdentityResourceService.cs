@@ -1,6 +1,5 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
 using IdS4.Application.Interface;
-using IdS4.Application.Paging;
 using IdS4.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -51,19 +50,20 @@ namespace IdS4.Application.Implementation
             return await _configurationDb.IdentityResources.FindAsync(id);
         }
 
-        public async Task<Paged<IdentityResource>> SearchAsync(PageQuery<IdentityResource> query)
-        {
-            var d = await _configurationDb.IdentityResources
-                .AsNoTracking()
-                .Where(query.Filters)
-                .OrderBy(query.OrderBy)
-                .Skip(query.Skip)
-                .Take(query.PageSize)
-                .ToListAsync();
+        //public async Task<Paged<IdentityResource>> SearchAsync(PageQuery<IdentityResource> query)
+        //{
+        //    //var d = await _configurationDb.IdentityResources
+        //    //    .AsNoTracking()
+        //    //    .Where(query.Filters)
+        //    //    .OrderBy(query.OrderBy)
+        //    //    .Skip(query.Skip)
+        //    //    .Take(query.PageSize)
+        //    //    .ToListAsync();
 
-            var c = await _configurationDb.IdentityResources.CountAsync();
+        //    //var c = await _configurationDb.IdentityResources.CountAsync();
 
-            return new Paged<IdentityResource> { Data = d, TotalCount = c };
-        }
+        //    //return new Paged<IdentityResource> { Data = d, TotalCount = c };
+        //    throw new NotImplementedException();
+        //}
     }
 }

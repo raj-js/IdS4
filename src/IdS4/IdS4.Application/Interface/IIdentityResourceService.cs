@@ -1,5 +1,4 @@
 ﻿using IdentityServer4.EntityFramework.Entities;
-using IdS4.Application.Paging;
 using System.Threading.Tasks;
 
 namespace IdS4.Application.Interface
@@ -42,6 +41,6 @@ namespace IdS4.Application.Interface
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<Paged<IdentityResource>> SearchAsync(PageQuery<IdentityResource> query);
+        // Task<Paged<IdentityResource>> SearchAsync(PageQuery<IdentityResource> query);
     }
 }

@@ -1,4 +1,5 @@
-﻿using IdS4.CoreApi.Configuration;
+﻿using AutoMapper;
+using IdS4.CoreApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace IdS4.CoreApi
             services.AddIdS4Authentication(Configuration);
             services.AddIdS4Cors(Configuration);
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

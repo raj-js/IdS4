@@ -1,0 +1,20 @@
+<page-header [title]="'编辑身份资源'" [breadcrumb]="breadcrumb" [tab]="tab">
+  <ng-template #breadcrumb>
+    <nz-breadcrumb>
+      <nz-breadcrumb-item><a href="#">首页</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a>资源管理</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a href="#/resource/identity">身份资源</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a>编辑</a></nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </ng-template>
+</page-header>
+
+<ng-template #tab>
+  <nz-tabset>
+    <nz-tab nzTitle="基本">
+      <sf #basic [schema]="basicSchema" [loading]="saving" (formSubmit)="basicSubmit($event)"></sf>
+    </nz-tab>
+    <nz-tab nzTitle="声明"></nz-tab>
+    <nz-tab nzTitle="属性"></nz-tab>
+  </nz-tabset>
+</ng-template>

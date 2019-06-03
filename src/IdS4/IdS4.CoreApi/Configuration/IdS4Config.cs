@@ -47,7 +47,6 @@ namespace IdS4.CoreApi.Configuration
 
             idsBuilder.AddOperationalStore<IdS4PersistedGrantDbContext>(options =>
             {
-                options.EnableTokenCleanup = true;
                 options.ConfigureDbContext = b =>
                     b.UseSqlServer(configuration.GetConnectionString("PersistedGrantDb"));
             });

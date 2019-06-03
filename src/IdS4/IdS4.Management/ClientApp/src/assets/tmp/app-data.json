@@ -15,7 +15,7 @@
     "hideInBreadcrumb": true,
     "children": [{
         "text": "资源管理",
-        "icon": "anticon-idcard",
+        "icon": "anticon-appstore",
         "children": [{
             "text": "身份资源",
             "link": "/resource/identity"

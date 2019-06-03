@@ -1,20 +1,10 @@
 <page-header [title]="'身份资源'"></page-header>
 <nz-card [nzBordered]="false">
-  <button nz-button (click)="add(modalContent)" [nzType]="'primary'">
-    <i nz-icon nzType="plus"></i>
-    <span>新建</span>
-  </button>
-  <st [data]="resources" [loading]="loading" [columns]="columns" [expand]="expand" expandRowByClick expandAccordion>
+  <button nz-button [nzType]="'primary'" (click)="add()">新建</button>
+  <st [data]="url" [columns]="columns" [expand]="expand" [req]="req" [res]="resp" expandRowByClick expandAccordion>
     <ng-template #expand let-item let-index="index" let-column="column">
       {{ item.description }}
     </ng-template>
+    <ng-template #name></ng-template>
   </st>
 </nz-card>
-<ng-template #modalContent>
-  <nz-form-item>
-    <nz-form-label nzFor="no">描述</nz-form-label>
-    <nz-form-control>
-      <input nz-input [(ngModel)]="description" name="description" placeholder="请输入" id="no" />
-    </nz-form-control>
-  </nz-form-item>
-</ng-template>

@@ -1,6 +1,5 @@
 ﻿using IdS4.Identity;
 using System.Threading.Tasks;
-using IdS4.Application.Paging;
 
 namespace IdS4.Application.Interface
 {
@@ -14,6 +13,6 @@ namespace IdS4.Application.Interface
 
         Task<IdS4User> FindAsync(string id);
 
-        Paged<IdS4User> SearchAsync(PageQuery<IdS4User> query);
+        // Paged<IdS4User> SearchAsync(PageQuery<IdS4User> query);
     }
 }
