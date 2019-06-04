@@ -78,7 +78,7 @@ export class AddIdentityResourceComponent implements OnInit {
 			if (result.code === ApiResultCode.Success) {
 				this.msgSrv.success('操作成功');
 				setTimeout(() => {
-					this.router.navigate([ '/resource/edit-identity', { id: result.data.id } ]);
+					this.router.navigateByUrl(`/resource/edit-identity/${result.data.id}`);
 				}, 500);
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);

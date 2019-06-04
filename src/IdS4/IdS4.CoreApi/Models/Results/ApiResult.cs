@@ -50,7 +50,19 @@ namespace IdS4.CoreApi.Models.Results
             return result;
         }
 
-        private static void RetrieveErrors(ApiResult res, string key, ModelStateEntry entry) 
+        public static ApiResult NotFound(object id)
+        {
+            return new ApiResult
+            {
+                Code = ApiResultCode.NotFound,
+                Errors =
+                {
+                    { nameof(ApiResultCode.NotFound), $"{id} not found" } 
+                }
+            };
+        }
+
+        private static void RetrieveErrors(ApiResult res, string key, ModelStateEntry entry)
         {
             if (entry.Errors == null) return;
 
@@ -70,6 +82,7 @@ namespace IdS4.CoreApi.Models.Results
     {
         Failure = 0,
         Success = 1,
-        InValidForm = 2
+        InValidForm = 2,
+        NotFound = 3
     }
 }

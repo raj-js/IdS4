@@ -54,7 +54,7 @@ export class IdentityResourceComponent implements OnInit {
 					icon: 'edit',
 					type: 'link',
 					iif: (row: any) => !row.nonEditable,
-					click: (row: any) => this.router.navigate([ '/resource/edit-identity', { id: row.id } ])
+					click: (row: any) => this.router.navigateByUrl(`/resource/edit-identity/${row.id}`)
 				}
 			]
 		}

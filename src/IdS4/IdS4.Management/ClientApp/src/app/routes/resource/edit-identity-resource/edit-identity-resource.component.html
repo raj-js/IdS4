@@ -12,9 +12,12 @@
 <ng-template #tab>
   <nz-tabset>
     <nz-tab nzTitle="基本">
-      <sf #basic [schema]="basicSchema" [loading]="saving" (formSubmit)="basicSubmit($event)"></sf>
+      <sf #basic [schema]="basicSchema" [loading]="loadingBasic" [formData]="resource" (formSubmit)="submit($event)">
+      </sf>
     </nz-tab>
-    <nz-tab nzTitle="声明"></nz-tab>
+    <nz-tab nzTitle="声明">
+      <sf [schema]="claimSchema" [loading]="loadingClaims" [formData]="claims" (formSubmit)="submitClaims($event)"></sf>
+    </nz-tab>
     <nz-tab nzTitle="属性"></nz-tab>
   </nz-tabset>
 </ng-template>

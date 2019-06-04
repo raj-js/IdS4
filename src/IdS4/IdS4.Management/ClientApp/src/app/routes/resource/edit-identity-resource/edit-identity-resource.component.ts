@@ -5,7 +5,7 @@ import { ConfigurationService } from '@shared/services/configuration.service';
 import { _HttpClient } from '@delon/theme';
 import { IApiResult } from '@shared/models/api-result.model';
 import { ApiResultCode } from '@shared/models/api-result-code.enum';
-import { ParamMap, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-edit-identity-resource',
@@ -17,8 +17,13 @@ export class EditIdentityResourceComponent implements OnInit {
 	@ViewChild('basic') basic: SFComponent;
 
 	url: string;
-	saving = false;
-	basicSaved = false;
+	loadingBasic = false;
+	loadingClaims = false;
+	loadingProperties = false;
+
+	resource: any;
+	claims: any;
+	properties: any;
 
 	basicSchema: SFSchema = {
 		properties: {
@@ -61,35 +66,94 @@ export class EditIdentityResourceComponent implements OnInit {
 		required: [ 'name', 'displayName' ]
 	};
 
+	claimSchema: SFSchema = {
+		properties: {
+			claims: {
+				title: '资源声明',
+				type: 'array',
+				items: {
+					type: 'object',
+					properties: {
+						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
+						identityResourceId: { type: 'number', ui: { hidden: true } },
+						type: { title: '类型', type: 'string', maxLength: 256, ui: { widget: 'textbox' } }
+					},
+					required: [ 'type' ]
+				}
+			}
+		},
+		ui: { spanLabel: 2, grid: { arraySpan: 8 } }
+	};
+
 	constructor(
 		private msgSrv: NzMessageService,
 		private configSrv: ConfigurationService,
 		private http: _HttpClient,
 		private cdr: ChangeDetectorRef,
 		private route: ActivatedRoute
-	) {
-		this.id = Number.parseInt(this.route.snapshot.queryParams.get('id'), 10);
-		console.log(this.id);
-		this.basic.setValue('/id', this.id);
-	}
+	) {}
 
 	ngOnInit() {
+		this.id = Number.parseInt(this.route.snapshot.paramMap.get('id'), 10);
+
+		if (this.id === Number.NaN) {
+			this.msgSrv.error('身份资源ID无效！');
+			return;
+		}
+
 		if (this.configSrv.isReady) {
 			this.url = this.configSrv.serverSettings.coreApiUrl;
+			this.load();
 		} else {
 			this.configSrv.settingsLoaded$.subscribe(() => {
 				this.url = this.configSrv.serverSettings.coreApiUrl;
+				this.load();
 			});
 		}
 	}
 
-	basicSubmit(value: any): void {
-		this.saving = true;
-		this.http.post(`${this.url}/api/resource/identity/edit`, value).subscribe((resp) => {
-			this.saving = false;
+	load(): void {
+		this.loadingBasic = true;
+		this.http.get(`${this.url}/api/resource/identity/${this.id}`).subscribe((resp) => {
+			this.loadingBasic = false;
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
-				this.basicSaved = true;
+				this.resource = result.data;
+				this.claims = { claims: result.data.userClaims };
+				this.properties = result.data.properties;
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
+	}
+
+	submit(value: any): void {
+		this.loadingBasic = true;
+		this.http.post(`${this.url}/api/resource/identity/edit`, value).subscribe((resp) => {
+			this.loadingBasic = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.resource = result.data;
+				this.msgSrv.success('操作成功');
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
+	}
+
+	submitClaims(value: any): void {
+		this.loadingClaims = true;
+
+		const arrs = value.claims as any[];
+		arrs.forEach((v, i, d) => (v.identityResourceId = this.id));
+
+		this.http.post(`${this.url}/api/resource/identity/editClaims/${this.id}`, arrs).subscribe((resp) => {
+			this.loadingClaims = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.claims = result.data;
 				this.msgSrv.success('操作成功');
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);

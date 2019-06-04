@@ -24,6 +24,7 @@ namespace IdS4.CoreApi
             services.AddIdS4Cors(Configuration);
 
             services.AddAutoMapper(typeof(Startup));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
