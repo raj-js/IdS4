@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // #region default language
 // 参考：https://ng-alain.com/docs/i18n
 import { default as ngLang } from '@angular/common/locales/zh';
-import { NZ_I18N, zh_CN as zorroLang } from 'ng-zorro-antd';
+import { NZ_I18N, zh_CN as zorroLang, NZ_ICONS, NgZorroAntdModule } from 'ng-zorro-antd';
 import { DELON_LOCALE, zh_CN as delonLang } from '@delon/theme';
 const LANG = {
 	abbr: 'zh',
@@ -89,6 +89,8 @@ const oidc_configuration = 'assets/auth.clientConfiguration.json';
 // if your config is on server side
 // const oidc_configuration = ${window.location.origin}/api/ClientAppSettings
 import { StartupService } from '@core/startup/startup.service';
+import { IconDefinition } from '@ant-design/icons-angular';
+import { AccountBookFill, AlertOutline, AlertFill, MinusOutline } from '@ant-design/icons-angular/icons/public_api';
 export function StartupServiceFactory(startupService: StartupService, oidcConfigService: OidcConfigService): Function {
 	return () => {
 		startupService.load();

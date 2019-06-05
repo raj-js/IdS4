@@ -19,6 +19,14 @@ namespace IdS4.CoreApi.Models.Results
             Errors.Add(key, error);
         }
 
+        public static ApiResult Success()
+        {
+            return new ApiResult
+            {
+                Code = ApiResultCode.Success
+            };
+        }
+
         public static ApiResult Success<T>(T data = default)
         {
             return new ApiResult<T>

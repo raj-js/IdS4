@@ -10,6 +10,9 @@ namespace IdS4.CoreApi.Configuration.Mappers
         {
             CreateMap<VmIdentityClaim, IdentityClaim>()
                 .ForMember(dst => dst.IdentityResource, exp => exp.Ignore());
+
+            CreateMap<VmIdentityResourceProperty, IdentityResourceProperty>()
+                .ForMember(dst => dst.IdentityResource, exp => exp.Ignore());
         }
     }
 }

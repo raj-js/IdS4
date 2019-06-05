@@ -1,11 +1,13 @@
-import { Component, OnInit, TemplateRef, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { STColumn, STReq, STRes, STData } from '@delon/abc';
+import { Component, OnInit, TemplateRef, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { STColumn, STReq, STRes, STData, STChange, STComponent } from '@delon/abc';
 import { _HttpClient } from '@delon/theme';
 import { NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { map, tap } from 'rxjs/operators';
 import { ConfigurationService } from '@shared/services/configuration.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { IApiResult } from '@shared/models/api-result.model';
+import { ApiResultCode } from '@shared/models/api-result-code.enum';
 
 @Component({
 	selector: 'app-identity-resource',
@@ -15,6 +17,9 @@ import { Router } from '@angular/router';
 })
 export class IdentityResourceComponent implements OnInit {
 	url: string;
+
+	@ViewChild('st') st: STComponent;
+
 	loading = false;
 	query: any = {
 		skip: 0,
@@ -34,6 +39,7 @@ export class IdentityResourceComponent implements OnInit {
 	};
 
 	resources: Observable<STData[]>;
+	checked: STData[];
 
 	columns: STColumn[] = [
 		{ title: '', type: 'checkbox', index: 'key' },
@@ -60,7 +66,13 @@ export class IdentityResourceComponent implements OnInit {
 		}
 	];
 
-	constructor(private configSrv: ConfigurationService, private router: Router) {}
+	constructor(
+		private configSrv: ConfigurationService,
+		private router: Router,
+		private msgSrv: NzMessageService,
+		private http: _HttpClient,
+		private cdr: ChangeDetectorRef
+	) {}
 
 	ngOnInit() {
 		if (this.configSrv.isReady) {
@@ -72,8 +84,38 @@ export class IdentityResourceComponent implements OnInit {
 		}
 	}
 
-	add() {
+	change(e: STChange) {
+		if (e.checkbox) {
+			this.checked = e.checkbox;
+		}
+	}
+
+	add(): void {
 		this.router.navigate([ '/resource/add-identity' ]);
+	}
+
+	remove(): void {
+		if (this.checked.length === 0) {
+			this.msgSrv.warning('未选择任何身份资源');
+			return;
+		}
+
+		this.loading = true;
+		const ids = [];
+		this.checked.forEach((v, i, d) => ids.push(v.id));
+		this.http.delete(`${this.url}/${ids.join(',')}`).subscribe((resp) => {
+			this.loading = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.msgSrv.success('操作成功');
+				setTimeout(() => {
+					this.st.reload();
+				}, 500);
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
 	}
 
 	//#region privates

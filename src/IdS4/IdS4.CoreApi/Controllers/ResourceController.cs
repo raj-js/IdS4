@@ -73,7 +73,7 @@ namespace IdS4.CoreApi.Controllers
             return ApiResult.Success(resource);
         }
 
-        [HttpPost("identity/edit")]
+        [HttpPut("identity/edit")]
         public async Task<ApiResult> EditIdentityResource([FromBody]VmIdentityResource vm)
         {
             if (vm.Id <= 0 ||
@@ -88,12 +88,17 @@ namespace IdS4.CoreApi.Controllers
             return ApiResult.Success(entry.Entity);
         }
 
-        [HttpPost("identity/editClaims/{resourceId}")]
+        [HttpPut("identity/editClaims/{resourceId}")]
         public async Task<ApiResult> EditIdentityClaims([FromRoute]int resourceId, [FromBody]List<VmIdentityClaim> claims)
         {
             if (resourceId <= 0 ||
                 !await _configurationDb.IdentityResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
                 return ApiResult.NotFound(resourceId);
+
+            var claimsEntities = await _configurationDb.IdentityClaims
+                .AsNoTracking()
+                .Where(s => s.IdentityResourceId == resourceId)
+                .ToListAsync();
 
             var entities = new List<IdentityClaim>();
 
@@ -111,9 +116,74 @@ namespace IdS4.CoreApi.Controllers
                 }
                 entities.Add(entity);
             }
+
+            claimsEntities.Where(s => entities.All(e => e.Id != s.Id))
+                .ToList()
+                .ForEach(s =>
+                {
+                    var entry = _configurationDb.Attach(s);
+                    entry.State = EntityState.Deleted;
+                });
+
             await _configurationDb.SaveChangesAsync();
 
             return ApiResult.Success(entities);
+        }
+
+        [HttpPut("identity/editProperties/{resourceId}")]
+        public async Task<ApiResult> EditIdentityProperties([FromRoute] int resourceId,
+            [FromBody] List<VmIdentityResourceProperty> properties)
+        {
+            if (resourceId <= 0 ||
+                !await _configurationDb.IdentityResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
+                return ApiResult.NotFound(resourceId);
+
+            var propertyEntities = await _configurationDb.IdentityResourceProperties
+                .AsNoTracking()
+                .Where(s => s.IdentityResourceId == resourceId)
+                .ToListAsync();
+
+            var entities = new List<IdentityResourceProperty>();
+            // don't use foreach
+            for (var i = 0; i < properties.Count; i++)
+            {
+                var entity = _mapper.Map<IdentityResourceProperty>(properties[i]);
+
+                if (entity.Id == default)
+                    _configurationDb.Add(entity);
+                else
+                {
+                    var entry = _configurationDb.Attach(entity);
+                    entry.State = EntityState.Modified;
+                }
+                entities.Add(entity);
+            }
+
+            propertyEntities.Where(s => entities.All(e => e.Id != s.Id))
+                .ToList()
+                .ForEach(s =>
+                {
+                    var entry = _configurationDb.Attach(s);
+                    entry.State = EntityState.Deleted;
+                });
+
+            await _configurationDb.SaveChangesAsync();
+
+            return ApiResult.Success(entities);
+        }
+
+        [HttpDelete("identity/{resourceIds}")]
+        public async Task<ApiResult> RemoveIdentityResource([FromRoute] string resourceIds)
+        {
+            foreach (var resourceId in resourceIds.Split(","))
+            {
+                var resource = await _configurationDb.IdentityResources.FindAsync(int.Parse(resourceId));
+                if (resource == null) continue;
+
+                _configurationDb.IdentityResources.Remove(resource);
+            }
+            await _configurationDb.SaveChangesAsync();
+            return ApiResult.Success();
         }
     }
 }
