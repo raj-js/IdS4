@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Models.Resource
 {
-    public class VmIdentityResource
+    public class VmApiResource
     {
         public int Id { get; set; }
         public bool Enabled { get; set; } = true;
-
-        [Required]
-        [MaxLength(32)]
         public string Name { get; set; }
-
-        [Required]
-        [MaxLength(32)]
         public string DisplayName { get; set; }
-
         public string Description { get; set; }
-        public bool Required { get; set; }
-        public bool Emphasize { get; set; }
-        public bool ShowInDiscoveryDocument { get; set; } = true;
-        public List<VmIdentityClaim> UserClaims { get; set; }
-        public List<VmIdentityResourceProperty> Properties { get; set; }
+        public List<VmApiSecret> Secrets { get; set; }
+        public List<VmApiScope> Scopes { get; set; }
+        public List<VmApiResourceClaim> UserClaims { get; set; }
+        public List<VmApiResourceProperty> Properties { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime? Updated { get; set; }
+        public DateTime? LastAccessed { get; set; }
         public bool NonEditable { get; set; }
     }
 }

@@ -13,6 +13,21 @@ namespace IdS4.CoreApi.Configuration.Mappers
 
             CreateMap<VmIdentityResourceProperty, IdentityResourceProperty>()
                 .ForMember(dst => dst.IdentityResource, exp => exp.Ignore());
+
+            CreateMap<VmApiScope, ApiScope>()
+                .ForMember(dst => dst.ApiResource, exp => exp.Ignore());
+
+            CreateMap<VmApiSecret, ApiSecret>()
+                .ForMember(dst => dst.ApiResource, exp => exp.Ignore());
+
+            CreateMap<VmApiResourceClaim, ApiResourceClaim>()
+                .ForMember(dst => dst.ApiResource, exp => exp.Ignore());
+
+            CreateMap<VmApiResourceProperty, ApiResourceProperty>()
+                .ForMember(dst => dst.ApiResource, exp => exp.Ignore());
+
+            CreateMap<VmApiScopeClaim, ApiScopeClaim>()
+                .ForMember(dst => dst.ApiScope, exp => exp.Ignore());
         }
     }
 }
