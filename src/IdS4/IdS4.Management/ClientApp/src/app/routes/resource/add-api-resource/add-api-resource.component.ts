@@ -1,20 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { SFSchema, SFUISchema, SFComponent } from '@delon/form';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { SFSchema } from '@delon/form';
 import { NzMessageService } from 'ng-zorro-antd';
 import { ConfigurationService } from '@shared/services/configuration.service';
 import { _HttpClient } from '@delon/theme';
-import { zip } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { IApiResult } from '@shared/models/api-result.model';
 import { ApiResultCode } from '@shared/models/api-result-code.enum';
-import { Router } from '@angular/router';
 
 @Component({
-	selector: 'app-add-identity-resource',
-	templateUrl: './add-identity-resource.component.html',
-	styles: [],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	selector: 'app-add-api-resource',
+	templateUrl: './add-api-resource.component.html',
+	styles: []
 })
-export class AddIdentityResourceComponent implements OnInit {
+export class AddApiResourceComponent implements OnInit {
 	url: string;
 	saving = false;
 	basicSaved = false;
@@ -45,9 +43,6 @@ export class AddIdentityResourceComponent implements OnInit {
 					}
 				}
 			},
-			required: { type: 'boolean', title: '必选', default: false },
-			emphasize: { type: 'boolean', title: '强调', default: false },
-			showInDiscoveryDocument: { type: 'boolean', title: '显示在发现文档中', default: true },
 			enabled: { type: 'boolean', title: '是否启用', default: true }
 		},
 		required: [ 'name', 'displayName' ]
@@ -73,7 +68,7 @@ export class AddIdentityResourceComponent implements OnInit {
 
 	basicSubmit(value: any): void {
 		this.saving = true;
-		this.http.post(`${this.url}/api/resource/identity`, value).subscribe((resp) => {
+		this.http.post(`${this.url}/api/resource/api/add`, value).subscribe((resp) => {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.msgSrv.success('操作成功');

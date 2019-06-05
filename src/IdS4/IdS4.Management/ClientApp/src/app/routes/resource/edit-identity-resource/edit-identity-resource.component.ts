@@ -150,7 +150,7 @@ export class EditIdentityResourceComponent implements OnInit {
 
 	submit(value: any): void {
 		this.loadingBasic = true;
-		this.http.put(`${this.url}/api/resource/identity/edit`, value).subscribe((resp) => {
+		this.http.put(`${this.url}/api/resource/identity`, value).subscribe((resp) => {
 			this.loadingBasic = false;
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
@@ -169,7 +169,7 @@ export class EditIdentityResourceComponent implements OnInit {
 		const arrs = value.claims as any[];
 		arrs.forEach((v, i, d) => (v.identityResourceId = this.id));
 
-		this.http.put(`${this.url}/api/resource/identity/editClaims/${this.id}`, arrs).subscribe((resp) => {
+		this.http.put(`${this.url}/api/resource/identity/claims/${this.id}`, arrs).subscribe((resp) => {
 			this.loadingClaims = false;
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
@@ -187,7 +187,7 @@ export class EditIdentityResourceComponent implements OnInit {
 		const arrs = value.properties as any[];
 		arrs.forEach((v, i, d) => (v.identityResourceId = this.id));
 
-		this.http.put(`${this.url}/api/resource/identity/editProperties/${this.id}`, arrs).subscribe((resp) => {
+		this.http.put(`${this.url}/api/resource/identity/properties/${this.id}`, arrs).subscribe((resp) => {
 			this.loadingProperties = false;
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
