@@ -142,7 +142,8 @@ export class EditApiResourceComponent implements OnInit {
 							type: 'string',
 							maxLength: 1000,
 							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
-						}
+						},
+						expiration: { title: '过期', type: 'string', format: 'date' }
 					},
 					required: [ 'value' ]
 				}
