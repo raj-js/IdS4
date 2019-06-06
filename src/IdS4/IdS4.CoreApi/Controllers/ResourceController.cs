@@ -222,6 +222,14 @@ namespace IdS4.CoreApi.Controllers
             entity.Scopes = await _configurationDb.ApiScopes.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
             entity.Secrets = await _configurationDb.ApiSecrets.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
 
+            foreach (var scope in entity.Scopes)
+            {
+                scope.UserClaims =
+                    await _configurationDb.ApiScopeClaims
+                        .Where(s => s.ApiScopeId == scope.Id)
+                        .ToListAsync();
+            }
+
             var resource = _mapper.Map<VmApiResource>(entity);
             return ApiResult.Success(resource);
         }
@@ -270,38 +278,24 @@ namespace IdS4.CoreApi.Controllers
             var entities = new List<ApiScope>();
             foreach (var scope in scopes)
             {
+                var claimEntities = await _configurationDb.ApiScopeClaims
+                    .AsNoTracking()
+                    .Where(s => s.ApiScopeId == scope.Id)
+                    .ToListAsync();
+
+                claimEntities.Where(ce => scope.UserClaims.All(c => c.Id != ce.Id))
+                    .ToList()
+                    .ForEach(ce =>
+                    {
+                        var entry = _configurationDb.Attach(ce);
+                        entry.State = EntityState.Deleted;
+                    });
+
                 var entity = _mapper.Map<ApiScope>(scope);
                 if (entity.Id == default)
                     _configurationDb.Add(entity);
                 else
                 {
-                    var claimEntities = await _configurationDb.ApiScopeClaims
-                        .AsNoTracking()
-                        .Where(s => s.ApiScopeId == scope.Id)
-                        .ToListAsync();
-
-                    var scopeClaims = new List<ApiScopeClaim>();
-                    foreach (var claim in scope.UserClaims)
-                    {
-                        var claimEntity = _mapper.Map<ApiScopeClaim>(claim);
-                        if (claimEntity.Id == default)
-                            _configurationDb.Add(claimEntity);
-                        else
-                        {
-                            var claimEntry = _configurationDb.Attach(claimEntity);
-                            claimEntry.State = EntityState.Modified;
-                        }
-                        scopeClaims.Add(claimEntity);
-                    }
-
-                    claimEntities.Where(s => entity.UserClaims.All(e => e.Id != s.Id))
-                        .ToList()
-                        .ForEach(s =>
-                        {
-                            var claimEntry = _configurationDb.Attach(s);
-                            claimEntry.State = EntityState.Deleted;
-                        });
-
                     var entry = _configurationDb.Attach(entity);
                     entry.State = EntityState.Modified;
                 }
@@ -318,7 +312,8 @@ namespace IdS4.CoreApi.Controllers
 
             await _configurationDb.SaveChangesAsync();
 
-            return ApiResult.Success(entities);
+            var vm = _mapper.Map<List<VmApiScope>>(entities);
+            return ApiResult.Success(vm);
         }
 
         [HttpPut("api/secrets/{resourceId}")]

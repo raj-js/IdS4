@@ -23,8 +23,12 @@
         (formSubmit)="submitProperties($event)"></sf>
     </nz-tab>
     <nz-tab nzTitle="密码">
+      <sf [schema]="secretSchema" [loading]="loadingSecrets" [formData]="secrets" (formSubmit)="submitSecrets($event)">
+      </sf>
     </nz-tab>
     <nz-tab nzTitle="范围">
+      <sf [schema]="scopeSchema" [loading]="loadingScopes" [formData]="scopes" (formSubmit)="submitScopes($event)">
+      </sf>
     </nz-tab>
   </nz-tabset>
 </ng-template>

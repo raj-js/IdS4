@@ -68,12 +68,12 @@ export class AddApiResourceComponent implements OnInit {
 
 	basicSubmit(value: any): void {
 		this.saving = true;
-		this.http.post(`${this.url}/api/resource/api/add`, value).subscribe((resp) => {
+		this.http.post(`${this.url}/api/resource/api`, value).subscribe((resp) => {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.msgSrv.success('操作成功');
 				setTimeout(() => {
-					this.router.navigateByUrl(`/resource/edit-identity/${result.data.id}`);
+					this.router.navigateByUrl(`/resource/edit-api/${result.data.id}`);
 				}, 500);
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);

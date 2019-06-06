@@ -69,7 +69,7 @@ export class EditIdentityResourceComponent implements OnInit {
 	claimSchema: SFSchema = {
 		properties: {
 			claims: {
-				title: '资源声明',
+				title: '用户声明',
 				type: 'array',
 				items: {
 					type: 'object',

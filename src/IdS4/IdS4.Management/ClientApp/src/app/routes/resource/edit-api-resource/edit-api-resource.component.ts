@@ -20,10 +20,14 @@ export class EditApiResourceComponent implements OnInit {
 	loadingBasic = false;
 	loadingClaims = false;
 	loadingProperties = false;
+	loadingSecrets = false;
+	loadingScopes = false;
 
 	resource: any;
 	claims: any;
 	properties: any;
+	secrets: any;
+	scopes: any;
 
 	basicSchema: SFSchema = {
 		properties: {
@@ -66,13 +70,13 @@ export class EditApiResourceComponent implements OnInit {
 	claimSchema: SFSchema = {
 		properties: {
 			claims: {
-				title: '资源声明',
+				title: '用户声明',
 				type: 'array',
 				items: {
 					type: 'object',
 					properties: {
 						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
-						identityResourceId: { type: 'number', ui: { hidden: true } },
+						apiResourceId: { type: 'number', ui: { hidden: true } },
 						type: { title: '类型', type: 'string', maxLength: 256 }
 					},
 					required: [ 'type' ]
@@ -91,7 +95,7 @@ export class EditApiResourceComponent implements OnInit {
 					type: 'object',
 					properties: {
 						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
-						identityResourceId: { type: 'number', ui: { hidden: true } },
+						apiResourceId: { type: 'number', ui: { hidden: true } },
 						key: { title: '键', type: 'string', maxLength: 32 },
 						value: { title: '值', type: 'string', maxLength: 256 }
 					},
@@ -100,6 +104,97 @@ export class EditApiResourceComponent implements OnInit {
 			}
 		},
 		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
+	};
+
+	secretSchema: SFSchema = {
+		properties: {
+			secrets: {
+				type: 'array',
+				title: '资源密码',
+				items: {
+					type: 'object',
+					properties: {
+						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
+						apiResourceId: { type: 'number', ui: { hidden: true } },
+						type: {
+							title: '类型',
+							type: 'string',
+							maxLength: 256,
+							enum: [
+								{ label: 'SharedSecret', value: 'SharedSecret' },
+								{ label: 'X509Thumbprint', value: 'X509Thumbprint' },
+								{ label: 'X509Name', value: 'X509Name' },
+								{ label: 'X509CertificateBase64', value: 'X509CertificateBase64' }
+							],
+							ui: {
+								widget: 'select'
+							},
+							default: 'SharedSecret'
+						},
+						value: {
+							title: '值',
+							type: 'string',
+							maxLength: 4000,
+							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
+						},
+						description: {
+							title: '描述',
+							type: 'string',
+							maxLength: 1000,
+							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
+						}
+					},
+					required: [ 'value' ]
+				}
+			}
+		},
+		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
+	};
+
+	scopeSchema: SFSchema = {
+		properties: {
+			scopes: {
+				type: 'array',
+				title: '资源范围',
+				items: {
+					type: 'object',
+					properties: {
+						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
+						apiResourceId: { type: 'number', ui: { hidden: true } },
+						name: { type: 'string', title: '名称', maxLength: 32, ui: { autofocus: true } },
+						displayName: { type: 'string', title: '显示名称', maxLength: 32 },
+						description: {
+							type: 'string',
+							title: '描述',
+							maxLength: 256,
+							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
+						},
+						required: { type: 'boolean', title: '必选', default: false },
+						emphasize: { type: 'boolean', title: '强调', default: false },
+						showInDiscoveryDocument: { type: 'boolean', title: '显示在发现文档中', default: true },
+						userClaims: {
+							type: 'array',
+							title: '用户声明',
+							items: {
+								type: 'object',
+								properties: {
+									id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
+									apiScopeId: { type: 'number', ui: { hidden: true } },
+									type: { title: '类型', type: 'string', maxLength: 256 }
+								},
+								required: [ 'type' ]
+							},
+							ui: {
+								spanLabel: 3,
+								grid: { arraySpan: 12 }
+							}
+						}
+					},
+					required: [ 'name', 'displayName' ]
+				}
+			}
+		},
+		ui: { spanLabel: 3, grid: { arraySpan: 24 } }
 	};
 
 	constructor(
@@ -138,6 +233,8 @@ export class EditApiResourceComponent implements OnInit {
 				this.resource = result.data;
 				this.claims = { claims: result.data.userClaims };
 				this.properties = { properties: result.data.properties };
+				this.secrets = { secrets: result.data.secrets };
+				this.scopes = { scopes: result.data.scopes };
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
 			}
@@ -189,6 +286,42 @@ export class EditApiResourceComponent implements OnInit {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.properties = { properties: result.data };
+				this.msgSrv.success('操作成功');
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
+	}
+
+	submitSecrets(value: any): void {
+		this.loadingSecrets = true;
+		const arrs = value.secrets as any[];
+		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
+
+		this.http.put(`${this.url}/api/resource/api/secrets/${this.id}`, arrs).subscribe((resp) => {
+			this.loadingSecrets = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.secrets = { secrets: result.data };
+				this.msgSrv.success('操作成功');
+			} else {
+				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
+			}
+			this.cdr.detectChanges();
+		});
+	}
+
+	submitScopes(value: any): void {
+		this.loadingScopes = true;
+		const arrs = value.scopes as any[];
+		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
+
+		this.http.put(`${this.url}/api/resource/api/scopes/${this.id}`, arrs).subscribe((resp) => {
+			this.loadingScopes = false;
+			const result = resp as IApiResult;
+			if (result.code === ApiResultCode.Success) {
+				this.scopes = { scopes: result.data };
 				this.msgSrv.success('操作成功');
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
