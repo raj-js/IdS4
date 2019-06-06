@@ -29,20 +29,17 @@
       {
         "text": "客户端管理",
         "link": "/client",
-        "icon": "anticon-appstore",
-        "badge": 2
+        "icon": "anticon-appstore"
       },
       {
         "text": "用户管理",
         "link": "/user",
-        "icon": "anticon-appstore",
-        "badge": 2
+        "icon": "anticon-appstore"
       },
       {
         "text": "角色管理",
         "link": "/role",
-        "icon": "anticon-appstore",
-        "badge": 2
+        "icon": "anticon-appstore"
       }
     ]
   }]
