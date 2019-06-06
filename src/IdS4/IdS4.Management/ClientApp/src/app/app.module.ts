@@ -54,7 +54,6 @@ const FORM_MODULES = [ JsonSchemaModule ];
 
 // #region Http Interceptors
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SimpleInterceptor } from '@delon/auth';
 import { DefaultInterceptor } from '@core/net/default.interceptor';
 import { AuthInterceptor } from '@core/net/auth.interceptor';
 const INTERCEPTOR_PROVIDES = [
@@ -89,8 +88,6 @@ const oidc_configuration = 'assets/auth.clientConfiguration.json';
 // if your config is on server side
 // const oidc_configuration = ${window.location.origin}/api/ClientAppSettings
 import { StartupService } from '@core/startup/startup.service';
-import { IconDefinition } from '@ant-design/icons-angular';
-import { AccountBookFill, AlertOutline, AlertFill, MinusOutline } from '@ant-design/icons-angular/icons/public_api';
 export function StartupServiceFactory(startupService: StartupService, oidcConfigService: OidcConfigService): Function {
 	return () => {
 		startupService.load();

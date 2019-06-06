@@ -44,11 +44,11 @@ const routes: Routes = [
 		path: 'passport',
 		component: LayoutPassportComponent,
 		children: [
-			{ path: 'login', component: UserLoginComponent, data: { title: '登录' } },
+			// { path: 'login', component: UserLoginComponent, data: { title: '登录' } },
 			{ path: 'register', component: UserRegisterComponent, data: { title: '注册' } },
 			{ path: 'register-result', component: UserRegisterResultComponent, data: { title: '注册结果' } },
 			{ path: 'lock', component: UserLockComponent, data: { title: '锁屏' } },
-			{ path: 'social-login', component: SocialLoginComponent, data: { title: '登录' } }
+			{ path: 'login', component: SocialLoginComponent, data: { title: '登录' } }
 		]
 	},
 	// 单页不包裹Layout
