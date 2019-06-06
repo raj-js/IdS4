@@ -42,13 +42,9 @@ export class ClientComponent implements OnInit {
 	columns: STColumn[] = [
 		{ title: '', type: 'checkbox', index: 'key' },
 		{ title: 'ID', index: 'id' },
-		{ title: '名称', index: 'name' },
-		{ title: '显示名称', index: 'displayName' },
-		{ title: '必选', index: 'required', type: 'yn' },
-		{ title: '强调', index: 'emphasize', type: 'yn' },
-		{ title: '显示在发现文档中', index: 'showInDiscoveryDocument', type: 'yn' },
-		{ title: '创建时间', index: 'created', type: 'date' },
-		{ title: '修改时间', index: 'updated', type: 'date' },
+		{ title: '客户端ID', index: 'clientId' },
+		{ title: '客户端名称', index: 'clientName' },
+		{ title: '协议类型', index: 'protocolType' },
 		{ title: '是否启用', index: 'enabled', type: 'yn' },
 		{
 			title: '',
@@ -58,7 +54,7 @@ export class ClientComponent implements OnInit {
 					icon: 'edit',
 					type: 'link',
 					iif: (row: any) => !row.nonEditable,
-					click: (row: any) => this.router.navigateByUrl(`/resource/edit-identity/${row.id}`)
+					click: (row: any) => this.router.navigateByUrl(`/client/edit/${row.id}`)
 				}
 			]
 		}
@@ -74,10 +70,10 @@ export class ClientComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.configSrv.isReady) {
-			this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/resource/identity`;
+			this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/client`;
 		} else {
 			this.configSrv.settingsLoaded$.subscribe(() => {
-				this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/resource/identity`;
+				this.url = `${this.configSrv.serverSettings.coreApiUrl}/api/client`;
 			});
 		}
 	}
@@ -89,7 +85,7 @@ export class ClientComponent implements OnInit {
 	}
 
 	add(): void {
-		this.router.navigate([ '/resource/add-identity' ]);
+		this.router.navigate([ '/client/add' ]);
 	}
 
 	remove(): void {
