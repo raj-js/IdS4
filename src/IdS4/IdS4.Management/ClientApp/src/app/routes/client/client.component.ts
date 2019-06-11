@@ -7,6 +7,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { _HttpClient } from '@delon/theme';
 import { IApiResult } from '@shared/models/api-result.model';
 import { ApiResultCode } from '@shared/models/api-result-code.enum';
+import { ClientType } from '@shared/models/client-type.enum';
 
 @Component({
 	selector: 'app-client',
@@ -15,6 +16,14 @@ import { ApiResultCode } from '@shared/models/api-result-code.enum';
 })
 export class ClientComponent implements OnInit {
 	url: string;
+	types: ClientType[] = [
+		ClientType.Empty,
+		ClientType.Hybrid,
+		ClientType.SPA,
+		ClientType.Native,
+		ClientType.Machine,
+		ClientType.Device
+	];
 
 	@ViewChild('st') st: STComponent;
 
@@ -42,7 +51,7 @@ export class ClientComponent implements OnInit {
 	columns: STColumn[] = [
 		{ title: '', type: 'checkbox', index: 'key' },
 		{ title: 'ID', index: 'id' },
-		{ title: '客户端ID', index: 'clientId' },
+		{ title: '客户端标识', index: 'clientId' },
 		{ title: '客户端名称', index: 'clientName' },
 		{ title: '协议类型', index: 'protocolType' },
 		{ title: '是否启用', index: 'enabled', type: 'yn' },
@@ -84,8 +93,8 @@ export class ClientComponent implements OnInit {
 		}
 	}
 
-	add(): void {
-		this.router.navigate([ '/client/add' ]);
+	add(type: ClientType): void {
+		this.router.navigateByUrl(`/client/add`);
 	}
 
 	remove(): void {

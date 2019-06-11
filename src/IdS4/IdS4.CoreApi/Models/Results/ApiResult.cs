@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IdS4.CoreApi.Models.Results
 {
@@ -36,12 +37,12 @@ namespace IdS4.CoreApi.Models.Results
             };
         }
 
-        public static ApiResult Failure(ApiResultCode code = ApiResultCode.Failure, Dictionary<string, object> errors = null)
+        public static ApiResult Failure(ApiResultCode code = ApiResultCode.Failure, params KeyValuePair<string, object>[] errors)
         {
             var result = new ApiResult { Code = code };
 
-            if (errors != null)
-                result.Errors = errors;
+            errors?.ToList()
+                .ForEach(s => result.AddError(s.Key, s.Value));
 
             return result;
         }
@@ -65,7 +66,7 @@ namespace IdS4.CoreApi.Models.Results
                 Code = ApiResultCode.NotFound,
                 Errors =
                 {
-                    { nameof(ApiResultCode.NotFound), $"{id} not found" } 
+                    { nameof(ApiResultCode.NotFound), $"{id} not found" }
                 }
             };
         }

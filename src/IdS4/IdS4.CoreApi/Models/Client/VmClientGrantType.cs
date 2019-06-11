@@ -6,5 +6,15 @@
         public string GrantType { get; set; }
 
         public int ClientId { get; set; }
+
+        public VmClientGrantType()
+        {
+            
+        }
+
+        public VmClientGrantType(string grantType)
+        {
+            GrantType = grantType;
+        }
     }
 }

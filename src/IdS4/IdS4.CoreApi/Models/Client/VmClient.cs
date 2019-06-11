@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace IdS4.CoreApi.Models.Client
 {
@@ -13,7 +14,7 @@ namespace IdS4.CoreApi.Models.Client
 
         public string ProtocolType { get; set; } = "oidc";
 
-        public List<VmClientSecret> ClientSecrets { get; set; }
+        public List<VmClientSecret> ClientSecrets { get; set; } = new List<VmClientSecret>();
 
         public bool RequireClientSecret { get; set; } = true;
 
@@ -31,7 +32,7 @@ namespace IdS4.CoreApi.Models.Client
 
         public bool AlwaysIncludeUserClaimsInIdToken { get; set; }
 
-        public List<VmClientGrantType> AllowedGrantTypes { get; set; }
+        public List<VmClientGrantType> AllowedGrantTypes { get; set; } = new List<VmClientGrantType>();
 
         public bool RequirePkce { get; set; }
 
@@ -39,9 +40,9 @@ namespace IdS4.CoreApi.Models.Client
 
         public bool AllowAccessTokensViaBrowser { get; set; }
 
-        public List<VmClientRedirectUri> RedirectUris { get; set; }
+        public List<VmClientRedirectUri> RedirectUris { get; set; } = new List<VmClientRedirectUri>();
 
-        public List<VmClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; }
+        public List<VmClientPostLogoutRedirectUri> PostLogoutRedirectUris { get; set; } = new List<VmClientPostLogoutRedirectUri>();
 
         public string FrontChannelLogoutUri { get; set; }
 
@@ -53,7 +54,7 @@ namespace IdS4.CoreApi.Models.Client
 
         public bool AllowOfflineAccess { get; set; }
 
-        public List<VmClientScope> AllowedScopes { get; set; }
+        public List<VmClientScope> AllowedScopes { get; set; } = new List<VmClientScope>();
 
         public int IdentityTokenLifetime { get; set; } = 300;
 
@@ -77,11 +78,11 @@ namespace IdS4.CoreApi.Models.Client
 
         public bool EnableLocalLogin { get; set; } = true;
 
-        public List<VmClientIdPRestriction> IdentityProviderRestrictions { get; set; }
+        public List<VmClientIdPRestriction> IdentityProviderRestrictions { get; set; } = new List<VmClientIdPRestriction>();
 
         public bool IncludeJwtId { get; set; }
 
-        public List<VmClientClaim> Claims { get; set; }
+        public List<VmClientClaim> Claims { get; set; } = new List<VmClientClaim>();
 
         public bool AlwaysSendClientClaims { get; set; }
 
@@ -89,9 +90,9 @@ namespace IdS4.CoreApi.Models.Client
 
         public string PairWiseSubjectSalt { get; set; }
 
-        public List<VmClientCorsOrigin> AllowedCorsOrigins { get; set; }
+        public List<VmClientCorsOrigin> AllowedCorsOrigins { get; set; } = new List<VmClientCorsOrigin>();
 
-        public List<VmClientProperty> Properties { get; set; }
+        public List<VmClientProperty> Properties { get; set; } = new List<VmClientProperty>();
 
         public DateTime Created { get; set; } = DateTime.UtcNow;
 

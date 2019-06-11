@@ -1,3 +1,17 @@
-<p>
-  add-client works!
-</p>
+<page-header [title]="'新建客户端'" [breadcrumb]="breadcrumb" [tab]="tab">
+  <ng-template #breadcrumb>
+    <nz-breadcrumb>
+      <nz-breadcrumb-item><a href="#">首页</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a href="#/client">客户端管理</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a>新建</a></nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </ng-template>
+</page-header>
+
+<ng-template #tab>
+  <nz-tabset>
+    <nz-tab nzTitle="基本">
+      <sf #basic [schema]="schema" [loading]="saving" (formSubmit)="submit($event)"></sf>
+    </nz-tab>
+  </nz-tabset>
+</ng-template>

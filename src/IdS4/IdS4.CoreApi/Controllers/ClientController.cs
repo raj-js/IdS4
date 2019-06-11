@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using IdS4.CoreApi.Models.Client;
 using IdS4.CoreApi.Models.Paging;
 using IdS4.CoreApi.Models.Results;
@@ -10,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using IdentityServer4.EntityFramework.Entities;
+using GrantType = IdentityServer4.Models.GrantType;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -73,5 +76,82 @@ namespace IdS4.CoreApi.Controllers
             var vm = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vm);
         }
+
+        [HttpPost]
+        public async Task<ApiResult> AddClient([FromBody]VmClientAdd vm)
+        {
+            if (!ModelState.IsValid) return ApiResult.Failure(ModelState);
+
+            var vmClient = PrepareClient(vm);
+
+            var apiResult = await ValidateClient(vmClient);
+            if (apiResult.Code != ApiResultCode.Success) return apiResult;
+
+            var client = _mapper.Map<Client>(vmClient);
+            await _configurationDb.Clients.AddAsync(client);
+            await _configurationDb.SaveChangesAsync();
+            return ApiResult.Success(_mapper.Map<VmClient>(client));
+        }
+
+        [HttpPatch]
+        public async Task<ApiResult> EditBasic()
+        {
+            return null;
+        }
+
+        #region privates
+
+        private VmClient PrepareClient(VmClientAdd vm)
+        {
+            var client = new VmClient
+            {
+                ClientId = vm.ClientId,
+                ClientName = vm.ClientName
+            };
+
+            switch (vm.Type)
+            {
+                case VmClientType.Empty:
+                    break;
+                case VmClientType.Hybrid:
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.Hybrid));
+                    break;
+                case VmClientType.SPA:
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.AuthorizationCode));
+                    client.RequirePkce = true;
+                    client.RequireClientSecret = false;
+                    break;
+                case VmClientType.Native:
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.Hybrid));
+                    break;
+                case VmClientType.Machine:
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.ResourceOwnerPassword));
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.ClientCredentials));
+                    break;
+                case VmClientType.Device:
+                    client.AllowedGrantTypes.Add(new VmClientGrantType(GrantType.DeviceFlow));
+                    client.RequireClientSecret = false;
+                    client.AllowOfflineAccess = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return client;
+        }
+
+        private async Task<ApiResult> ValidateClient(VmClient client)
+        {
+            if (await _configurationDb.Clients.AnyAsync(s => s.ClientId.Equals(client.ClientId)))
+            {
+                return ApiResult.Failure(errors:
+                    new KeyValuePair<string, object>("客户端已存在", $"客户端ID: {client.ClientId} 已存在")
+                    );
+            }
+
+            return ApiResult.Success();
+        }
+
+        #endregion
     }
 }
