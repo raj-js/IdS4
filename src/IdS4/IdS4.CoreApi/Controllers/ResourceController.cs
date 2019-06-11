@@ -174,6 +174,8 @@ namespace IdS4.CoreApi.Controllers
         [HttpDelete("identity/{resourceIds}")]
         public async Task<ApiResult> RemoveIdentityResource([FromRoute] string resourceIds)
         {
+            if (string.IsNullOrEmpty(resourceIds)) return ApiResult.Failure();
+
             foreach (var resourceId in resourceIds.Split(","))
             {
                 var resource = await _configurationDb.IdentityResources.FindAsync(int.Parse(resourceId));

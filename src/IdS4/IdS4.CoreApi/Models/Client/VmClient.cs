@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace IdS4.CoreApi.Models.Client
 {
-    public class VmClient
+    public partial class VmClient
     {
         public int Id { get; set; }
 

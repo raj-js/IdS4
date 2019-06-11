@@ -1,3 +1,46 @@
-<p>
-  edit-client works!
-</p>
+<page-header [title]="'编辑客户端'" [breadcrumb]="breadcrumb" [tab]="tab">
+  <ng-template #breadcrumb>
+    <nz-breadcrumb>
+      <nz-breadcrumb-item><a href="#">首页</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a href="#/client">客户端管理</a></nz-breadcrumb-item>
+      <nz-breadcrumb-item><a>编辑</a></nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </ng-template>
+</page-header>
+
+<ng-template #tab>
+  <nz-tabset>
+    <nz-tab nzTitle="基本">
+      <sf #basic [schema]="basicFormSchema" [loading]="loadingBasicForm" [formData]="basicForm"
+        (formSubmit)="submitBasicForm($event)">
+      </sf>
+    </nz-tab>
+    <nz-tab nzTitle="授权">
+      <ng-template nz-tab>
+        <sf [schema]="authenticateFormSchema" [loading]="loadingAuthenticateForm" [formData]="authenticateForm"
+          (formSubmit)="submitAuthenticateForm($event)"></sf>
+      </ng-template>
+    </nz-tab>
+    <nz-tab nzTitle="令牌">
+      <ng-template nz-tab>
+        <sf [schema]="tokenFormSchema" [loading]="loadingTokenForm" [formData]="tokenForm"
+          (formSubmit)="submitTokenForm($event)">
+        </sf>
+      </ng-template>
+    </nz-tab>
+    <nz-tab nzTitle="许可">
+      <ng-template nz-tab>
+        <sf [schema]="consentFormSchema" [loading]="loadingConsentForm" [formData]="consentForm"
+          (formSubmit)="submitConsentForm($event)">
+        </sf>
+      </ng-template>
+    </nz-tab>
+    <nz-tab nzTitle="设备">
+      <ng-template nz-tab>
+        <sf [schema]="deviceFormSchema" [loading]="loadingDeviceForm" [formData]="deviceForm"
+          (formSubmit)="submitDeviceForm($event)">
+        </sf>
+      </ng-template>
+    </nz-tab>
+  </nz-tabset>
+</ng-template>
