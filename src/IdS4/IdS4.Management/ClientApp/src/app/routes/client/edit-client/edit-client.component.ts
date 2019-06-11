@@ -326,7 +326,7 @@ export class EditClientComponent implements OnInit {
 		this.id = Number.parseInt(this.route.snapshot.paramMap.get('id'), 10);
 
 		if (this.id === Number.NaN) {
-			this.msgSrv.error('Api资源ID无效！');
+			this.msgSrv.error('客户端ID无效！');
 			return;
 		}
 
