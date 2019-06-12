@@ -273,9 +273,10 @@ export class EditClientComponent implements OnInit {
 					properties: {
 						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
 						apiResourceId: { type: 'number', ui: { hidden: true } },
-						type: { title: '类型', type: 'string', maxLength: 256 }
+						type: { title: '类型', type: 'string', maxLength: 250 },
+						value: { title: '值', type: 'string', maxLength: 250 }
 					},
-					required: [ 'type' ]
+					required: [ 'type', 'value' ]
 				}
 			},
 			alwaysSendClientClaims: { type: 'boolean', title: '总是发送声明在任何流程中', default: false },

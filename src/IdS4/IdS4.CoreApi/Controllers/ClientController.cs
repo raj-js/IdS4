@@ -95,7 +95,17 @@ namespace IdS4.CoreApi.Controllers
             if (vmClient == null) return ApiResult.Failure();
 
             vm.ApplyChangeToClient(vmClient);
-            vmClient = await EditClient(vmClient);
+
+            await MarkClientSecretsDeleted(vm.Id, vm.ClientSecrets);
+            await MarkAllowedGrantTypesDeleted(vm.Id, vm.AllowedGrantTypes);
+            await MarkRedirectUrisDeleted(vm.Id, vm.RedirectUris);
+            await MarkAllowedScopesDeleted(vm.Id, vm.AllowedScopes);
+            await MarkPropertiesDeleted(vm.Id, vm.Properties);
+
+            var client = await EditClient(vmClient);
+            await _configurationDb.SaveChangesAsync();
+
+            vmClient = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vmClient.ToBasic(_mapper));
         }
 
@@ -111,7 +121,14 @@ namespace IdS4.CoreApi.Controllers
             if (vmClient == null) return ApiResult.Failure();
 
             vm.ApplyChangeToClient(vmClient);
-            vmClient = await EditClient(vmClient);
+
+            await MarkPostLogoutRedirectUrisDeleted(vm.Id, vm.PostLogoutRedirectUris);
+            await MarkIdentityProviderRestrictionsDeleted(vm.Id, vm.IdentityProviderRestrictions);
+
+            var client = await EditClient(vmClient);
+            await _configurationDb.SaveChangesAsync();
+
+            vmClient = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vmClient.ToAuthenticate(_mapper));
         }
 
@@ -127,7 +144,14 @@ namespace IdS4.CoreApi.Controllers
             if (vmClient == null) return ApiResult.Failure();
 
             vm.ApplyChangeToClient(vmClient);
-            vmClient = await EditClient(vmClient);
+
+            await MarkAllowedCorsOriginsDeleted(vm.Id, vm.AllowedCorsOrigins);
+            await MarkClaimsDeleted(vm.Id, vm.Claims);
+
+            var client = await EditClient(vmClient);
+            await _configurationDb.SaveChangesAsync();
+
+            vmClient = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vmClient.ToToken(_mapper));
         }
 
@@ -143,7 +167,10 @@ namespace IdS4.CoreApi.Controllers
             if (vmClient == null) return ApiResult.Failure();
 
             vm.ApplyChangeToClient(vmClient);
-            vmClient = await EditClient(vmClient);
+            var client = await EditClient(vmClient);
+            await _configurationDb.SaveChangesAsync();
+
+            vmClient = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vmClient.ToConsent(_mapper));
         }
 
@@ -159,7 +186,10 @@ namespace IdS4.CoreApi.Controllers
             if (vmClient == null) return ApiResult.Failure();
 
             vm.ApplyChangeToClient(vmClient);
-            vmClient = await EditClient(vmClient);
+            var client = await EditClient(vmClient);
+            await _configurationDb.SaveChangesAsync();
+
+            vmClient = _mapper.Map<VmClient>(client);
             return ApiResult.Success(vmClient.ToDevice(_mapper));
         }
 
@@ -260,14 +290,131 @@ namespace IdS4.CoreApi.Controllers
             return ApiResult.Success(vm);
         }
 
-        private async Task<VmClient> EditClient(VmClient vm)
+        private async Task<Client> EditClient(VmClient vm)
         {
             var entity = _mapper.Map<Client>(vm);
             var entry = _configurationDb.Attach(entity);
             entry.State = EntityState.Modified;
 
-            await _configurationDb.SaveChangesAsync();
-            return _mapper.Map<VmClient>(entity);
+            await Task.CompletedTask;
+            return entity;
+        }
+
+        private async Task MarkClientSecretsDeleted(int clientId, List<VmClientSecret> changed)
+        {
+            var origin = await _configurationDb.Set<ClientSecret>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkAllowedGrantTypesDeleted(int clientId, List<VmClientGrantType> changed)
+        {
+            var origin = await _configurationDb.Set<ClientGrantType>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkRedirectUrisDeleted(int clientId, List<VmClientRedirectUri> changed)
+        {
+            var origin = await _configurationDb.Set<ClientRedirectUri>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkAllowedScopesDeleted(int clientId, List<VmClientScope> changed)
+        {
+            var origin = await _configurationDb.Set<ClientScope>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkPropertiesDeleted(int clientId, List<VmClientProperty> changed)
+        {
+            var origin = await _configurationDb.Set<ClientProperty>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkPostLogoutRedirectUrisDeleted(int clientId, List<VmClientPostLogoutRedirectUri> changed)
+        {
+            var origin = await _configurationDb.Set<ClientPostLogoutRedirectUri>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkIdentityProviderRestrictionsDeleted(int clientId, List<VmClientIdPRestriction> changed)
+        {
+            var origin = await _configurationDb.Set<ClientIdPRestriction>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkAllowedCorsOriginsDeleted(int clientId, List<VmClientCorsOrigin> changed)
+        {
+            var origin = await _configurationDb.Set<ClientCorsOrigin>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkClaimsDeleted(int clientId, List<VmClientClaim> changed)
+        {
+            var origin = await _configurationDb.Set<ClientClaim>()
+                .AsNoTracking()
+                .Where(s => s.ClientId == clientId)
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
         }
 
         #endregion
