@@ -10,7 +10,6 @@
   },
   "menu": [{
     "text": "核心功能",
-    "i18n": "menu.main",
     "group": true,
     "hideInBreadcrumb": true,
     "children": [{

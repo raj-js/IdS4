@@ -90,8 +90,8 @@ const oidc_configuration = 'assets/auth.clientConfiguration.json';
 import { StartupService } from '@core/startup/startup.service';
 export function StartupServiceFactory(startupService: StartupService, oidcConfigService: OidcConfigService): Function {
 	return () => {
-		startupService.load();
 		oidcConfigService.load(oidc_configuration);
+		startupService.load();
 	};
 }
 const APPINIT_PROVIDES = [

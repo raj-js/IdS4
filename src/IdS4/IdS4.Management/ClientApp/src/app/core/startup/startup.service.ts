@@ -61,6 +61,7 @@ export class StartupService {
 					this.settingService.setApp(res.app);
 					// 用户信息：包括姓名、头像、邮箱地址
 					// this.settingService.setUser(res.user);
+					this.setUser();
 					// ACL：设置权限为全量
 					this.aclService.setFull(true);
 					// 初始化菜单
@@ -75,7 +76,7 @@ export class StartupService {
 			);
 	}
 
-	private fillUser() {
+	private setUser() {
 		this.oidcSecurityService = this.injector.get(OidcSecurityService);
 		if (this.oidcSecurityService === null) return;
 
@@ -83,7 +84,11 @@ export class StartupService {
 		if (token === null || token === '') return;
 
 		this.oidcSecurityService.getUserData().subscribe((d) => {
-			const sid = d.sid;
+			this.settingService.setUser({
+				name: d.name,
+				email: d.email,
+				avatar: d.avatar
+			});
 		});
 	}
 
