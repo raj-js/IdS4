@@ -23,6 +23,8 @@ namespace IdS4.CoreApi.Models.User
 
         public int AccessFailedCount { get; set; }
 
+        public string ConcurrencyStamp { get; set; }
+
         public List<VmUserClaim> UserClaims { get; set; }
     }
 }

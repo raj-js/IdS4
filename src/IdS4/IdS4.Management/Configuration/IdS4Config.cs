@@ -16,7 +16,9 @@ namespace IdS4.Management.Configuration
 
             services.AddDbContext<IdS4IdentityDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("IdentityDb"));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("IdentityDb"),
+                    sql => sql.MigrationsAssembly(assembly));
             });
 
             services

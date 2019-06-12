@@ -9,7 +9,9 @@ using IdS4.CoreApi.Models.Results;
 using IdS4.CoreApi.Models.Role;
 using IdS4.CoreApi.Models.User;
 using IdS4.DbContexts;
+using IdS4.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,16 +24,18 @@ namespace IdS4.CoreApi.Controllers
     {
         private readonly ILogger<RoleController> _logger;
         private readonly IdS4IdentityDbContext _identityDb;
+        private readonly RoleManager<IdS4Role> _roleManager;
         private readonly IMapper _mapper;
 
         public RoleController(
             ILogger<RoleController> logger,
             IdS4IdentityDbContext identityDb,
-            IMapper mapper)
+            IMapper mapper, RoleManager<IdS4Role> roleManager)
         {
             _logger = logger;
             _identityDb = identityDb;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         [HttpGet]
@@ -63,5 +67,74 @@ namespace IdS4.CoreApi.Controllers
             vmRole.RoleClaims = _mapper.Map<List<VmRoleClaim>>(roleClaims);
             return ApiResult.Success(vmRole);
         }
+
+        [HttpPost]
+        public async Task<ApiResult> Add([FromBody]VmRole vm)
+        {
+            if (!ModelState.IsValid) return ApiResult.Failure(ModelState);
+
+            var role = _mapper.Map<IdS4Role>(vm);
+            var entry = _identityDb.Attach(role);
+            await _identityDb.SaveChangesAsync();
+
+            return ApiResult.Success(_mapper.Map<VmRole>(entry.Entity));
+        }
+
+        [HttpPut]
+        public async Task<ApiResult> Edit([FromBody] VmRole vm)
+        {
+            if (string.IsNullOrEmpty(vm.Id)) return ApiResult.NotFound(vm.Id);
+
+            var origin = await _identityDb.Roles
+                .AsNoTracking()
+                .SingleOrDefaultAsync(s => s.Id.Equals(vm.Id));
+
+            if (origin == null) return ApiResult.NotFound(vm.Id);
+
+            origin.RoleClaims = _mapper.Map<List<IdS4RoleClaim>>(vm.RoleClaims);
+            vm = _mapper.Map(origin, vm);
+            await MarkRoleClaimsDeleted(vm.Id, vm.RoleClaims);
+
+            var entity = _mapper.Map<IdS4Role>(vm);
+            var entry = _identityDb.Attach(entity);
+            entry.State = EntityState.Modified;
+            await _identityDb.SaveChangesAsync();
+
+            vm = _mapper.Map<VmRole>(entity);
+            return ApiResult.Success(vm);
+        }
+
+        [HttpDelete("{ids}")]
+        public async Task<ApiResult> Remove([FromRoute]string ids)
+        {
+            if (string.IsNullOrEmpty(ids)) return ApiResult.Failure();
+
+            foreach (var id in ids.Split(","))
+            {
+                var entity = await _identityDb.Roles.FindAsync(id);
+                if (entity == null) continue;
+
+                _identityDb.Roles.Remove(entity);
+            }
+            await _identityDb.SaveChangesAsync();
+            return ApiResult.Success();
+        }
+
+        #region privates
+
+        private async Task MarkRoleClaimsDeleted(string roleId, List<VmRoleClaim> changed)
+        {
+            var origin = await _identityDb.RoleClaims
+                .AsNoTracking()
+                .Where(s => s.RoleId.Equals(roleId))
+                .ToListAsync();
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _identityDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        #endregion
     }
 }

@@ -6,6 +6,7 @@ namespace IdS4.CoreApi.Models.Role
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string ConcurrencyStamp { get; set; }
         public List<VmRoleClaim> RoleClaims { get; set; }
     }
 }
