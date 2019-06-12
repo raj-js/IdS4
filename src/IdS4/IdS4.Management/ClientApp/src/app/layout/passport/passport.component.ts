@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SettingsService, App } from '@delon/theme';
 
 @Component({
 	selector: 'layout-passport',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
 	styleUrls: [ './passport.component.less' ]
 })
 export class LayoutPassportComponent {
+	app: App;
 	links = [];
+
+	constructor(private settingsSrv: SettingsService) {
+		this.app = this.settingsSrv.app;
+	}
 }
