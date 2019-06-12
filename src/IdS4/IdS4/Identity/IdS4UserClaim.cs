@@ -5,6 +5,8 @@ namespace IdS4.Identity
 {
     public class IdS4UserClaim : IdentityUserClaim<string>
     {
+        public virtual IdS4User User { get; set; }
+
         public IdS4UserClaim()
         {
             

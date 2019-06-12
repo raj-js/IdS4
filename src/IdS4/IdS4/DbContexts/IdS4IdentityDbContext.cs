@@ -11,5 +11,30 @@ namespace IdS4.DbContexts
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<IdS4UserClaim>()
+                .HasOne(s => s.User)
+                .WithMany(s => s.UserClaims)
+                .HasForeignKey(s => s.UserId);
+
+            builder.Entity<IdS4UserRole>()
+                .HasOne(s => s.User)
+                .WithMany(s => s.UserRoles)
+                .HasForeignKey(s => s.UserId);
+
+            builder.Entity<IdS4UserRole>()
+                .HasOne(s => s.Role)
+                .WithMany(s => s.UserRoles)
+                .HasForeignKey(s => s.RoleId);
+
+            builder.Entity<IdS4RoleClaim>()
+                .HasOne(s => s.Role)
+                .WithMany(s => s.RoleClaims)
+                .HasForeignKey(s => s.RoleId);
+        }
     }
 }
