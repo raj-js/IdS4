@@ -69,8 +69,8 @@ namespace IdS4.CoreApi.Controllers
             entity.UserClaims = await _configurationDb.IdentityClaims.Where(s => s.IdentityResourceId == entity.Id).ToListAsync();
             entity.Properties = await _configurationDb.IdentityResourceProperties.Where(s => s.IdentityResourceId == entity.Id).ToListAsync();
 
-            var resource = _mapper.Map<VmIdentityResource>(entity);
-            return ApiResult.Success(resource);
+            var vmResource = _mapper.Map<VmIdentityResource>(entity);
+            return ApiResult.Success(vmResource);
         }
 
         [HttpPut("identity")]
@@ -85,7 +85,8 @@ namespace IdS4.CoreApi.Controllers
             entry.State = EntityState.Modified;
             await _configurationDb.SaveChangesAsync();
 
-            return ApiResult.Success(entry.Entity);
+            var vmResource = _mapper.Map<VmIdentityResource>(entry.Entity);
+            return ApiResult.Success(vmResource);
         }
 
         [HttpPut("identity/claims/{resourceId}")]
