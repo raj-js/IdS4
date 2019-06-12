@@ -28,22 +28,21 @@ export class EditUserComponent implements OnInit {
 			emailConfirmed: { type: 'boolean', title: '邮箱是否确认' },
 			twoFactorEnabled: { type: 'boolean', title: '启用双重验证' },
 			lockoutEnabled: { type: 'boolean', title: '启用锁定' },
-			claims: {
+			userClaims: {
 				title: '用户声明',
 				type: 'array',
 				items: {
 					type: 'object',
 					properties: {
-						id: { type: 'number', ui: { hidden: true } },
+						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
 						userId: { type: 'number', ui: { hidden: true } },
-						claimType: { title: '键', type: 'string', maxLength: 2000 },
-						claimValue: { title: '值', type: 'string', maxLength: 2000 }
+						claimType: { title: '类型', type: 'string', maxLength: 250 },
+						claimValue: { title: '值', type: 'string', maxLength: 250 }
 					},
-					required: [ 'claimType' ]
+					required: [ 'claimType', 'claimValue' ]
 				}
 			}
-		},
-		required: [ 'name', 'displayName' ]
+		}
 	};
 
 	constructor(

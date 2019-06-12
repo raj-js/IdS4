@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using IdS4.CoreApi.Models.Results;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -45,6 +46,21 @@ namespace IdS4.CoreApi.Controllers
                 _mapper.Map<List<VmUser>>(users),
                 await _identityDb.Users.AsNoTracking().CountAsync()
             );
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ApiResult> Get([FromRoute] string id)
+        {
+            if (string.IsNullOrEmpty(id)) return ApiResult.NotFound(id);
+
+            var user = await _identityDb.Users.FindAsync(id);
+            if (user == null) return  ApiResult.NotFound(id);
+
+            var userClaims = await _identityDb.UserClaims.AsNoTracking().Where(s => s.UserId.Equals(id)).ToListAsync();
+
+            var vmUser = _mapper.Map<VmUser>(user);
+            vmUser.UserClaims = _mapper.Map<List<VmUserClaim>>(userClaims);
+            return ApiResult.Success(vmUser);
         }
     }
 }

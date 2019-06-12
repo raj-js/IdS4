@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace IdS4.CoreApi.Models.User
 {
@@ -21,5 +22,7 @@ namespace IdS4.CoreApi.Models.User
         public bool LockoutEnabled { get; set; }
 
         public int AccessFailedCount { get; set; }
+
+        public List<VmUserClaim> UserClaims { get; set; }
     }
 }
