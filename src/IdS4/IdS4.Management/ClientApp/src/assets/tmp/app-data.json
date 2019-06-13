@@ -14,7 +14,7 @@
     "hideInBreadcrumb": true,
     "children": [{
         "text": "资源管理",
-        "icon": "anticon-appstore",
+        "icon": "anticon-build",
         "children": [{
             "text": "身份资源",
             "link": "/resource/identity"
@@ -33,12 +33,12 @@
       {
         "text": "用户管理",
         "link": "/user",
-        "icon": "anticon-appstore"
+        "icon": "anticon-user"
       },
       {
         "text": "角色管理",
         "link": "/role",
-        "icon": "anticon-appstore"
+        "icon": "anticon-team"
       }
     ]
   }]

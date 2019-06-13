@@ -27,7 +27,7 @@ const routes: Routes = [
 		canLoad: [ AuthorizationGuard ],
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-			{ path: 'dashboard', component: DashboardComponent, data: { title: '仪表盘' } },
+			{ path: 'dashboard', component: DashboardComponent, data: { title: '首页' } },
 			{ path: 'exception', loadChildren: './exception/exception.module#ExceptionModule' },
 			// resource
 			{ path: 'resource', loadChildren: './resource/resource.module#ResourceModule' },
@@ -53,7 +53,7 @@ const routes: Routes = [
 	},
 	// 单页不包裹Layout
 	{ path: 'callback', component: CallbackComponent },
-	{ path: '**', redirectTo: 'exception/404' }
+	{ path: '**', redirectTo: 'exception/404', data: { title: '404' } }
 ];
 
 @NgModule({

@@ -1,6 +1,61 @@
-<div class="alain-default__content-title">
-  <h1>
-    IdS4 统一身份认证授权系统
-    <small>Welcome !</small>
-  </h1>
+<page-header [title]="'IdS4 统一身份认证授权系统'"></page-header>
+
+<div nz-row nzGutter="16">
+  <div nz-col nzSpan="6" nzOffset="6">
+    <nz-card nzHoverable [nzCover]="coverIdResTemplate">
+      <nz-card-meta nzTitle="身份资源管理" nzDescription="管理访问令牌中包含的用户信息">
+      </nz-card-meta>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="6">
+    <nz-card nzHoverable [nzCover]="coverApiResTemplate">
+      <nz-card-meta nzTitle="Api资源管理" nzDescription="管理需要进行保护的Api资源"></nz-card-meta>
+    </nz-card>
+  </div>
 </div>
+
+<div nz-row nzGutter="16">
+  <div nz-col nzSpan="6" nzOffset="3">
+    <nz-card nzHoverable [nzCover]="coverClientTemplate">
+      <nz-card-meta nzTitle="客户端管理" nzDescription="管理客户端的基本信息与可访问权限"></nz-card-meta>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="6">
+    <nz-card nzHoverable [nzCover]="coverUserTemplate">
+      <nz-card-meta nzTitle="用户管理" nzDescription="管理用户声明"></nz-card-meta>
+    </nz-card>
+  </div>
+  <div nz-col nzSpan="6">
+    <nz-card nzHoverable [nzCover]="coverRoleTemplate">
+      <nz-card-meta nzTitle="角色管理" nzDescription="管理基本角色来对资源访问进行初步控制"></nz-card-meta>
+    </nz-card>
+  </div>
+</div>
+
+<ng-template #coverIdResTemplate>
+  <a href="/#/resource/identity" class="coverNav">
+    <i nz-icon nzType="idcard" nzTheme="outline"></i>
+  </a>
+</ng-template>
+<ng-template #coverApiResTemplate>
+  <a href="/#/resource/api" class="coverNav">
+    <i nz-icon nzType="api" nzTheme="outline"></i>
+  </a>
+</ng-template>
+
+<ng-template #coverClientTemplate>
+  <a href="/#/client" class="coverNav">
+    <i nz-icon nzType="appstore" nzTheme="outline"></i>
+  </a>
+</ng-template>
+
+<ng-template #coverUserTemplate>
+  <a href="/#/user" class="coverNav">
+    <i nz-icon nzType="user" nzTheme="outline"></i>
+  </a>
+</ng-template>
+<ng-template #coverRoleTemplate>
+  <a href="/#/role" class="coverNav">
+    <i nz-icon nzType="team" nzTheme="outline"></i>
+  </a>
+</ng-template>
