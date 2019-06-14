@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { IApiResult } from '@shared/models/api-result.model';
 import { ApiResultCode } from '@shared/models/api-result-code.enum';
 import { Observable } from 'rxjs';
+import { map, filter } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-edit-client',
@@ -15,6 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class EditClientComponent implements OnInit {
 	url: string;
+	url$: Observable<string>;
 	id: number;
 
 	loadingBasicForm = false;
@@ -130,7 +132,21 @@ export class EditClientComponent implements OnInit {
 					properties: {
 						id: { title: 'ID', type: 'number', default: 0, ui: { widget: 'text' } },
 						clientId: { type: 'number', ui: { hidden: true } },
-						scope: { type: 'string', maxLength: 256, title: '范围' }
+						scope: {
+							type: 'string',
+							title: '范围',
+							ui: {
+								widget: 'select',
+								asyncData: () =>
+									this.http
+										.get(`${this.url}/api/scope`)
+										.pipe(
+											map((resp: any) => resp as IApiResult),
+											filter((res: IApiResult) => res.code === ApiResultCode.Success),
+											map((res: IApiResult) => res.data)
+										)
+							}
+						}
 					},
 					required: [ 'scope' ]
 				}

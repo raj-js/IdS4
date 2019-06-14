@@ -12,19 +12,21 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.Entities;
+using IdS4.CoreApi.Extensions;
 using GrantType = IdentityServer4.Models.GrantType;
 
 namespace IdS4.CoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [BearerAuthorize]
     public class ClientController : ControllerBase
     {
         private readonly IdS4ConfigurationDbContext _configurationDb;
-        private readonly ILogger<ResourceController> _logger;
+        private readonly ILogger<ScopeController> _logger;
         private readonly IMapper _mapper;
 
-        public ClientController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper)
+        public ClientController(IdS4ConfigurationDbContext configurationDb, ILogger<ScopeController> logger, IMapper mapper)
         {
             _configurationDb = configurationDb;
             _logger = logger;

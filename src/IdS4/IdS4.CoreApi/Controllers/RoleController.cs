@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using AutoMapper;
+using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Paging;
 using IdS4.CoreApi.Models.Results;
 using IdS4.CoreApi.Models.Role;
@@ -20,6 +21,7 @@ namespace IdS4.CoreApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [BearerAuthorize]
     public class RoleController : ControllerBase
     {
         private readonly ILogger<RoleController> _logger;
