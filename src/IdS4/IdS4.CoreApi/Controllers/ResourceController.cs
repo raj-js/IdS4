@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
+using IdS4.Application.Models.Paging;
+using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
-using IdS4.CoreApi.Models.Paging;
+using IdS4.CoreApi.Models.Resource;
+using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using AutoMapper;
-using IdS4.CoreApi.Models.Resource;
-using IdS4.CoreApi.Models.Results;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -23,25 +24,42 @@ namespace IdS4.CoreApi.Controllers
         private readonly IdS4ConfigurationDbContext _configurationDb;
         private readonly ILogger<ResourceController> _logger;
         private readonly IMapper _mapper;
+        private readonly IResourceQueries _resourceQueries;
 
-        public ResourceController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper)
+        public ResourceController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper, IResourceQueries resourceQueries)
         {
             _configurationDb = configurationDb;
             _logger = logger;
             _mapper = mapper;
+            _resourceQueries = resourceQueries;
         }
 
         [HttpGet("identity")]
-        public async Task<Paged<IdentityResource>> GetIdentityResources([FromQuery]PageQuery query)
+        public async Task<Paged<IdS4.Application.Models.Resource.VmIdentityResource>> GetIdentityResources([FromQuery]PagingQuery query)
         {
-            return Paged<IdentityResource>.From(
-                await _configurationDb.IdentityResources.AsNoTracking()
-                    .OrderBy(query.Sort ?? "Id")
-                    .Skip(query.Skip)
-                    .Take(query.Limit)
-                    .ToListAsync(),
-                await _configurationDb.IdentityResources.AsNoTracking().CountAsync()
-                );
+            return await _resourceQueries.GetIdentityResources(query);
+        }
+
+        [HttpGet("api")]
+        public async Task<Paged<IdS4.Application.Models.Resource.VmApiResource>> GetApiResources([FromQuery] PagingQuery query)
+        {
+            return await _resourceQueries.GetApiResources(query);
+        }
+
+        [HttpGet("api/{id}")]
+        public async Task<ApiResult> GetApiResource([FromRoute] int id)
+        {
+            if (id <= 0) return ApiResult.NotFound(id);
+
+            return ApiResult.Success(await _resourceQueries.GetApiResource(id));
+        }
+
+        [HttpGet("identity/{id}")]
+        public async Task<ApiResult> GetIdentityResource([FromRoute] int id)
+        {
+            if (id <= 0) return ApiResult.NotFound(id);
+
+            return ApiResult.Success(await _resourceQueries.GetIdentityResource(id));
         }
 
         [HttpPost("identity")]
@@ -58,19 +76,6 @@ namespace IdS4.CoreApi.Controllers
             await _configurationDb.SaveChangesAsync();
 
             return ApiResult.Success(entry.Entity);
-        }
-
-        [HttpGet("identity/{id}")]
-        public async Task<ApiResult> GetIdentityResource([FromRoute] int id)
-        {
-            if (id <= 0) return ApiResult.NotFound(id);
-
-            var entity = await _configurationDb.IdentityResources.FindAsync(id);
-            entity.UserClaims = await _configurationDb.IdentityClaims.Where(s => s.IdentityResourceId == entity.Id).ToListAsync();
-            entity.Properties = await _configurationDb.IdentityResourceProperties.Where(s => s.IdentityResourceId == entity.Id).ToListAsync();
-
-            var vmResource = _mapper.Map<VmIdentityResource>(entity);
-            return ApiResult.Success(vmResource);
         }
 
         [HttpPut("identity")]
@@ -188,19 +193,6 @@ namespace IdS4.CoreApi.Controllers
             return ApiResult.Success();
         }
 
-        [HttpGet("api")]
-        public async Task<Paged<ApiResource>> GetApiResources([FromQuery] PageQuery query)
-        {
-            return Paged<ApiResource>.From(
-                await _configurationDb.ApiResources.AsNoTracking()
-                    .OrderBy(query.Sort ?? "Id")
-                    .Skip(query.Skip)
-                    .Take(query.Limit)
-                    .ToListAsync(),
-                await _configurationDb.ApiResources.AsNoTracking().CountAsync()
-            );
-        }
-
         [HttpPost("api")]
         public async Task<ApiResult> AddApiResource([FromBody]VmApiResource vm)
         {
@@ -212,29 +204,6 @@ namespace IdS4.CoreApi.Controllers
             await _configurationDb.SaveChangesAsync();
 
             return ApiResult.Success(entry.Entity);
-        }
-
-        [HttpGet("api/{id}")]
-        public async Task<ApiResult> GetApiResource([FromRoute] int id)
-        {
-            if (id <= 0) return ApiResult.NotFound(id);
-
-            var entity = await _configurationDb.ApiResources.FindAsync(id);
-            entity.UserClaims = await _configurationDb.ApiResourceClaims.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
-            entity.Properties = await _configurationDb.ApiResourceProperties.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
-            entity.Scopes = await _configurationDb.ApiScopes.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
-            entity.Secrets = await _configurationDb.ApiSecrets.Where(s => s.ApiResourceId == entity.Id).ToListAsync();
-
-            foreach (var scope in entity.Scopes)
-            {
-                scope.UserClaims =
-                    await _configurationDb.ApiScopeClaims
-                        .Where(s => s.ApiScopeId == scope.Id)
-                        .ToListAsync();
-            }
-
-            var resource = _mapper.Map<VmApiResource>(entity);
-            return ApiResult.Success(resource);
         }
 
         [HttpPut("api")]
