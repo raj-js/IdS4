@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 using IdS4.Application.Commands;
 using IdS4.Application.Models.Resource;
@@ -38,6 +39,8 @@ namespace IdS4.Application.CommandHandlers
             await MarkPropertiesDeleted(request.Resource.Id, request.Resource.Properties, cancellationToken);
 
             var resource = _mapper.Map<IdentityResource>(request.Resource);
+            resource.Updated = DateTime.Now;
+
             var entry = _configurationDb.Attach(resource);
             entry.State = EntityState.Modified;
             await _configurationDb.SaveChangesAsync(cancellationToken);
