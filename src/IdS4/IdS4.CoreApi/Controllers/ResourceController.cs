@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
+using IdS4.Application.Commands;
 using IdS4.Application.Models.Paging;
 using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Resource;
 using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,13 +27,15 @@ namespace IdS4.CoreApi.Controllers
         private readonly ILogger<ResourceController> _logger;
         private readonly IMapper _mapper;
         private readonly IResourceQueries _resourceQueries;
+        private readonly IMediator _mediator;
 
-        public ResourceController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper, IResourceQueries resourceQueries)
+        public ResourceController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper, IResourceQueries resourceQueries, IMediator mediator)
         {
             _configurationDb = configurationDb;
             _logger = logger;
             _mapper = mapper;
             _resourceQueries = resourceQueries;
+            _mediator = mediator;
         }
 
         [HttpGet("identity")]
@@ -63,19 +67,12 @@ namespace IdS4.CoreApi.Controllers
         }
 
         [HttpPost("identity")]
-        public async Task<ApiResult> AddIdentityResource([FromBody]VmIdentityResource vm)
+        public async Task<ApiResult> AddIdentityResource([FromBody]IdS4.Application.Models.Resource.VmIdentityResource vm)
         {
-            //if (!ModelState.IsValid)
-            //    return ModelState.ToApiResult();
-
             if (vm.Id > 0) return ApiResult.NotFound(vm.Id);
 
-            var resource = _mapper.Map<IdentityResource>(vm);
-
-            var entry = await _configurationDb.IdentityResources.AddAsync(resource);
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entry.Entity);
+            var command = new AddIdentityResourceCommand(vm);
+            return ApiResult.Success(await _mediator.Send(command));
         }
 
         [HttpPut("identity")]

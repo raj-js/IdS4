@@ -31,7 +31,8 @@ namespace IdS4.CoreApi
 
             var container = new ContainerBuilder();
             container.Populate(services);
-            container.RegisterModule(new MediatorModule());
+            container.RegisterModule<MediatorModule>();
+            container.RegisterModule<ApplicationModule>();
             return new AutofacServiceProvider(container.Build());
         }
 
