@@ -1,20 +1,19 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 using IdS4.Application.Commands;
 using IdS4.Application.Models.Paging;
+using IdS4.Application.Models.Resource;
 using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
-using IdS4.CoreApi.Models.Resource;
 using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -39,13 +38,13 @@ namespace IdS4.CoreApi.Controllers
         }
 
         [HttpGet("identity")]
-        public async Task<Paged<IdS4.Application.Models.Resource.VmIdentityResource>> GetIdentityResources([FromQuery]PagingQuery query)
+        public async Task<Paged<VmIdentityResource>> GetIdentityResources([FromQuery]PagingQuery query)
         {
             return await _resourceQueries.GetIdentityResources(query);
         }
 
         [HttpGet("api")]
-        public async Task<Paged<IdS4.Application.Models.Resource.VmApiResource>> GetApiResources([FromQuery] PagingQuery query)
+        public async Task<Paged<VmApiResource>> GetApiResources([FromQuery] PagingQuery query)
         {
             return await _resourceQueries.GetApiResources(query);
         }
@@ -67,7 +66,7 @@ namespace IdS4.CoreApi.Controllers
         }
 
         [HttpPost("identity")]
-        public async Task<ApiResult> AddIdentityResource([FromBody]IdS4.Application.Models.Resource.VmIdentityResource vm)
+        public async Task<ApiResult> AddIdentityResource([FromBody]VmIdentityResource vm)
         {
             if (vm.Id > 0) return ApiResult.NotFound(vm.Id);
 
@@ -110,7 +109,7 @@ namespace IdS4.CoreApi.Controllers
                 var entity = _mapper.Map<IdentityClaim>(claim);
 
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);
@@ -152,7 +151,7 @@ namespace IdS4.CoreApi.Controllers
                 var entity = _mapper.Map<IdentityResourceProperty>(property);
 
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);
@@ -262,7 +261,7 @@ namespace IdS4.CoreApi.Controllers
 
                 var entity = _mapper.Map<ApiScope>(scope);
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);
@@ -304,7 +303,7 @@ namespace IdS4.CoreApi.Controllers
                 var entity = _mapper.Map<ApiSecret>(secret);
 
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);
@@ -345,7 +344,7 @@ namespace IdS4.CoreApi.Controllers
                 var entity = _mapper.Map<ApiResourceClaim>(claim);
 
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);
@@ -386,7 +385,7 @@ namespace IdS4.CoreApi.Controllers
                 var entity = _mapper.Map<ApiResourceProperty>(property);
 
                 if (entity.Id == default)
-                    _configurationDb.Add(entity);
+                    _configurationDb.Add((object) entity);
                 else
                 {
                     var entry = _configurationDb.Attach(entity);

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
 using IdS4.CoreApi.Models.Scope;
@@ -8,6 +6,8 @@ using IdS4.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
 {

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using IdS4.CoreApi.Extensions;
-using IdS4.CoreApi.Models.Paging;
+using IdS4.CoreApi.Models.Results;
 using IdS4.CoreApi.Models.User;
 using IdS4.DbContexts;
+using IdS4.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,8 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using IdS4.CoreApi.Models.Results;
-using IdS4.Identity;
+using IdS4.Application.Models.Paging;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -35,7 +35,7 @@ namespace IdS4.CoreApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Paged<VmUser>> Get([FromQuery]PageQuery query)
+        public async Task<Paged<VmUser>> Get([FromQuery]PagingQuery query)
         {
             var users = await _identityDb.Users.AsNoTracking()
                 .OrderBy(query.Sort ?? "Id")

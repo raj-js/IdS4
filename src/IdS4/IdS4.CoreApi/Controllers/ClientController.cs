@@ -1,18 +1,18 @@
-﻿using System;
-using AutoMapper;
-using IdS4.CoreApi.Models.Client;
-using IdS4.CoreApi.Models.Paging;
+﻿using AutoMapper;
+using IdentityServer4.EntityFramework.Entities;
+using IdS4.Application.Models.Client;
+using IdS4.Application.Models.Paging;
+using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Entities;
-using IdS4.CoreApi.Extensions;
 using GrantType = IdentityServer4.Models.GrantType;
 
 namespace IdS4.CoreApi.Controllers
@@ -34,7 +34,7 @@ namespace IdS4.CoreApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Paged<VmClient>> Get([FromQuery]PageQuery query)
+        public async Task<Paged<VmClient>> Get([FromQuery]PagingQuery query)
         {
             var clients = await _configurationDb.Clients.AsNoTracking()
                 .OrderBy(query.Sort ?? "Id")

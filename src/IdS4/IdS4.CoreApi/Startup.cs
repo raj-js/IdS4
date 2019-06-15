@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
+using IdS4.Application.Mappers;
 using IdS4.CoreApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,8 +26,7 @@ namespace IdS4.CoreApi
             services.AddIdS4DbContext(Configuration);
             services.AddIdS4Authentication(Configuration);
             services.AddIdS4Cors(Configuration);
-            services.AddAutoMapper(typeof(Startup));
-            services.AddAutoMapper(typeof(IdS4.Application.Mappers.UserProfile).Assembly);
+            services.AddAutoMapper(typeof(UserProfile));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var container = new ContainerBuilder();
