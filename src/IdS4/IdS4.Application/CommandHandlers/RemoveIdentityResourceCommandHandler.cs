@@ -27,12 +27,12 @@ namespace IdS4.Application.CommandHandlers
 
             foreach (var resourceId in request.ResourceIds.Split(','))
             {
-                var resource = await _configurationDb.IdentityResources.FindAsync(int.Parse(resourceId));
+                var resource = await _configurationDb.IdentityResources.FindAsync(new object[]{ int.Parse(resourceId) }, cancellationToken: cancellationToken);
                 if (resource == null) continue;
 
                 _configurationDb.IdentityResources.Remove(resource);
             }
-            return await _configurationDb.SaveChangesAsync() > 0;
+            return await _configurationDb.SaveChangesAsync(cancellationToken) > 0;
         }
     }
 }

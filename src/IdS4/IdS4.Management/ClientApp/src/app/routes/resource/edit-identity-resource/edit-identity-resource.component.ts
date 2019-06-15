@@ -18,12 +18,8 @@ export class EditIdentityResourceComponent implements OnInit {
 
 	url: string;
 	loadingBasic = false;
-	loadingClaims = false;
-	loadingProperties = false;
 
 	resource: any;
-	claims: any;
-	properties: any;
 
 	basicSchema: SFSchema = {
 		properties: {
@@ -61,14 +57,8 @@ export class EditIdentityResourceComponent implements OnInit {
 			required: { type: 'boolean', title: '必选', default: false },
 			emphasize: { type: 'boolean', title: '强调', default: false },
 			showInDiscoveryDocument: { type: 'boolean', title: '显示在发现文档中', default: true },
-			enabled: { type: 'boolean', title: '是否启用', default: true }
-		},
-		required: [ 'name', 'displayName' ]
-	};
-
-	claimSchema: SFSchema = {
-		properties: {
-			claims: {
+			enabled: { type: 'boolean', title: '是否启用', default: true },
+			userClaims: {
 				title: '用户声明',
 				type: 'array',
 				items: {
@@ -80,13 +70,7 @@ export class EditIdentityResourceComponent implements OnInit {
 					},
 					required: [ 'type' ]
 				}
-			}
-		},
-		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
-	};
-
-	propertySchema: SFSchema = {
-		properties: {
+			},
 			properties: {
 				title: '资源属性',
 				type: 'array',
@@ -102,7 +86,7 @@ export class EditIdentityResourceComponent implements OnInit {
 				}
 			}
 		},
-		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
+		required: [ 'name', 'displayName' ]
 	};
 
 	constructor(
@@ -139,8 +123,6 @@ export class EditIdentityResourceComponent implements OnInit {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.resource = result.data;
-				this.claims = { claims: result.data.userClaims };
-				this.properties = { properties: result.data.properties };
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
 			}
@@ -155,43 +137,6 @@ export class EditIdentityResourceComponent implements OnInit {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.resource = result.data;
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitClaims(value: any): void {
-		this.loadingClaims = true;
-
-		const arrs = value.claims as any[];
-		arrs.forEach((v, i, d) => (v.identityResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/identity/claims/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingClaims = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.claims = { claims: result.data };
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitProperties(value: any): void {
-		this.loadingProperties = true;
-		const arrs = value.properties as any[];
-		arrs.forEach((v, i, d) => (v.identityResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/identity/properties/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingProperties = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.properties = { properties: result.data };
 				this.msgSrv.success('操作成功');
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);

@@ -77,17 +77,10 @@ namespace IdS4.CoreApi.Controllers
         [HttpPut("identity")]
         public async Task<ApiResult> EditIdentityResource([FromBody]VmIdentityResource vm)
         {
-            if (vm.Id <= 0 ||
-                !await _configurationDb.IdentityResources.AsNoTracking().AnyAsync(s => s.Id == vm.Id))
-                return ApiResult.NotFound(vm.Id);
+            if (vm.Id <= 0) return ApiResult.NotFound(vm.Id);
 
-            var resource = _mapper.Map<IdentityResource>(vm);
-            var entry = _configurationDb.Attach(resource);
-            entry.State = EntityState.Modified;
-            await _configurationDb.SaveChangesAsync();
-
-            var vmResource = _mapper.Map<VmIdentityResource>(entry.Entity);
-            return ApiResult.Success(vmResource);
+            var command = new EditIdentityResourceCommand(vm);
+            return ApiResult.Success(await _mediator.Send(command));
         }
 
         [HttpPut("identity/claims/{resourceId}")]
