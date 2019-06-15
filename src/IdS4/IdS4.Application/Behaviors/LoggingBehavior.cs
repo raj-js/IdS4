@@ -14,7 +14,7 @@ namespace IdS4.Application.Behaviors
         {
             _logger.LogInformation($"处理命令 {typeof(TRequest).Name}");
             var response = await next();
-            _logger.LogInformation($"命令 {typeof(TResponse).Name} 已处理");
+            _logger.LogInformation($"命令 {typeof(TRequest).Name} 已处理");
             return response;
         }
     }

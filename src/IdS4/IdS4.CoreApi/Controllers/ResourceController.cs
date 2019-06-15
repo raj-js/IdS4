@@ -178,15 +178,8 @@ namespace IdS4.CoreApi.Controllers
         {
             if (string.IsNullOrEmpty(resourceIds)) return ApiResult.Failure();
 
-            foreach (var resourceId in resourceIds.Split(","))
-            {
-                var resource = await _configurationDb.IdentityResources.FindAsync(int.Parse(resourceId));
-                if (resource == null) continue;
-
-                _configurationDb.IdentityResources.Remove(resource);
-            }
-            await _configurationDb.SaveChangesAsync();
-            return ApiResult.Success();
+            var command = new RemoveIdentityResourceCommand(resourceIds);
+            return await _mediator.Send(command) ? ApiResult.Success() : ApiResult.Failure();
         }
 
         [HttpPost("api")]
