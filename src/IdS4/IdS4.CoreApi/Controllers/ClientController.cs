@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using IdS4.Application.Queries;
 using GrantType = IdentityServer4.Models.GrantType;
 
 namespace IdS4.CoreApi.Controllers
@@ -25,27 +26,20 @@ namespace IdS4.CoreApi.Controllers
         private readonly IdS4ConfigurationDbContext _configurationDb;
         private readonly ILogger<ScopeController> _logger;
         private readonly IMapper _mapper;
+        private readonly IClientQueries _clientQueries;
 
-        public ClientController(IdS4ConfigurationDbContext configurationDb, ILogger<ScopeController> logger, IMapper mapper)
+        public ClientController(IdS4ConfigurationDbContext configurationDb, ILogger<ScopeController> logger, IMapper mapper, IClientQueries clientQueries)
         {
             _configurationDb = configurationDb;
             _logger = logger;
             _mapper = mapper;
+            _clientQueries = clientQueries;
         }
 
         [HttpGet]
         public async Task<Paged<VmClient>> Get([FromQuery]PagingQuery query)
         {
-            var clients = await _configurationDb.Clients.AsNoTracking()
-                .OrderBy(query.Sort ?? "Id")
-                .Skip(query.Skip)
-                .Take(query.Limit)
-                .ToListAsync();
-
-            return Paged<VmClient>.From(
-                _mapper.Map<List<VmClient>>(clients),
-                await _configurationDb.Clients.AsNoTracking().CountAsync()
-            );
+            return await _clientQueries.GetClients(query);
         }
 
         [HttpGet("{id}")]
@@ -53,20 +47,11 @@ namespace IdS4.CoreApi.Controllers
         {
             if (id <= 0) return ApiResult.NotFound(id);
 
-            var apiResult = await GetClient(id);
-            if (apiResult.Code != ApiResultCode.Success) return apiResult;
+            var vmSplitClient = await _clientQueries.GetClient(id);
+            if (vmSplitClient == null)
+                return ApiResult.NotFound(id);
 
-            var vm = (apiResult as ApiResult<VmClient>)?.Data;
-            if (vm == null) return ApiResult.Failure();
-
-            return ApiResult.Success(new
-            {
-                Basic = vm.ToBasic(_mapper),
-                Authenticate = vm.ToAuthenticate(_mapper),
-                Token = vm.ToToken(_mapper),
-                Consent = vm.ToConsent(_mapper),
-                Device = vm.ToDevice(_mapper)
-            });
+            return ApiResult.Success(vmSplitClient);
         }
 
         [HttpPost]

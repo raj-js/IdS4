@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using IdS4.Application.Models.Paging;
+using IdS4.Application.Queries;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -23,30 +24,23 @@ namespace IdS4.CoreApi.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IdS4IdentityDbContext _identityDb;
         private readonly IMapper _mapper;
+        private readonly IUserQueries _userQueries;
 
         public UserController(
             ILogger<UserController> logger, 
             IdS4IdentityDbContext identityDb, 
-            IMapper mapper)
+            IMapper mapper, IUserQueries userQueries)
         {
             _logger = logger;
             _identityDb = identityDb;
             _mapper = mapper;
+            _userQueries = userQueries;
         }
 
         [HttpGet]
         public async Task<Paged<VmUser>> Get([FromQuery]PagingQuery query)
         {
-            var users = await _identityDb.Users.AsNoTracking()
-                .OrderBy(query.Sort ?? "Id")
-                .Skip(query.Skip)
-                .Take(query.Limit)
-                .ToListAsync();
-
-            return Paged<VmUser>.From(
-                _mapper.Map<List<VmUser>>(users),
-                await _identityDb.Users.AsNoTracking().CountAsync()
-            );
+            return await _userQueries.GetUsers(query);
         }
 
         [HttpGet("{id}")]
@@ -54,13 +48,10 @@ namespace IdS4.CoreApi.Controllers
         {
             if (string.IsNullOrEmpty(id)) return ApiResult.NotFound(id);
 
-            var user = await _identityDb.Users.FindAsync(id);
-            if (user == null) return  ApiResult.NotFound(id);
+            var vmUser = await _userQueries.GetUser(id);
+            if (vmUser == null)
+                return ApiResult.NotFound(id);
 
-            var userClaims = await _identityDb.UserClaims.AsNoTracking().Where(s => s.UserId.Equals(id)).ToListAsync();
-
-            var vmUser = _mapper.Map<VmUser>(user);
-            vmUser.UserClaims = _mapper.Map<List<VmUserClaim>>(userClaims);
             return ApiResult.Success(vmUser);
         }
 

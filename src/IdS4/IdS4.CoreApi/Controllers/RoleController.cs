@@ -13,6 +13,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using IdS4.Application.Models.Paging;
+using IdS4.Application.Queries;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -23,18 +24,19 @@ namespace IdS4.CoreApi.Controllers
     {
         private readonly ILogger<RoleController> _logger;
         private readonly IdS4IdentityDbContext _identityDb;
-        private readonly RoleManager<IdS4Role> _roleManager;
         private readonly IMapper _mapper;
+        private readonly IRoleQueries _roleQueries;
 
         public RoleController(
             ILogger<RoleController> logger,
             IdS4IdentityDbContext identityDb,
-            IMapper mapper, RoleManager<IdS4Role> roleManager)
+            IMapper mapper, 
+            IRoleQueries roleQueries)
         {
             _logger = logger;
             _identityDb = identityDb;
             _mapper = mapper;
-            _roleManager = roleManager;
+            _roleQueries = roleQueries;
         }
 
         [HttpGet]
@@ -57,13 +59,10 @@ namespace IdS4.CoreApi.Controllers
         {
             if (string.IsNullOrEmpty(id)) return ApiResult.NotFound(id);
 
-            var role = await _identityDb.Roles.FindAsync(id);
-            if (role == null) return ApiResult.NotFound(id);
+            var vmRole = await _roleQueries.GetRole(id);
+            if (vmRole == null)
+                return ApiResult.NotFound(id);
 
-            var roleClaims = await _identityDb.RoleClaims.AsNoTracking().Where(s => s.RoleId.Equals(id)).ToListAsync();
-
-            var vmRole = _mapper.Map<VmRole>(role);
-            vmRole.RoleClaims = _mapper.Map<List<VmRoleClaim>>(roleClaims);
             return ApiResult.Success(vmRole);
         }
 
