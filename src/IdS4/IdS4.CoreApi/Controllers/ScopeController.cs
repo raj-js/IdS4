@@ -1,12 +1,7 @@
-﻿using AutoMapper;
+﻿using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
-using IdS4.CoreApi.Models.Scope;
-using IdS4.DbContexts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
@@ -16,31 +11,17 @@ namespace IdS4.CoreApi.Controllers
     [BearerAuthorize]
     public class ScopeController: ControllerBase
     {
-        private readonly IdS4ConfigurationDbContext _configurationDb;
-        private readonly ILogger<ScopeController> _logger;
-        private readonly IMapper _mapper;
+        private readonly IScopeQueries _scopeQueries;
 
-        public ScopeController(IdS4ConfigurationDbContext configurationDb, ILogger<ScopeController> logger, IMapper mapper)
+        public ScopeController(IScopeQueries scopeQueries)
         {
-            _configurationDb = configurationDb;
-            _logger = logger;
-            _mapper = mapper;
+            _scopeQueries = scopeQueries;
         }
 
         [HttpGet]
         public async Task<ApiResult> Get()
         {
-            var identityScope = await _configurationDb.IdentityResources
-                .AsNoTracking()
-                .Select(s => new VmSelectItem(s.DisplayName, s.Name))
-                .ToListAsync();
-
-            var apiScope = await _configurationDb.ApiScopes
-                .AsNoTracking()
-                .Select(s => new VmSelectItem(s.DisplayName, s.Name))
-                .ToListAsync();
-
-            return ApiResult.Success(identityScope.Concat(apiScope));
+            return ApiResult.Success(await _scopeQueries.GetClientScopeSelectItems());
         }
     }
 }
