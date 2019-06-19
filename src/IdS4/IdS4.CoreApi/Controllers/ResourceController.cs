@@ -8,7 +8,6 @@ using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
@@ -18,17 +17,11 @@ namespace IdS4.CoreApi.Controllers
     [BearerAuthorize]
     public class ResourceController : ControllerBase
     {
-        private readonly IdS4ConfigurationDbContext _configurationDb;
-        private readonly ILogger<ResourceController> _logger;
-        private readonly IMapper _mapper;
         private readonly IResourceQueries _resourceQueries;
         private readonly IMediator _mediator;
 
-        public ResourceController(IdS4ConfigurationDbContext configurationDb, ILogger<ResourceController> logger, IMapper mapper, IResourceQueries resourceQueries, IMediator mediator)
+        public ResourceController(IResourceQueries resourceQueries, IMediator mediator)
         {
-            _configurationDb = configurationDb;
-            _logger = logger;
-            _mapper = mapper;
             _resourceQueries = resourceQueries;
             _mediator = mediator;
         }
