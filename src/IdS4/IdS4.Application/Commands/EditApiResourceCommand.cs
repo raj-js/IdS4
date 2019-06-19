@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using IdS4.Application.Models.Resource;
+﻿using IdS4.Application.Models.Resource;
 using MediatR;
+using System;
 
 namespace IdS4.Application.Commands
 {

@@ -97,12 +97,8 @@ namespace IdS4.CoreApi.Controllers
         {
             if (vm.Id > 0) return ApiResult.NotFound(vm.Id);
 
-            var resource = _mapper.Map<ApiResource>(vm);
-
-            var entry = await _configurationDb.ApiResources.AddAsync(resource);
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entry.Entity);
+            var command = new AddApiResourceCommand(vm);
+            return ApiResult.Success(await _mediator.Send(command));
         }
 
         [HttpPut("api")]

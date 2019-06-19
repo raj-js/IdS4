@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using IdS4.CoreApi.Models.User;
+using IdS4.Application.Models.User;
 using IdS4.Identity;
 
 namespace IdS4.Application.Mappers

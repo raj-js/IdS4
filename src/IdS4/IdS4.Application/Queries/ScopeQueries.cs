@@ -1,9 +1,9 @@
-﻿using IdS4.CoreApi.Models.Scope;
-using IdS4.DbContexts;
+﻿using IdS4.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdS4.Application.Models.Scope;
 
 namespace IdS4.Application.Queries
 {

@@ -1,6 +1,6 @@
 ﻿using IdS4.Application.Models.Paging;
-using IdS4.CoreApi.Models.Role;
 using System.Threading.Tasks;
+using IdS4.Application.Models.Role;
 
 namespace IdS4.Application.Queries
 {

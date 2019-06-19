@@ -2,6 +2,7 @@
 using IdentityServer4.EntityFramework.Entities;
 using IdS4.Application.Models.Client;
 using IdS4.Application.Models.Paging;
+using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
@@ -13,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using IdS4.Application.Queries;
 using GrantType = IdentityServer4.Models.GrantType;
 
 namespace IdS4.CoreApi.Controllers

@@ -1,4 +1,4 @@
-﻿using IdS4.CoreApi.Models.Role;
+﻿using IdS4.Application.Models.Role;
 using MediatR;
 
 namespace IdS4.Application.Commands

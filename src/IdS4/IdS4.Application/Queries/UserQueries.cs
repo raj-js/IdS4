@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using IdS4.Application.Models.Paging;
-using IdS4.CoreApi.Models.User;
 using IdS4.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using IdS4.Application.Models.User;
 
 namespace IdS4.Application.Queries
 {

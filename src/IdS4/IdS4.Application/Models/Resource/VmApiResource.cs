@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MediatR;
 
 namespace IdS4.Application.Models.Resource
 {

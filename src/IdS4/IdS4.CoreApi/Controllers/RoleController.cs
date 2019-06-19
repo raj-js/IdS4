@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using IdS4.Application.Models.Paging;
+using IdS4.Application.Models.Role;
+using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
-using IdS4.CoreApi.Models.Role;
 using IdS4.DbContexts;
 using IdS4.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,8 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using IdS4.Application.Models.Paging;
-using IdS4.Application.Queries;
+using IdS4.Application.Commands;
+using MediatR;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -26,17 +27,20 @@ namespace IdS4.CoreApi.Controllers
         private readonly IdS4IdentityDbContext _identityDb;
         private readonly IMapper _mapper;
         private readonly IRoleQueries _roleQueries;
+        private IMediator _mediator;
 
         public RoleController(
             ILogger<RoleController> logger,
             IdS4IdentityDbContext identityDb,
-            IMapper mapper, 
-            IRoleQueries roleQueries)
+            IMapper mapper,
+            IRoleQueries roleQueries,
+            IMediator mediator)
         {
             _logger = logger;
             _identityDb = identityDb;
             _mapper = mapper;
             _roleQueries = roleQueries;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -71,11 +75,8 @@ namespace IdS4.CoreApi.Controllers
         {
             if (!ModelState.IsValid) return ApiResult.Failure(ModelState);
 
-            var role = _mapper.Map<IdS4Role>(vm);
-            var entry = _identityDb.Attach(role);
-            await _identityDb.SaveChangesAsync();
-
-            return ApiResult.Success(_mapper.Map<VmRole>(entry.Entity));
+            var command = new AddRoleCommand(vm);
+            return ApiResult.Success(await _mediator.Send(command));
         }
 
         [HttpPut]

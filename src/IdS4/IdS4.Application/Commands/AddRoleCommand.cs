@@ -1,4 +1,5 @@
-﻿using IdS4.CoreApi.Models.Role;
+﻿using System;
+using IdS4.Application.Models.Role;
 using MediatR;
 
 namespace IdS4.Application.Commands
@@ -9,7 +10,7 @@ namespace IdS4.Application.Commands
 
         public AddRoleCommand(VmRole role)
         {
-            Role = role;
+            Role = role ?? throw new ArgumentNullException(nameof(role));
         }
     }
 }

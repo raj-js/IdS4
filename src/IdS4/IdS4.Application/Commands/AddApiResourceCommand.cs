@@ -1,4 +1,5 @@
-﻿using IdS4.Application.Models.Resource;
+﻿using System;
+using IdS4.Application.Models.Resource;
 using MediatR;
 
 namespace IdS4.Application.Commands
@@ -9,7 +10,7 @@ namespace IdS4.Application.Commands
 
         public AddApiResourceCommand(VmApiResource resource)
         {
-            Resource = resource;
+            Resource = resource ?? throw new ArgumentNullException(nameof(resource));
         }
     }
 }
