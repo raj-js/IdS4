@@ -6,9 +6,9 @@ namespace IdS4.Application.Commands
 {
     public class EditApiResourceCommand: IRequest<VmApiResource>
     {
-        public VmIdentityResource Resource { get; private set; }
+        public VmApiResource Resource { get; private set; }
 
-        public EditApiResourceCommand(VmIdentityResource resource)
+        public EditApiResourceCommand(VmApiResource resource)
         {
             Resource = resource ?? throw new ArgumentNullException(nameof(resource));
         }

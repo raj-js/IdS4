@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using IdentityServer4.EntityFramework.Entities;
+﻿using AutoMapper;
 using IdS4.Application.Commands;
 using IdS4.Application.Models.Paging;
 using IdS4.Application.Models.Resource;
@@ -12,8 +8,8 @@ using IdS4.CoreApi.Models.Results;
 using IdS4.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -104,206 +100,21 @@ namespace IdS4.CoreApi.Controllers
         [HttpPut("api")]
         public async Task<ApiResult> EditApiResource([FromBody]VmApiResource vm)
         {
-            if (vm.Id <= 0 ||
-                !await _configurationDb.ApiResources.AsNoTracking().AnyAsync(s => s.Id == vm.Id))
+            if (vm.Id <= 0) return ApiResult.NotFound(vm.Id);
+
+            var command = new EditApiResourceCommand(vm);
+            var vmApiResource = await _mediator.Send(command);
+            if (vmApiResource == null)
                 return ApiResult.NotFound(vm.Id);
 
-            var resource = _mapper.Map<VmApiResource>(vm);
-            var entry = _configurationDb.Attach(resource);
-            entry.State = EntityState.Modified;
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entry.Entity);
+            return ApiResult.Success(vmApiResource);
         }
 
         [HttpDelete("api/{resourceIds}")]
         public async Task<ApiResult> RemoveApiResource([FromRoute]string resourceIds)
         {
-            foreach (var resourceId in resourceIds.Split(","))
-            {
-                var resource = await _configurationDb.ApiResources.FindAsync(int.Parse(resourceId));
-                if (resource == null) continue;
-
-                _configurationDb.ApiResources.Remove(resource);
-            }
-            await _configurationDb.SaveChangesAsync();
-            return ApiResult.Success();
-        }
-
-        [HttpPut("api/scopes/{resourceId}")]
-        public async Task<ApiResult> EditApiScopes([FromRoute] int resourceId, [FromBody] List<VmApiScope> scopes)
-        {
-            if (resourceId <= 0 ||
-                !await _configurationDb.ApiResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
-                return ApiResult.NotFound(resourceId);
-
-            var scopeEntities = await _configurationDb.ApiScopes
-                .AsNoTracking()
-                .Where(s => s.ApiResourceId == resourceId)
-                .ToListAsync();
-
-            var entities = new List<ApiScope>();
-            foreach (var scope in scopes)
-            {
-                var claimEntities = await _configurationDb.ApiScopeClaims
-                    .AsNoTracking()
-                    .Where(s => s.ApiScopeId == scope.Id)
-                    .ToListAsync();
-
-                claimEntities.Where(ce => scope.UserClaims.All(c => c.Id != ce.Id))
-                    .ToList()
-                    .ForEach(ce =>
-                    {
-                        var entry = _configurationDb.Attach(ce);
-                        entry.State = EntityState.Deleted;
-                    });
-
-                var entity = _mapper.Map<ApiScope>(scope);
-                if (entity.Id == default)
-                    _configurationDb.Add((object) entity);
-                else
-                {
-                    var entry = _configurationDb.Attach(entity);
-                    entry.State = EntityState.Modified;
-                }
-                entities.Add(entity);
-            }
-
-            scopeEntities.Where(s => entities.All(e => e.Id != s.Id))
-                .ToList()
-                .ForEach(s =>
-                {
-                    var entry = _configurationDb.Attach(s);
-                    entry.State = EntityState.Deleted;
-                });
-
-            await _configurationDb.SaveChangesAsync();
-
-            var vm = _mapper.Map<List<VmApiScope>>(entities);
-            return ApiResult.Success(vm);
-        }
-
-        [HttpPut("api/secrets/{resourceId}")]
-        public async Task<ApiResult> EditApiSecrets([FromRoute] int resourceId, [FromBody] List<VmApiSecret> secrets)
-        {
-            if (resourceId <= 0 ||
-                !await _configurationDb.ApiResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
-                return ApiResult.NotFound(resourceId);
-
-            var secretEntities = await _configurationDb.ApiSecrets
-                .AsNoTracking()
-                .Where(s => s.ApiResourceId == resourceId)
-                .ToListAsync();
-
-            var entities = new List<ApiSecret>();
-
-            foreach (var secret in secrets)
-            {
-                var entity = _mapper.Map<ApiSecret>(secret);
-
-                if (entity.Id == default)
-                    _configurationDb.Add((object) entity);
-                else
-                {
-                    var entry = _configurationDb.Attach(entity);
-                    entry.State = EntityState.Modified;
-                }
-                entities.Add(entity);
-            }
-
-            secretEntities.Where(s => entities.All(e => e.Id != s.Id))
-                .ToList()
-                .ForEach(s =>
-                {
-                    var entry = _configurationDb.Attach(s);
-                    entry.State = EntityState.Deleted;
-                });
-
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entities);
-        }
-
-        [HttpPut("api/claims/{resourceId}")]
-        public async Task<ApiResult> EditApiResourceClaims([FromRoute] int resourceId, [FromBody] List<VmApiResourceClaim> claims)
-        {
-            if (resourceId <= 0 ||
-                !await _configurationDb.ApiResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
-                return ApiResult.NotFound(resourceId);
-
-            var claimEntities = await _configurationDb.ApiResourceClaims
-                .AsNoTracking()
-                .Where(s => s.ApiResourceId == resourceId)
-                .ToListAsync();
-
-            var entities = new List<ApiResourceClaim>();
-
-            foreach (var claim in claims)
-            {
-                var entity = _mapper.Map<ApiResourceClaim>(claim);
-
-                if (entity.Id == default)
-                    _configurationDb.Add((object) entity);
-                else
-                {
-                    var entry = _configurationDb.Attach(entity);
-                    entry.State = EntityState.Modified;
-                }
-                entities.Add(entity);
-            }
-
-            claimEntities.Where(s => entities.All(e => e.Id != s.Id))
-                .ToList()
-                .ForEach(s =>
-                {
-                    var entry = _configurationDb.Attach(s);
-                    entry.State = EntityState.Deleted;
-                });
-
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entities);
-        }
-
-        [HttpPut("api/properties/{resourceId}")]
-        public async Task<ApiResult> EditApiResourceProperties([FromRoute] int resourceId, [FromBody] List<VmApiResourceProperty> properties)
-        {
-            if (resourceId <= 0 ||
-                !await _configurationDb.ApiResources.AsNoTracking().AnyAsync(s => s.Id == resourceId))
-                return ApiResult.NotFound(resourceId);
-
-            var propertyEntities = await _configurationDb.ApiResourceProperties
-                .AsNoTracking()
-                .Where(s => s.ApiResourceId == resourceId)
-                .ToListAsync();
-
-            var entities = new List<ApiResourceProperty>();
-
-            foreach (var property in properties)
-            {
-                var entity = _mapper.Map<ApiResourceProperty>(property);
-
-                if (entity.Id == default)
-                    _configurationDb.Add((object) entity);
-                else
-                {
-                    var entry = _configurationDb.Attach(entity);
-                    entry.State = EntityState.Modified;
-                }
-                entities.Add(entity);
-            }
-
-            propertyEntities.Where(s => entities.All(e => e.Id != s.Id))
-                .ToList()
-                .ForEach(s =>
-                {
-                    var entry = _configurationDb.Attach(s);
-                    entry.State = EntityState.Deleted;
-                });
-
-            await _configurationDb.SaveChangesAsync();
-
-            return ApiResult.Success(entities);
+            var command = new RemoveApiResourceCommand(resourceIds);
+            return await _mediator.Send(command) ? ApiResult.Success() : ApiResult.Failure();
         }
     }
 }

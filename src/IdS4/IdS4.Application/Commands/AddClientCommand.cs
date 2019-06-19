@@ -6,9 +6,9 @@ namespace IdS4.Application.Commands
 {
     public class AddClientCommand : IRequest<VmClient>
     {
-        public VmClient Client { get; private set; }
+        public VmClientAdd Client { get; private set; }
 
-        public AddClientCommand(VmClient client)
+        public AddClientCommand(VmClientAdd client)
         {
             Client = client ?? throw new ArgumentNullException(nameof(client));
         }

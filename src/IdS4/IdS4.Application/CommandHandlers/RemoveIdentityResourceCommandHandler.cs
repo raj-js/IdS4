@@ -2,7 +2,6 @@
 using IdS4.Application.Commands;
 using IdS4.DbContexts;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 

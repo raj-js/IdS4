@@ -26,7 +26,7 @@ namespace IdS4.Application.CommandHandlers
             var resource = _mapper.Map<ApiResource>(request.Resource);
 
             var entry = await _configurationDb.ApiResources.AddAsync(resource, cancellationToken);
-            await _configurationDb.SaveChangesAsync();
+            await _configurationDb.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<VmApiResource>(entry.Entity);
         }

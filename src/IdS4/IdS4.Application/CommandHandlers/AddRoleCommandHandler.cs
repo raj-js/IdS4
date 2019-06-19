@@ -1,12 +1,11 @@
-﻿using IdS4.Application.Commands;
+﻿using AutoMapper;
+using IdS4.Application.Commands;
 using IdS4.Application.Models.Role;
-using MediatR;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
 using IdS4.DbContexts;
 using IdS4.Identity;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace IdS4.Application.CommandHandlers
 {
@@ -21,7 +20,6 @@ namespace IdS4.Application.CommandHandlers
             _identityDb = identityDb;
             _mapper = mapper;
         }
-
 
         public async Task<VmRole> Handle(AddRoleCommand request, CancellationToken cancellationToken)
         {

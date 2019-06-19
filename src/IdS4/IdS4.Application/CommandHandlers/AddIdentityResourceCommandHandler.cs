@@ -29,7 +29,7 @@ namespace IdS4.Application.CommandHandlers
             var resource = _mapper.Map<IdentityResource>(request.Resource);
 
             var entry = await _configurationDb.IdentityResources.AddAsync(resource, cancellationToken);
-            await _configurationDb.SaveChangesAsync();
+            await _configurationDb.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<VmIdentityResource>(entry.Entity);
         }
