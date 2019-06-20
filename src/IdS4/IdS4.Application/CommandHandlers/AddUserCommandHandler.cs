@@ -40,7 +40,9 @@ namespace IdS4.Application.CommandHandlers
                 {
                     new IdS4UserClaim(user.Id, JwtClaimTypes.Id, user.Id),
                     new IdS4UserClaim(user.Id, JwtClaimTypes.Subject, user.Id),
-                    new IdS4UserClaim(user.Id, JwtClaimTypes.Name, user.UserName)
+                    new IdS4UserClaim(user.Id, JwtClaimTypes.Name, user.UserName),
+                    new IdS4UserClaim(user.Id, JwtClaimTypes.Email, user.Email),
+                    new IdS4UserClaim(user.Id, JwtClaimTypes.EmailVerified, user.EmailConfirmed.ToString())
                 }, 
                 cancellationToken
             );
