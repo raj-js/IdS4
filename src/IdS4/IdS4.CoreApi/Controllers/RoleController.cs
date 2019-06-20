@@ -1,20 +1,12 @@
-﻿using AutoMapper;
+﻿using IdS4.Application.Commands;
 using IdS4.Application.Models.Paging;
 using IdS4.Application.Models.Role;
 using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
-using IdS4.DbContexts;
-using IdS4.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
-using IdS4.Application.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace IdS4.CoreApi.Controllers
 {
@@ -23,22 +15,13 @@ namespace IdS4.CoreApi.Controllers
     [BearerAuthorize]
     public class RoleController : ControllerBase
     {
-        private readonly ILogger<RoleController> _logger;
-        private readonly IdS4IdentityDbContext _identityDb;
-        private readonly IMapper _mapper;
         private readonly IRoleQueries _roleQueries;
-        private IMediator _mediator;
+        private readonly IMediator _mediator;
 
         public RoleController(
-            ILogger<RoleController> logger,
-            IdS4IdentityDbContext identityDb,
-            IMapper mapper,
             IRoleQueries roleQueries,
             IMediator mediator)
         {
-            _logger = logger;
-            _identityDb = identityDb;
-            _mapper = mapper;
             _roleQueries = roleQueries;
             _mediator = mediator;
         }
@@ -46,16 +29,7 @@ namespace IdS4.CoreApi.Controllers
         [HttpGet]
         public async Task<Paged<VmRole>> Get([FromQuery]PagingQuery query)
         {
-            var roles = await _identityDb.Roles.AsNoTracking()
-                .OrderBy(query.Sort ?? "Id")
-                .Skip(query.Skip)
-                .Take(query.Limit)
-                .ToListAsync();
-
-            return Paged<VmRole>.From(
-                _mapper.Map<List<VmRole>>(roles),
-                await _identityDb.Roles.AsNoTracking().CountAsync()
-            );
+            return await _roleQueries.GetRoles(query);
         }
 
         [HttpGet("{id}")]
@@ -64,10 +38,7 @@ namespace IdS4.CoreApi.Controllers
             if (string.IsNullOrEmpty(id)) return ApiResult.NotFound(id);
 
             var vmRole = await _roleQueries.GetRole(id);
-            if (vmRole == null)
-                return ApiResult.NotFound(id);
-
-            return ApiResult.Success(vmRole);
+            return vmRole == null ? ApiResult.NotFound(id) : ApiResult.Success(vmRole);
         }
 
         [HttpPost]
@@ -76,7 +47,8 @@ namespace IdS4.CoreApi.Controllers
             if (!ModelState.IsValid) return ApiResult.Failure(ModelState);
 
             var command = new AddRoleCommand(vm);
-            return ApiResult.Success(await _mediator.Send(command));
+            var vmRole = await _mediator.Send(command);
+            return vmRole == null ? ApiResult.Failure() : ApiResult.Success(vmRole);
         }
 
         [HttpPut]
@@ -84,23 +56,9 @@ namespace IdS4.CoreApi.Controllers
         {
             if (string.IsNullOrEmpty(vm.Id)) return ApiResult.NotFound(vm.Id);
 
-            var origin = await _identityDb.Roles
-                .AsNoTracking()
-                .SingleOrDefaultAsync(s => s.Id.Equals(vm.Id));
-
-            if (origin == null) return ApiResult.NotFound(vm.Id);
-
-            origin.RoleClaims = _mapper.Map<List<IdS4RoleClaim>>(vm.RoleClaims);
-            vm = _mapper.Map(origin, vm);
-            await MarkRoleClaimsDeleted(vm.Id, vm.RoleClaims);
-
-            var entity = _mapper.Map<IdS4Role>(vm);
-            var entry = _identityDb.Attach(entity);
-            entry.State = EntityState.Modified;
-            await _identityDb.SaveChangesAsync();
-
-            vm = _mapper.Map<VmRole>(entity);
-            return ApiResult.Success(vm);
+            var command = new EditRoleCommand(vm);
+            var vmRole = await _mediator.Send(command);
+            return vmRole == null ? ApiResult.Failure() : ApiResult.Success(vmRole);
         }
 
         [HttpDelete("{ids}")]
@@ -108,32 +66,8 @@ namespace IdS4.CoreApi.Controllers
         {
             if (string.IsNullOrEmpty(ids)) return ApiResult.Failure();
 
-            foreach (var id in ids.Split(","))
-            {
-                var entity = await _identityDb.Roles.FindAsync(id);
-                if (entity == null) continue;
-
-                _identityDb.Roles.Remove(entity);
-            }
-            await _identityDb.SaveChangesAsync();
-            return ApiResult.Success();
+            var command = new RemoveRoleCommand(ids);
+            return await _mediator.Send(command) ? ApiResult.Success() : ApiResult.Failure();
         }
-
-        #region privates
-
-        private async Task MarkRoleClaimsDeleted(string roleId, List<VmRoleClaim> changed)
-        {
-            var origin = await _identityDb.RoleClaims
-                .AsNoTracking()
-                .Where(s => s.RoleId.Equals(roleId))
-                .ToListAsync();
-
-            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
-
-            foreach (var item in deleted)
-                _identityDb.Attach(item).State = EntityState.Deleted;
-        }
-
-        #endregion
     }
 }

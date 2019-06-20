@@ -36,10 +36,7 @@ namespace IdS4.CoreApi.Controllers
             if (id <= 0) return ApiResult.NotFound(id);
 
             var vmSplitClient = await _clientQueries.GetClient(id);
-            if (vmSplitClient == null)
-                return ApiResult.NotFound(id);
-
-            return ApiResult.Success(vmSplitClient);
+            return vmSplitClient == null ? ApiResult.NotFound(id) : ApiResult.Success(vmSplitClient);
         }
 
         [HttpPost]
@@ -48,7 +45,8 @@ namespace IdS4.CoreApi.Controllers
             if (!ModelState.IsValid) return ApiResult.Failure(ModelState);
 
             var command = new AddClientCommand(vm);
-            return ApiResult.Success(await _mediator.Send(command));
+            var vmClient = await _mediator.Send(command);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpPatch("basic")]
@@ -58,10 +56,7 @@ namespace IdS4.CoreApi.Controllers
 
             var command = new EditClientBasicCommand(vm);
             var vmClient = await _mediator.Send(command);
-            if (vmClient == null) 
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmClient);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpPatch("authenticate")]
@@ -71,10 +66,7 @@ namespace IdS4.CoreApi.Controllers
 
             var command = new EditClientAuthenticateCommand(vm);
             var vmClient = await _mediator.Send(command);
-            if (vmClient == null)
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmClient);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpPatch("token")]
@@ -84,10 +76,7 @@ namespace IdS4.CoreApi.Controllers
 
             var command = new EditClientTokenCommand(vm);
             var vmClient = await _mediator.Send(command);
-            if (vmClient == null)
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmClient);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpPatch("consent")]
@@ -97,10 +86,7 @@ namespace IdS4.CoreApi.Controllers
 
             var command = new EditClientConsentCommand(vm);
             var vmClient = await _mediator.Send(command);
-            if (vmClient == null)
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmClient);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpPatch("device")]
@@ -110,10 +96,7 @@ namespace IdS4.CoreApi.Controllers
 
             var command = new EditClientDeviceCommand(vm);
             var vmClient = await _mediator.Send(command);
-            if (vmClient == null)
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmClient);
+            return vmClient == null ? ApiResult.Failure() : ApiResult.Success(vmClient);
         }
 
         [HttpDelete("{ids}")]

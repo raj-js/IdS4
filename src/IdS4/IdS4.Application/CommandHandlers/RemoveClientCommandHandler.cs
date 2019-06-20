@@ -20,12 +20,12 @@ namespace IdS4.Application.CommandHandlers
 
         public async Task<bool> Handle(RemoveClientCommand request, CancellationToken cancellationToken)
         {
-            foreach (var resourceId in request.ClientIds.Split(','))
+            foreach (var clientId in request.ClientIds.Split(','))
             {
-                var clients = await _configurationDb.Clients.FindAsync(new object[] { int.Parse(resourceId) }, cancellationToken: cancellationToken);
-                if (clients == null) continue;
+                var client = await _configurationDb.Clients.FindAsync(new object[] { int.Parse(clientId) }, cancellationToken: cancellationToken);
+                if (client == null) continue;
 
-                _configurationDb.Clients.Remove(clients);
+                _configurationDb.Clients.Remove(client);
             }
             return await _configurationDb.SaveChangesAsync(cancellationToken) > 0;
         }

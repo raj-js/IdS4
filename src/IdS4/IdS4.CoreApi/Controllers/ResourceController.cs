@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using IdS4.Application.Commands;
+﻿using IdS4.Application.Commands;
 using IdS4.Application.Models.Paging;
 using IdS4.Application.Models.Resource;
 using IdS4.Application.Queries;
 using IdS4.CoreApi.Extensions;
 using IdS4.CoreApi.Models.Results;
-using IdS4.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -41,17 +39,13 @@ namespace IdS4.CoreApi.Controllers
         [HttpGet("api/{id}")]
         public async Task<ApiResult> GetApiResource([FromRoute] int id)
         {
-            if (id <= 0) return ApiResult.NotFound(id);
-
-            return ApiResult.Success(await _resourceQueries.GetApiResource(id));
+            return id <= 0 ? ApiResult.NotFound(id) : ApiResult.Success(await _resourceQueries.GetApiResource(id));
         }
 
         [HttpGet("identity/{id}")]
         public async Task<ApiResult> GetIdentityResource([FromRoute] int id)
         {
-            if (id <= 0) return ApiResult.NotFound(id);
-
-            return ApiResult.Success(await _resourceQueries.GetIdentityResource(id));
+            return id <= 0 ? ApiResult.NotFound(id) : ApiResult.Success(await _resourceQueries.GetIdentityResource(id));
         }
 
         [HttpPost("identity")]
@@ -60,7 +54,8 @@ namespace IdS4.CoreApi.Controllers
             if (vm.Id > 0) return ApiResult.NotFound(vm.Id);
 
             var command = new AddIdentityResourceCommand(vm);
-            return ApiResult.Success(await _mediator.Send(command));
+            var vmResource = await _mediator.Send(command);
+            return vmResource == null ? ApiResult.Failure() : ApiResult.Success(vmResource);
         }
 
         [HttpPut("identity")]
@@ -69,7 +64,8 @@ namespace IdS4.CoreApi.Controllers
             if (vm.Id <= 0) return ApiResult.NotFound(vm.Id);
 
             var command = new EditIdentityResourceCommand(vm);
-            return ApiResult.Success(await _mediator.Send(command));
+            var vmResource = await _mediator.Send(command);
+            return vmResource == null ? ApiResult.Failure() : ApiResult.Success(vmResource);
         }
 
         [HttpDelete("identity/{resourceIds}")]
@@ -87,7 +83,8 @@ namespace IdS4.CoreApi.Controllers
             if (vm.Id > 0) return ApiResult.NotFound(vm.Id);
 
             var command = new AddApiResourceCommand(vm);
-            return ApiResult.Success(await _mediator.Send(command));
+            var vmResource = await _mediator.Send(command);
+            return vmResource == null ? ApiResult.Failure() : ApiResult.Success(vmResource);
         }
 
         [HttpPut("api")]
@@ -96,11 +93,8 @@ namespace IdS4.CoreApi.Controllers
             if (vm.Id <= 0) return ApiResult.NotFound(vm.Id);
 
             var command = new EditApiResourceCommand(vm);
-            var vmApiResource = await _mediator.Send(command);
-            if (vmApiResource == null)
-                return ApiResult.NotFound(vm.Id);
-
-            return ApiResult.Success(vmApiResource);
+            var vmResource = await _mediator.Send(command);
+            return vmResource == null ? ApiResult.Failure() : ApiResult.Success(vmResource);
         }
 
         [HttpDelete("api/{resourceIds}")]
