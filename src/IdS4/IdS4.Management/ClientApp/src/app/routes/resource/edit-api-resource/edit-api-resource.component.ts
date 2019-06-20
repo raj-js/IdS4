@@ -18,58 +18,22 @@ export class EditApiResourceComponent implements OnInit {
 
 	url: string;
 	loadingBasic = false;
-	loadingClaims = false;
-	loadingProperties = false;
-	loadingSecrets = false;
-	loadingScopes = false;
 
 	resource: any;
-	claims: any;
-	properties: any;
-	secrets: any;
-	scopes: any;
 
 	basicSchema: SFSchema = {
 		properties: {
-			id: {
-				type: 'number',
-				title: 'ID',
-				ui: {
-					widget: 'text'
-				}
-			},
-			name: {
-				type: 'string',
-				title: '名称',
-				maxLength: 32,
-				ui: {
-					autofocus: true,
-					grid: {
-						span: 4
-					}
-				}
-			},
+			id: { type: 'number', title: 'ID', ui: { widget: 'text' } },
+			name: { type: 'string', title: '名称', maxLength: 32 },
 			displayName: { type: 'string', title: '显示名称', maxLength: 32 },
 			description: {
 				type: 'string',
 				title: '描述',
 				maxLength: 256,
-				ui: {
-					widget: 'textarea',
-					autosize: {
-						minRows: 3,
-						maxRows: 6
-					}
-				}
+				ui: { widget: 'textarea', autosize: { maxRows: 3 } }
 			},
-			enabled: { type: 'boolean', title: '是否启用', default: true }
-		},
-		required: [ 'name', 'displayName' ]
-	};
-
-	claimSchema: SFSchema = {
-		properties: {
-			claims: {
+			enabled: { type: 'boolean', title: '是否启用', default: true },
+			userClaims: {
 				title: '用户声明',
 				type: 'array',
 				items: {
@@ -81,13 +45,7 @@ export class EditApiResourceComponent implements OnInit {
 					},
 					required: [ 'type' ]
 				}
-			}
-		},
-		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
-	};
-
-	propertySchema: SFSchema = {
-		properties: {
+			},
 			properties: {
 				title: '资源属性',
 				type: 'array',
@@ -101,13 +59,7 @@ export class EditApiResourceComponent implements OnInit {
 					},
 					required: [ 'key' ]
 				}
-			}
-		},
-		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
-	};
-
-	secretSchema: SFSchema = {
-		properties: {
+			},
 			secrets: {
 				type: 'array',
 				title: '资源密码',
@@ -119,17 +71,13 @@ export class EditApiResourceComponent implements OnInit {
 						type: {
 							title: '类型',
 							type: 'string',
-							maxLength: 256,
 							enum: [
 								{ label: 'SharedSecret', value: 'SharedSecret' },
 								{ label: 'X509Thumbprint', value: 'X509Thumbprint' },
 								{ label: 'X509Name', value: 'X509Name' },
 								{ label: 'X509CertificateBase64', value: 'X509CertificateBase64' }
 							],
-							ui: {
-								widget: 'select'
-							},
-							default: 'SharedSecret'
+							ui: { widget: 'select' }
 						},
 						value: {
 							title: '值',
@@ -141,19 +89,13 @@ export class EditApiResourceComponent implements OnInit {
 							title: '描述',
 							type: 'string',
 							maxLength: 1000,
-							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
+							ui: { widget: 'textarea', autosize: { maxRows: 3 } }
 						},
 						expiration: { title: '过期', type: 'string', format: 'date' }
 					},
 					required: [ 'value' ]
 				}
-			}
-		},
-		ui: { spanLabel: 2, grid: { arraySpan: 12 } }
-	};
-
-	scopeSchema: SFSchema = {
-		properties: {
+			},
 			scopes: {
 				type: 'array',
 				title: '资源范围',
@@ -164,12 +106,7 @@ export class EditApiResourceComponent implements OnInit {
 						apiResourceId: { type: 'number', ui: { hidden: true } },
 						name: { type: 'string', title: '名称', maxLength: 32, ui: { autofocus: true } },
 						displayName: { type: 'string', title: '显示名称', maxLength: 32 },
-						description: {
-							type: 'string',
-							title: '描述',
-							maxLength: 256,
-							ui: { widget: 'textarea', autosize: { minRows: 2, maxRows: 3 } }
-						},
+						description: { type: 'string', title: '描述', maxLength: 256, ui: { widget: 'textarea' } },
 						required: { type: 'boolean', title: '必选', default: false },
 						emphasize: { type: 'boolean', title: '强调', default: false },
 						showInDiscoveryDocument: { type: 'boolean', title: '显示在发现文档中', default: true },
@@ -185,17 +122,15 @@ export class EditApiResourceComponent implements OnInit {
 								},
 								required: [ 'type' ]
 							},
-							ui: {
-								spanLabel: 3,
-								grid: { arraySpan: 12 }
-							}
+							ui: { grid: { arraySpan: 12 } }
 						}
 					},
 					required: [ 'name', 'displayName' ]
-				}
+				},
+				ui: { grid: { arraySpan: 24 } }
 			}
 		},
-		ui: { spanLabel: 3, grid: { arraySpan: 24 } }
+		required: [ 'name', 'displayName' ]
 	};
 
 	constructor(
@@ -232,10 +167,6 @@ export class EditApiResourceComponent implements OnInit {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.resource = result.data;
-				this.claims = { claims: result.data.userClaims };
-				this.properties = { properties: result.data.properties };
-				this.secrets = { secrets: result.data.secrets };
-				this.scopes = { scopes: result.data.scopes };
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
 			}
@@ -250,79 +181,6 @@ export class EditApiResourceComponent implements OnInit {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
 				this.resource = result.data;
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitClaims(value: any): void {
-		this.loadingClaims = true;
-
-		const arrs = value.claims as any[];
-		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/api/claims/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingClaims = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.claims = { claims: result.data };
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitProperties(value: any): void {
-		this.loadingProperties = true;
-		const arrs = value.properties as any[];
-		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/api/properties/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingProperties = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.properties = { properties: result.data };
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitSecrets(value: any): void {
-		this.loadingSecrets = true;
-		const arrs = value.secrets as any[];
-		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/api/secrets/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingSecrets = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.secrets = { secrets: result.data };
-				this.msgSrv.success('操作成功');
-			} else {
-				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
-			}
-			this.cdr.detectChanges();
-		});
-	}
-
-	submitScopes(value: any): void {
-		this.loadingScopes = true;
-		const arrs = value.scopes as any[];
-		arrs.forEach((v, i, d) => (v.apiResourceId = this.id));
-
-		this.http.put(`${this.url}/api/resource/api/scopes/${this.id}`, arrs).subscribe((resp) => {
-			this.loadingScopes = false;
-			const result = resp as IApiResult;
-			if (result.code === ApiResultCode.Success) {
-				this.scopes = { scopes: result.data };
 				this.msgSrv.success('操作成功');
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);

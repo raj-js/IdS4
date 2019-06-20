@@ -10,6 +10,22 @@ namespace IdS4.CoreApi.Configuration
             builder.RegisterType<ResourceQueries>()
                 .As<IResourceQueries>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ClientQueries>()
+                .As<IClientQueries>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<UserQueries>()
+                .As<IUserQueries>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<RoleQueries>()
+                .As<IRoleQueries>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<ScopeQueries>()
+                .As<IScopeQueries>()
+                .InstancePerLifetimeScope();
         }
     }
 }

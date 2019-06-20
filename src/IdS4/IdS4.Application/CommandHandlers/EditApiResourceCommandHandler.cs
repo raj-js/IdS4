@@ -37,6 +37,9 @@ namespace IdS4.Application.CommandHandlers
             await MarkSecretsDeleted(request.Resource.Id, request.Resource.Secrets, cancellationToken);
             await MarkPropertiesDeleted(request.Resource.Id, request.Resource.Properties, cancellationToken);
 
+            foreach (var scope in request.Resource.Scopes)
+                await MarkScopesClaimsDeleted(scope.Id, scope.UserClaims, cancellationToken);
+
             var resource = _mapper.Map<ApiResource>(request.Resource);
             resource.Updated = DateTime.Now;
 
@@ -91,6 +94,19 @@ namespace IdS4.Application.CommandHandlers
             var origin = await _configurationDb.Set<ApiResourceProperty>()
                 .AsNoTracking()
                 .Where(s => s.ApiResourceId == resourceId)
+                .ToListAsync(cancellationToken);
+
+            var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
+
+            foreach (var item in deleted)
+                _configurationDb.Attach(item).State = EntityState.Deleted;
+        }
+
+        private async Task MarkScopesClaimsDeleted(int scopeId, List<VmApiScopeClaim> changed, CancellationToken cancellationToken = default)
+        {
+            var origin = await _configurationDb.Set<ApiScopeClaim>()
+                .AsNoTracking()
+                .Where(s => s.ApiScopeId == scopeId)
                 .ToListAsync(cancellationToken);
 
             var deleted = origin.Where(s => changed.All(c => c.Id != s.Id));
