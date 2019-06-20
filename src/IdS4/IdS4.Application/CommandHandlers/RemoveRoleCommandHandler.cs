@@ -25,7 +25,7 @@ namespace IdS4.Application.CommandHandlers
         {
             foreach (var roleId in request.RoleIds.Split(','))
             {
-                var role = await _identityDb.Roles.FindAsync(new object[] { int.Parse(roleId) }, cancellationToken: cancellationToken);
+                var role = await _identityDb.Roles.FindAsync(new object[] { roleId }, cancellationToken: cancellationToken);
                 if (role == null) continue;
 
                 _identityDb.Roles.Remove(role);

@@ -22,7 +22,7 @@ namespace IdS4.Application.CommandHandlers
         {
             foreach (var userId in request.UserIds.Split(','))
             {
-                var user = await _identityDb.Users.FindAsync(new object[] { int.Parse(userId) }, cancellationToken: cancellationToken);
+                var user = await _identityDb.Users.FindAsync(new object[] { userId }, cancellationToken: cancellationToken);
                 if (user == null) continue;
 
                 _identityDb.Users.Remove(user);
