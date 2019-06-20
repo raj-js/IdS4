@@ -21,7 +21,7 @@ export class AddUserComponent implements OnInit {
 		properties: {
 			userName: { type: 'string', title: '用户名', maxLength: 32 },
 			email: { type: 'string', title: '邮箱地址', maxLength: 32 },
-			emailConfirmed: { type: 'boolean', ui: { hidden: true }, default: true }
+			emailConfirmed: { type: 'boolean', title: '邮箱已确认', default: true }
 		},
 		required: [ 'userName', 'email' ]
 	};
@@ -49,10 +49,9 @@ export class AddUserComponent implements OnInit {
 		this.http.post(`${this.url}/api/user`, value).subscribe((resp) => {
 			const result = resp as IApiResult;
 			if (result.code === ApiResultCode.Success) {
-				this.msgSrv.success('操作成功');
-				setTimeout(() => {
+				this.msgSrv.success(`操作成功, ${result.msg}`, { nzDuration: 3000 }).onClose.subscribe(() => {
 					this.router.navigateByUrl(`/user/edit/${result.data.id}`);
-				}, 500);
+				});
 			} else {
 				this.msgSrv.error(`code: ${result.code} \r\n errors: ${JSON.stringify(result.errors)}`);
 			}

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdS4.CoreApi.Models.Results
 {
@@ -9,6 +10,8 @@ namespace IdS4.CoreApi.Models.Results
         public ApiResultCode Code { get; set; }
 
         public Dictionary<string, object> Errors { get; set; } = new Dictionary<string, object>();
+
+        public string Msg { get; set; }
 
         public void AddError(object error)
         {
@@ -37,6 +40,16 @@ namespace IdS4.CoreApi.Models.Results
             };
         }
 
+        public static ApiResult Success<T>(T data = default, string msg = null)
+        {
+            return new ApiResult<T>
+            {
+                Code = ApiResultCode.Success,
+                Data = data,
+                Msg = msg
+            };
+        }
+
         public static ApiResult Failure(ApiResultCode code = ApiResultCode.Failure, params KeyValuePair<string, object>[] errors)
         {
             var result = new ApiResult { Code = code };
@@ -54,6 +67,20 @@ namespace IdS4.CoreApi.Models.Results
             foreach (var model in modelState)
             {
                 RetrieveErrors(result, model.Key, model.Value);
+            }
+
+            return result;
+        }
+
+        public static ApiResult Failure(IEnumerable<IdentityError> errors)
+        {
+            var result = new ApiResult { Code = ApiResultCode.Failure };
+
+            if (errors == null) return result;
+
+            foreach (var error in errors)
+            {
+                result.Errors.Add(error.Code, error.Description);
             }
 
             return result;

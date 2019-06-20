@@ -41,6 +41,17 @@ namespace IdS4.CoreApi.Controllers
             return vmUser == null ? ApiResult.NotFound(id) : ApiResult.Success(vmUser);
         }
 
+        [HttpPost]
+        public async Task<ApiResult> Add([FromBody] VmUser vm)
+        {
+            var command = new AddUserCommand(vm);
+            var vmUserAdd = await _mediator.Send(command);
+
+            return vmUserAdd.Result?.Succeeded == true ? 
+                ApiResult.Success(vmUserAdd.User, msg: $"默认密码为：{vmUserAdd.DefaultPassword}") : 
+                ApiResult.Failure(vmUserAdd.Result?.Errors);
+        }
+
         [HttpPut]
         public async Task<ApiResult> Edit([FromBody] VmUser vm)
         {

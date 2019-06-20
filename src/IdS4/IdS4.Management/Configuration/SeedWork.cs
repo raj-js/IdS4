@@ -59,7 +59,8 @@ namespace IdS4.Management.Configuration
                 await ids4IdentityDb.UserClaims.AddRangeAsync(
                     new List<IdS4UserClaim>
                     {
-                        new IdS4UserClaim(admin.Id, JwtClaimTypes.Subject, admin.Id),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.Subject, admin.Id),
+                        new IdS4UserClaim(admin.Id,JwtClaimTypes.Id, admin.Id),
                         new IdS4UserClaim(admin.Id,JwtClaimTypes.Email, admin.Email),
                         new IdS4UserClaim(admin.Id,JwtClaimTypes.EmailVerified, admin.EmailConfirmed.ToString()),
                         new IdS4UserClaim(admin.Id,JwtClaimTypes.Name, admin.UserName),
